@@ -1,0 +1,151 @@
+/* login.css - Estilos profesionales con animaciones (similar a signup) */
+
+body {
+    background-color: var(--bg-primary, #fce4ec) !important;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Fondo de burbujas difuminadas (animado) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(251, 207, 232, 0.4) 0%, transparent 35%),
+        radial-gradient(circle at 90% 70%, rgba(253, 186, 211, 0.35) 0%, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 45%),
+        radial-gradient(circle at 70% 15%, rgba(245, 168, 202, 0.25) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: floatBlobs 20s infinite alternate ease-in-out;
+}
+
+@keyframes floatBlobs {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.05) translate(-1%, -1%); }
+}
+
+body.dark-theme::before {
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(180, 130, 160, 0.2) 0%, transparent 35%),
+        radial-gradient(circle at 90% 70%, rgba(140, 100, 130, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(120, 80, 110, 0.2) 0%, transparent 45%),
+        radial-gradient(circle at 70% 15%, rgba(160, 110, 140, 0.15) 0%, transparent 50%);
+}
+
+/* Elementos decorativos flotantes (como en signup) */
+.decorative-element {
+    position: fixed;
+    color: rgba(236, 72, 153, 0.1);
+    font-size: 5rem;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body.dark-theme .decorative-element {
+    color: rgba(244, 114, 182, 0.08);
+}
+
+.deco-1 { top: 8%; left: 3%; transform: rotate(-10deg); }
+.deco-2 { bottom: 12%; right: 4%; transform: rotate(15deg); font-size: 6rem; }
+.deco-3 { top: 40%; right: 10%; font-size: 4rem; opacity: 0.08; }
+.deco-4 { bottom: 30%; left: 8%; font-size: 3.5rem; opacity: 0.06; }
+
+/* Tarjeta principal */
+.login-card-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(8px);
+    border-top: 4px solid var(--accent, #ec489a);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover en la tarjeta (como en signup) */
+.bg-white:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 40px -15px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme .bg-white {
+    background-color: rgba(45, 45, 68, 0.9) !important;
+}
+
+/* Detalles decorativos en la tarjeta */
+.bg-white::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 80px;
+    height: 80px;
+    background-image: radial-gradient(var(--accent, #ec489a) 2px, transparent 2px);
+    background-size: 15px 15px;
+    opacity: 0.2;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.bg-white::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 60px;
+    height: 60px;
+    border-left: 3px solid var(--accent, #ec489a);
+    border-bottom: 3px solid var(--accent, #ec489a);
+    opacity: 0.3;
+    border-radius: 0 0 0 12px;
+    pointer-events: none;
+}
+
+/* Estilos de inputs con animación focus */
+input {
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    border-color: var(--accent, #ec489a) !important;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15) !important;
+    transform: scale(1.01);
+}
+
+/* Botón hover */
+button[type="submit"] {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.4);
+}
+
+/* Mensaje de error con animación shake */
+#error-message:not(.hidden) {
+    display: block;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* Modal de restablecimiento */
+#reset-modal .bg-white {
+    animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

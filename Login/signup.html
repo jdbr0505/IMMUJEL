@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - IMMUJEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="signup.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="Login_supabase.js"></script>
+    <link rel="icon" href="../Images/HEAD.jpg">
+</head>
+<body class="font-sans antialiased flex items-center justify-center min-h-screen p-4">
+    
+    <div class="decorative-element deco-1"><i class="fas fa-flower"></i></div>
+    <div class="decorative-element deco-2"><i class="fas fa-heart"></i></div>
+    <div class="decorative-element deco-3"><i class="fas fa-feather-alt"></i></div>
+    <div class="decorative-element deco-4"><i class="fas fa-hand-holding-heart"></i></div>
+
+    <!-- Interruptor de tema -->
+    <div class="fixed top-5 right-5 z-50">
+        <div id="theme-toggle" class="theme-switch" role="button" aria-label="Cambiar modo oscuro">
+            <div class="slider">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Zm11.394-5.834a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18Zm-5.834-2.166a.75.75 0 0 0-1.06 1.06l1.59 1.591a.75.75 0 1 0 1.061-1.06l-1.59-1.591ZM5.25 12a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H4.5a.75.75 0 0 1 .75.75Zm.894-5.834a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" clip-rule="evenodd"/>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full max-w-lg">
+        <div class="flex justify-center mb-6">
+            <a href="../index.html">
+                <img src="../Images/LOGO INMUJEL.png" alt="IMMUJEL" class="h-24 w-auto drop-shadow-md">
+            </a>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden p-8 md:p-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Crear cuenta</h2>
+                <p class="text-gray-600">Únete a nuestra comunidad de apoyo</p>
+            </div>
+
+            <form id="signup-form" class="space-y-5">
+                <!-- Nombre completo -->
+                <div>
+                    <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-user"></i></span>
+                        <input type="text" id="fullname" required 
+                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               placeholder="María Pérez">
+                    </div>
+                </div>
+
+                <!-- Correo -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-envelope"></i></span>
+                        <input type="email" id="email" required 
+                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               placeholder="maria@ejemplo.com">
+                    </div>
+                </div>
+
+                <!-- Nombre de usuario -->
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-at"></i></span>
+                        <input type="text" id="username" required 
+                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               placeholder="mariaperez">
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="password" required 
+                               class="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               placeholder="Mínimo 6 caracteres">
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1 ml-1">Debe tener al menos 6 caracteres</p>
+                </div>
+
+                <!-- Confirmar contraseña -->
+                <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="confirm-password" required 
+                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               placeholder="Repite tu contraseña">
+                    </div>
+                </div>
+
+                <!-- Mensajes -->
+                <div id="error-message" class="text-red-500 text-sm font-medium hidden bg-red-50 p-3 rounded-lg border border-red-200"></div>
+                <div id="success-message" class="text-green-700 text-sm font-medium hidden bg-green-50 p-3 rounded-lg border border-green-200"></div>
+
+                <!-- Botón -->
+                <button type="submit" id="submit-btn" 
+                        class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-pink-600 hover:to-rose-600 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 shadow-md mt-2">
+                    Registrarse
+                </button>
+
+                <p class="text-center text-gray-600 mt-6">
+                    ¿Ya tienes cuenta? 
+                    <a href="login.html" class="text-pink-600 font-semibold hover:underline">Inicia sesión aquí</a>
+                </p>
+            </form>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="../index.html" class="text-gray-600 hover:text-pink-600 text-sm inline-flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Volver al inicio
+            </a>
+        </div>
+    </div>
+
+    <script src="signup.js"></script>
+    <script>
+        // Toggle de tema
+        (function() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            body.classList.remove('dark-theme');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') body.classList.add('dark-theme');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    body.classList.toggle('dark-theme');
+                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
