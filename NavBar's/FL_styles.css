@@ -1,58 +1,89 @@
-/* styles.css */
- :root {
-    color-scheme: light only;
-    --bg-primary: #ffa2e1;
-    --bg-card: #ffffff;
-    --text-primary: #1f2937;
-    --text-secondary: #4b5563;
-    --accent: #ec4899;
-    --border-light: #e5e7eb;
+/* FL_styles.css - Identidad IMMUJEL para Fundamentos Legales */
+
+/* Variables institucionales (las mismas que el Home y Sobre Nosotras) */
+:root {
+    --purple-primary: #A506AD;
+    --blue-primary: #0362CF;
+    --magenta: #F66EFD;
+    --lavender: #FCBFFF;
+    --sky-blue: #4190EB;
+    --pale-blue: #BAD7F8;
+    --deep-blue: #02162E;
+    --white: #FFFFFF;
+    
+    --bg-gradient-start: #FCE4EC;
+    --bg-gradient-end: #F3E5F5;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --text-primary: #1F2937;
+    --text-secondary: #4B5563;
+    --border-light: #E5E7EB;
+    --accent: var(--purple-primary);
 }
 
 body.dark-theme {
-    --bg-primary: #1e1e2f;
-    --bg-card: #2d2d44;
-    --text-primary: #f3f4f6;
-    --text-secondary: #d1d5db;
-    --accent: #f472b6;
-    --border-light: #4b5563;
-    color-scheme: dark;
+    --bg-gradient-start: #2D1B36;
+    --bg-gradient-end: #1E1A3A;
+    --card-bg: rgba(30, 30, 47, 0.95);
+    --text-primary: #F3F4F6;
+    --text-secondary: #D1D5DB;
+    --border-light: #4B5563;
+    --accent: #C474E8;
+}
+
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 html, body {
-    background-color: var(--bg-primary) !important;
     margin: 0;
     padding: 0;
     min-height: 100vh;
-}
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    font-family: 'Arial Nova', Arial, 'Helvetica Neue', sans-serif;
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Ajustes de elementos */
-.bg-white {
-    background-color: var(--bg-card) !important;
-}
-.text-gray-800, .text-gray-700 {
-    color: var(--text-primary) !important;
-}
-.text-gray-600, .text-gray-500 {
-    color: var(--text-secondary) !important;
-}
-.border-gray-200, .border-gray-300 {
-    border-color: var(--border-light) !important;
-}
-.bg-pink-500 {
-    background-color: var(--accent) !important;
-}
-.hover\:bg-pink-600:hover {
-    background-color: color-mix(in srgb, var(--accent) 90%, black) !important;
+/* Montserrat para todos los títulos */
+h1, h2, h3, h4, .font-montserrat, .font-bold, .font-black, .font-semibold {
+    font-family: 'Montserrat', 'Arial Nova', sans-serif;
 }
 
-/* ===== INTERRUPTOR DE MODO OSCURO ===== */
+/* Efecto vidrio en tarjetas y nav */
+.bg-white, .bg-white\/90, .bg-white\/80 {
+    background-color: var(--card-bg) !important;
+    backdrop-filter: blur(8px);
+}
+
+/* Enlaces activos */
+.text-purple-700 { color: var(--purple-primary) !important; }
+.border-purple-700 { border-color: var(--purple-primary) !important; }
+.hover\:text-purple-600:hover, .hover\:text-purple-700:hover { color: var(--purple-primary) !important; }
+
+/* Gradiente institucional para botones */
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--purple-primary), var(--blue-primary)) !important;
+}
+.bg-gradient-to-r:hover {
+    background-image: linear-gradient(to right, #8B05A0, #0250B5) !important;
+}
+
+/* Sombras y bordes */
+.shadow-lg, .shadow-xl {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+}
+.bg-white\/50 {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+.border-purple-100 {
+    border-color: rgba(165, 6, 173, 0.2);
+}
+
+/* Estilo de tarjetas con borde izquierdo */
+.border-l-4 {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Interruptor de modo oscuro */
 .theme-switch {
     position: relative;
     display: inline-block;
@@ -61,19 +92,13 @@ body {
     background-color: #e5e7eb;
     border-radius: 9999px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     border: 1px solid var(--border-light);
 }
-
-body.dark-theme .theme-switch {
-    background-color: #4b5563;
-}
-
+body.dark-theme .theme-switch { background-color: #4b5563; }
 .theme-switch .slider {
     position: absolute;
     top: 2px;
-    left: 3px;
+    left: 2px;
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -83,82 +108,18 @@ body.dark-theme .theme-switch {
     justify-content: center;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    overflow: hidden;
 }
+body.dark-theme .theme-switch .slider { transform: translateX(32px); background-color: #1e1e2f; }
+.theme-switch .slider svg { position: absolute; width: 18px; height: 18px; transition: transform 0.3s ease, opacity 0.2s ease; }
+.theme-switch .sun-icon { color: #fbbf24; opacity: 1; transform: translateY(0); }
+.theme-switch .moon-icon { color: #cbd5e1; opacity: 0; transform: translateY(20px); }
+body.dark-theme .theme-switch .sun-icon { opacity: 0; transform: translateY(-20px); }
+body.dark-theme .theme-switch .moon-icon { opacity: 1; transform: translateY(0); color: #fbbf24; }
 
-body.dark-theme .theme-switch .slider {
-    transform: translateX(30px);
-    background-color: #1e1e2f;
-}
-
-.theme-switch .slider svg {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    transition: transform 0.3s ease, opacity 0.2s ease;
-}
-
-.theme-switch .sun-icon {
-    color: #fbbf24;
-    opacity: 1;
-    transform: translateY(0);
-}
-.theme-switch .moon-icon {
-    color: #cbd5e1;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-body.dark-theme .theme-switch .sun-icon {
-    opacity: 0;
-    transform: translateY(-20px);
-}
-body.dark-theme .theme-switch .moon-icon {
-    opacity: 1;
-    transform: translateY(0);
-    color: #fbbf24;
-}
-
-/* Transiciones globales */
-* {
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-/* Ocultar scrollbar (si se usa en carruseles) */
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-/* Transiciones suaves */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* laws.css - Estilos adicionales para la página de Fundamentos Legales */
-
-.law-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-.law-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Asegurar que el interruptor de tema se muestre correctamente */
-#theme-toggle {
-    display: inline-block;
-}
-
-/* Compatibilidad con modo oscuro para fondos y textos heredados */
-body.dark-theme .bg-white {
-    background-color: var(--bg-card) !important;
-}
-body.dark-theme .text-gray-800,
-body.dark-theme .text-gray-700 {
+/* Textos en modo oscuro */
+body.dark-theme .text-gray-800, 
+body.dark-theme .text-gray-700,
+body.dark-theme .text-gray-900 {
     color: var(--text-primary) !important;
 }
 body.dark-theme .text-gray-600,
@@ -166,6 +127,18 @@ body.dark-theme .text-gray-500 {
     color: var(--text-secondary) !important;
 }
 body.dark-theme .border-gray-200,
-body.dark-theme .border-gray-300 {
+body.dark-theme .border-gray-300,
+body.dark-theme .border-gray-100 {
     border-color: var(--border-light) !important;
+}
+body.dark-theme .bg-white\/50 {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }

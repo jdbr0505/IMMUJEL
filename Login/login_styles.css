@@ -1,61 +1,65 @@
-/* login.css - Estilos profesionales con animaciones (similar a signup) */
+/* login_styles.css – Fondo claro institucional + elementos visibles */
 
+/* ========== MODO CLARO (default: degradado celeste-rosa-blanco) ========== */
 body {
-    background-color: var(--bg-primary, #fce4ec) !important;
+    background: linear-gradient(135deg, #e5f6ff 0%, #ffffff 50%, #ffebfa 100%);
     position: relative;
     overflow-x: hidden;
+    margin: 0;
+    font-family: 'Arial Nova', Arial, sans-serif;
+    color: #1f2937;
 }
 
-/* Fondo de burbujas difuminadas (animado) */
+/* Manchas decorativas de luz (celeste y rosa) – permanecen igual */
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(251, 207, 232, 0.4) 0%, transparent 35%),
-        radial-gradient(circle at 90% 70%, rgba(253, 186, 211, 0.35) 0%, transparent 40%),
-        radial-gradient(circle at 40% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 45%),
-        radial-gradient(circle at 70% 15%, rgba(245, 168, 202, 0.25) 0%, transparent 50%);
-    pointer-events: none;
+    top: -15%;
+    left: 5%;
+    width: 65%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(197, 241, 255, 0.8) 0%, transparent 70%);
+    filter: blur(75px);
     z-index: 0;
-    animation: floatBlobs 20s infinite alternate ease-in-out;
+    pointer-events: none;
+    animation: floatSmoke 8s infinite alternate ease-in-out;
 }
 
-@keyframes floatBlobs {
-    0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.05) translate(-1%, -1%); }
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    right: 0%;
+    width: 70%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(255, 204, 249, 0.8) 0%, transparent 70%);
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+    animation: floatSmoke 7s infinite alternate-reverse ease-in-out;
 }
 
-body.dark-theme::before {
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(180, 130, 160, 0.2) 0%, transparent 35%),
-        radial-gradient(circle at 90% 70%, rgba(140, 100, 130, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 40% 80%, rgba(120, 80, 110, 0.2) 0%, transparent 45%),
-        radial-gradient(circle at 70% 15%, rgba(160, 110, 140, 0.15) 0%, transparent 50%);
+@keyframes floatSmoke {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(25px, -20px) scale(1.1); }
 }
 
-/* Elementos decorativos flotantes (como en signup) */
+/* ========== ELEMENTOS DECORATIVOS FLOTANTES (ahora visibles en claro) ========== */
 .decorative-element {
     position: fixed;
-    color: rgba(236, 72, 153, 0.1);
+    /* Rosa pálido semitransparente, visible sobre el fondo claro */
+    color: rgba(255, 105, 180, 0.15);
     font-size: 5rem;
     z-index: 0;
     pointer-events: none;
 }
 
-body.dark-theme .decorative-element {
-    color: rgba(244, 114, 182, 0.08);
-}
+.deco-1 { top: 20%; left: 3%; font-size: 6rem; }
+.deco-2 { bottom: 1%; right: 3%; transform: rotate(18deg); font-size: 11rem; }
+.deco-3 { top: 23%; right: 16%; font-size: 8rem; }
+.deco-4 { bottom: 20%; left: 17%; font-size: 9rem; transform: rotate(-15deg); }
 
-.deco-1 { top: 8%; left: 3%; transform: rotate(-10deg); }
-.deco-2 { bottom: 12%; right: 4%; transform: rotate(15deg); font-size: 6rem; }
-.deco-3 { top: 40%; right: 10%; font-size: 4rem; opacity: 0.08; }
-.deco-4 { bottom: 30%; left: 8%; font-size: 3.5rem; opacity: 0.06; }
-
-/* Tarjeta principal */
+/* ========== TARJETA DEL FORMULARIO ========== */
 .login-card-wrapper {
     position: relative;
     z-index: 10;
@@ -63,22 +67,19 @@ body.dark-theme .decorative-element {
 
 .bg-white {
     background-color: rgba(255, 255, 255, 0.85) !important;
-    backdrop-filter: blur(8px);
-    border-top: 4px solid var(--accent, #ec489a);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(15px);
+    border-top: 4px solid #ff3399;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    color: #1f2937;
 }
 
-/* Efecto hover en la tarjeta (como en signup) */
 .bg-white:hover {
     transform: translateY(-5px);
-    box-shadow: 0 30px 40px -15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
 }
 
-body.dark-theme .bg-white {
-    background-color: rgba(45, 45, 68, 0.9) !important;
-}
-
-/* Detalles decorativos en la tarjeta */
+/* Detalles decorativos (puntos y esquina) */
 .bg-white::after {
     content: '';
     position: absolute;
@@ -86,9 +87,9 @@ body.dark-theme .bg-white {
     right: -15px;
     width: 80px;
     height: 80px;
-    background-image: radial-gradient(var(--accent, #ec489a) 2px, transparent 2px);
+    background-image: radial-gradient(#ff3399 2px, transparent 2px);
     background-size: 15px 15px;
-    opacity: 0.2;
+    opacity: 0.25;
     border-radius: 50%;
     pointer-events: none;
 }
@@ -100,35 +101,36 @@ body.dark-theme .bg-white {
     left: -10px;
     width: 60px;
     height: 60px;
-    border-left: 3px solid var(--accent, #ec489a);
-    border-bottom: 3px solid var(--accent, #ec489a);
-    opacity: 0.3;
+    border-left: 3px solid #ff3399;
+    border-bottom: 3px solid #ff3399;
+    opacity: 0.4;
     border-radius: 0 0 0 12px;
     pointer-events: none;
 }
 
-/* Estilos de inputs con animación focus */
-input {
+/* Inputs y botones */
+input, select, textarea {
     transition: all 0.2s ease;
 }
 
 input:focus {
-    border-color: var(--accent, #ec489a) !important;
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15) !important;
+    border-color: #ff3399 !important;
+    box-shadow: 0 0 0 3px rgba(255, 51, 153, 0.2) !important;
     transform: scale(1.01);
 }
 
-/* Botón hover */
 button[type="submit"] {
+    background: linear-gradient(135deg, #ff3399, #cc0066) !important;
+    border: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button[type="submit"]:hover:not(:disabled) {
     transform: scale(1.02);
-    box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 10px 25px rgba(255, 51, 153, 0.4);
 }
 
-/* Mensaje de error con animación shake */
+/* Mensajes de error y modal */
 #error-message:not(.hidden) {
     display: block;
     animation: shake 0.3s ease-in-out;
@@ -140,7 +142,6 @@ button[type="submit"]:hover:not(:disabled) {
     75% { transform: translateX(4px); }
 }
 
-/* Modal de restablecimiento */
 #reset-modal .bg-white {
     animation: scaleIn 0.2s ease-out;
 }
@@ -148,4 +149,75 @@ button[type="submit"]:hover:not(:disabled) {
 @keyframes scaleIn {
     from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
+}
+
+/* ========== MODO OSCURO MANUAL (se mantiene idéntico al original) ========== */
+body.dark-theme {
+    background: linear-gradient(135deg, #2D1B36, #1E1A3A) !important;
+    color: #F3F4F6;
+}
+
+body.dark-theme::before,
+body.dark-theme::after {
+    display: none;
+}
+
+body.dark-theme .decorative-element {
+    color: rgba(196, 116, 232, 0.15);
+}
+
+body.dark-theme .bg-white {
+    background-color: rgba(30, 30, 47, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 4px solid #c474e8;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    color: #F3F4F6;
+}
+
+body.dark-theme .bg-white::after {
+    background-image: radial-gradient(#c474e8 2px, transparent 2px);
+    opacity: 0.2;
+}
+
+body.dark-theme .bg-white::before {
+    border-color: #c474e8;
+    opacity: 0.3;
+}
+
+body.dark-theme .text-gray-800,
+body.dark-theme .text-gray-700 {
+    color: #F3F4F6 !important;
+}
+body.dark-theme .text-gray-600,
+body.dark-theme .text-gray-500 {
+    color: #D1D5DB !important;
+}
+
+body.dark-theme input,
+body.dark-theme select {
+    background-color: #1e1e2f;
+    border-color: #4B5563;
+    color: #F3F4F6;
+}
+
+body.dark-theme input:focus {
+    border-color: #c474e8 !important;
+    box-shadow: 0 0 0 3px rgba(196, 116, 232, 0.25) !important;
+}
+
+body.dark-theme button[type="submit"] {
+    background: linear-gradient(135deg, #A506AD, #0362CF) !important;
+}
+
+body.dark-theme button[type="submit"]:hover:not(:disabled) {
+    box-shadow: 0 10px 25px rgba(165, 6, 173, 0.5);
+}
+
+body.dark-theme #reset-modal .bg-white {
+    background-color: #2d2d44 !important;
+    color: #F3F4F6;
+}
+
+body.dark-theme a.text-pink-600 {
+    color: #c474e8 !important;
 }

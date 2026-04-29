@@ -1,0 +1,106 @@
+/* form_styles.css – Estilos del formulario de asesoría (identidad IMMUJEL) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+/* Reutilizamos las variables definidas en styles.css, pero las replicamos para seguridad */
+:root {
+    --purple-primary: #A506AD;
+    --blue-primary: #0362CF;
+    --text-primary: #1F2937;
+    --text-secondary: #4B5563;
+    --border-light: #E5E7EB;
+    --accent: var(--purple-primary);
+}
+
+body.dark-theme {
+    --text-primary: #F3F4F6;
+    --text-secondary: #D1D5DB;
+    --border-light: #4B5563;
+    --accent: #C474E8;
+}
+
+/* Fondo con gradiente igual al home */
+html, body {
+    background: linear-gradient(135deg, var(--bg-gradient-start, #FCE4EC), var(--bg-gradient-end, #F3E5F5));
+    font-family: 'Arial Nova', Arial, 'Helvetica Neue', sans-serif;
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #2D1B36, #1E1A3A);
+}
+
+/* Tarjeta del formulario */
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(8px);
+    border-top: 4px solid var(--purple-primary) !important;
+}
+body.dark-theme .bg-white {
+    background-color: rgba(30, 30, 47, 0.95) !important;
+}
+
+/* Textos */
+.text-gray-800 { color: var(--text-primary) !important; }
+.text-gray-600, .text-gray-500 { color: var(--text-secondary) !important; }
+body.dark-theme .text-gray-800,
+body.dark-theme .text-gray-700,
+body.dark-theme .text-gray-900 { color: var(--text-primary) !important; }
+body.dark-theme .text-gray-600,
+body.dark-theme .text-gray-500 { color: var(--text-secondary) !important; }
+
+/* Inputs y selects */
+input, select, textarea {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: var(--purple-primary) !important;
+    box-shadow: 0 0 0 3px rgba(165, 6, 173, 0.15) !important;
+}
+
+/* Botón con gradiente institucional */
+button[type="submit"] {
+    background-image: linear-gradient(to right, var(--purple-primary), var(--blue-primary)) !important;
+}
+button[type="submit"]:hover:not(:disabled) {
+    background-image: linear-gradient(to right, #8B05A0, #0250B5) !important;
+    box-shadow: 0 10px 20px -5px rgba(165, 6, 173, 0.4);
+}
+
+/* Mensajes de error/éxito */
+#error-message:not(.hidden),
+#success-message:not(.hidden) {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ajustes modo oscuro para campos */
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+    background-color: #1e1e2f;
+    color: #f3f4f6;
+    border-color: var(--border-light);
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus {
+    border-color: var(--accent) !important;
+}
+
+/* Ocultar barra desplazamiento si se usara */
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .p-6 { padding: 1.25rem !important; }
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración – IMMUJEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../Login/Login_supabase.js"></script>
+    <link rel="icon" href="../Images/HEAD.svg">
+</head>
+<body class="font-sans antialiased bg-gray-50">
+
+    <!-- Navbar minimalista -->
+    <header class="bg-white/90 backdrop-blur shadow-sm px-6 py-3 flex items-center justify-between">
+        <a href="../index.html"><img src="../Images/LOGO INMUJEL.png" alt="IMMUJEL" class="h-10"></a>
+        <div class="flex items-center gap-4">
+            <span id="user-name" class="text-gray-700 font-medium"></span>
+            <button id="logout-btn" class="text-red-600 hover:underline text-sm">Cerrar sesión</button>
+            <div id="theme-toggle" class="theme-switch"><!-- interruptor de tema --></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Gestión de Asesorías</h1>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl shadow p-4 mb-6 flex flex-wrap items-end gap-4">
+            <div>
+                <label class="text-sm text-gray-600">Parroquia</label>
+                <select id="filter-parroquia" class="mt-1 block w-full rounded-lg border-gray-300">
+                    <option value="">Todas</option>
+                    <option>Alonso de Ojeda (Paraute)</option>
+                    <option>Libertad</option>
+                    <option>Campo Lara</option>
+                    <option>Eleazar López Contreras</option>
+                    <option>Venezuela</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600">Estado</label>
+                <select id="filter-status" class="mt-1 block w-full rounded-lg border-gray-300">
+                    <option value="">Todos</option>
+                    <option>pendiente</option>
+                    <option>en proceso</option>
+                    <option>finalizado</option>
+                    <option>cancelado</option>
+                </select>
+            </div>
+            <button id="apply-filter" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">Filtrar</button>
+            <button id="reset-filter" class="text-purple-600 underline text-sm">Limpiar filtros</button>
+        </div>
+
+        <!-- Tabla de reportes -->
+        <div class="bg-white rounded-xl shadow overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Teléfono</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Parroquia</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Asignada</th>
+                        <th class="px-4 py-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-tbody" class="divide-y divide-gray-200">
+                    <!-- Rellenado por JavaScript -->
+                </tbody>
+            </table>
+            <div id="loading" class="text-center py-8 text-gray-500">Cargando...</div>
+        </div>
+    </main>
+
+    <script src="admin.js"></script>
+    <script>
+        // Tema oscuro y menú (puedes replicar el mismo script)
+    </script>
+</body>
+</html>

@@ -1,67 +1,133 @@
-/* signup.css - Estilos profesionales para el registro */
+/* signup.css – Fondo claro institucional + elementos visibles */
+
 body {
-    background-color: var(--bg-primary, #fce4ec) !important;
+    background: linear-gradient(135deg, #e5f6ff 0%, #ffffff 50%, #ffebfa 100%);
     position: relative;
     overflow-x: hidden;
+    font-family: 'Arial Nova', Arial, sans-serif;
+    color: #1f2937;
 }
 
-/* Onda decorativa superior */
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 150px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23fbcfe8" fill-opacity="0.3" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,106.7C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') repeat-x top;
-    background-size: cover;
-    pointer-events: none;
+    top: -15%;
+    left: 5%;
+    width: 65%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(197, 241, 255, 0.8) 0%, transparent 70%);
+    filter: blur(75px);
     z-index: 0;
+    pointer-events: none;
+    animation: floatSmoke 8s infinite alternate ease-in-out;
 }
 
-body.dark-theme::before { opacity: 0.2; filter: brightness(0.7); }
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    right: 0%;
+    width: 70%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(255, 204, 249, 0.8) 0%, transparent 70%);
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+    animation: floatSmoke 7s infinite alternate-reverse ease-in-out;
+}
 
-/* Elementos decorativos flotantes */
+@keyframes floatSmoke {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-15px, 20px) scale(1.1); }
+}
+
 .decorative-element {
     position: fixed;
-    color: rgba(236, 72, 153, 0.1);
+    color: rgba(255, 105, 180, 0.15);
     font-size: 5rem;
     z-index: 0;
     pointer-events: none;
 }
-body.dark-theme .decorative-element { color: rgba(244, 114, 182, 0.08); }
-.deco-1 { top: 8%; left: 3%; transform: rotate(-10deg); }
-.deco-2 { bottom: 12%; right: 4%; transform: rotate(15deg); font-size: 6rem; }
-.deco-3 { top: 40%; right: 10%; font-size: 4rem; opacity: 0.08; }
-.deco-4 { bottom: 30%; left: 8%; font-size: 3.5rem; opacity: 0.06; }
+.deco-1 { top: 20%; left: 3%; font-size: 6rem; }
+.deco-2 { bottom: 1%; right: 3%; transform: rotate(18deg); font-size: 11rem; }
+.deco-3 { top: 23%; right: 16%; font-size: 8rem; }
+.deco-4 { bottom: 20%; left: 17%; font-size: 9rem; transform: rotate(-15deg); }
 
-/* Tarjeta (heredamos los estilos de login) */
 .bg-white {
-    position: relative;
-    z-index: 10;
-    backdrop-filter: blur(2px);
-    border-top: 4px solid var(--accent, #ec489a);
     background-color: rgba(255, 255, 255, 0.85) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(15px);
+    border-top: 4px solid #ff3399;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    color: #1f2937;
 }
-.bg-white:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 25px 30px -12px rgba(0, 0, 0, 0.15);
+.bg-white:hover { transform: translateY(-5px); box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15); }
+
+input:focus {
+    border-color: #ff3399 !important;
+    box-shadow: 0 0 0 3px rgba(255, 51, 153, 0.2) !important;
 }
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #ff3399, #cc0066) !important;
+    border: none;
+}
+button[type="submit"]:hover:not(:disabled) {
+    box-shadow: 0 10px 25px rgba(255, 51, 153, 0.4);
+}
+
+/* ========== MODO OSCURO MANUAL ========== */
+body.dark-theme {
+    background: linear-gradient(135deg, #2D1B36, #1E1A3A) !important;
+    color: #F3F4F6;
+}
+
+body.dark-theme::before,
+body.dark-theme::after {
+    display: none;
+}
+
+body.dark-theme .decorative-element {
+    color: rgba(196, 116, 232, 0.15);
+}
+
 body.dark-theme .bg-white {
-    background-color: rgba(45, 45, 68, 0.9) !important;
+    background-color: rgba(30, 30, 47, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 4px solid #c474e8;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+    color: #F3F4F6;
 }
 
-/* Modal */
-#confirmation-modal .bg-white {
-    animation: scaleIn 0.2s ease-out;
-}
-@keyframes scaleIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+body.dark-theme .text-gray-800,
+body.dark-theme .text-gray-700 { color: #F3F4F6 !important; }
+body.dark-theme .text-gray-600,
+body.dark-theme .text-gray-500 { color: #D1D5DB !important; }
+
+body.dark-theme input,
+body.dark-theme select {
+    background-color: #1e1e2f;
+    border-color: #4B5563;
+    color: #F3F4F6;
 }
 
-/* Ajustes responsive */
+body.dark-theme input:focus {
+    border-color: #c474e8 !important;
+    box-shadow: 0 0 0 3px rgba(196, 116, 232, 0.25) !important;
+}
+
+body.dark-theme button[type="submit"] {
+    background: linear-gradient(135deg, #A506AD, #0362CF) !important;
+}
+
+body.dark-theme button[type="submit"]:hover:not(:disabled) {
+    box-shadow: 0 10px 25px rgba(165, 6, 173, 0.5);
+}
+
+body.dark-theme a.text-pink-600 {
+    color: #c474e8 !important;
+}
+
 @media (max-width: 640px) {
     .p-8 { padding: 1.5rem !important; }
 }
