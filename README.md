@@ -4,7 +4,8 @@ First Prob
 # Project deployed on Github Pages:
 
 # Project QR:
-![codigo_qr](https://github.com/jdbr0505/IMMUJEL/issues/1#issue-4361260677)
+![codigo_qr]("https://github.com/user-attachments/assets/8f82201b-ec2f-48a0-a14b-79e4422809b4")
+)
 
 
 
