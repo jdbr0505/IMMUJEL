@@ -4,7 +4,7 @@ First Prob
 # Project deployed on Github Pages:
 
 # Project QR:
-![codigo_qr]([https://github.com/jdbr0505/IMMUJEL/blob/main/qr.py])
+![codigo_qr]([https://github.com/jdbr0505/IMMUJEL/main/qr.py])
 
 
 
