@@ -1,17 +1,23 @@
 /* form_styles.css – Estilos del formulario de asesoría (identidad IMMUJEL) */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
-/* Reutilizamos las variables definidas en styles.css, pero las replicamos para seguridad */
+/* Reutilizamos las variables definidas en styles.css */
 :root {
     --purple-primary: #A506AD;
     --blue-primary: #0362CF;
-    --text-primary: #1F2937;
-    --text-secondary: #4B5563;
-    --border-light: #E5E7EB;
-    --accent: var(--purple-primary);
+    --magenta: #F66EFD;
+    --lavender: #FCBFFF;
+    --sky-blue: #4190EB;
+    --pale-blue: #BAD7F8;
+    --deep-blue: #02162E;
+    --white: #FFFFFF;
 }
 
 body.dark-theme {
+    /* Modo oscuro */
+    --bg-gradient-start: #2D1B36;
+    --bg-gradient-end: #1E1A3A;
+    --card-bg: rgba(30, 30, 47, 0.95);
     --text-primary: #F3F4F6;
     --text-secondary: #D1D5DB;
     --border-light: #4B5563;
@@ -28,18 +34,14 @@ body.dark-theme {
     background: linear-gradient(135deg, #2D1B36, #1E1A3A);
 }
 
-/* Tarjeta del formulario */
+/* ----- Tarjeta del formulario (hereda fondo de styles.css) ----- */
 .bg-white {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(8px);
+    /* El fondo lo controla styles.css mediante --card-bg */
     border-top: 4px solid var(--purple-primary) !important;
 }
-body.dark-theme .bg-white {
-    background-color: rgba(30, 30, 47, 0.95) !important;
-}
 
-/* Textos */
-.text-gray-800 { color: var(--text-primary) !important; }
+/* Textos (solo como refuerzo, realmente los controla styles.css) */
+.text-gray-800, .text-gray-700, .text-gray-900 { color: var(--text-primary) !important; }
 .text-gray-600, .text-gray-500 { color: var(--text-secondary) !important; }
 body.dark-theme .text-gray-800,
 body.dark-theme .text-gray-700,
@@ -91,7 +93,6 @@ body.dark-theme textarea:focus {
     border-color: var(--accent) !important;
 }
 
-/* Ocultar barra desplazamiento si se usara */
 .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -100,7 +101,6 @@ body.dark-theme textarea:focus {
     display: none;
 }
 
-/* Responsive */
 @media (max-width: 640px) {
     .p-6 { padding: 1.25rem !important; }
 }

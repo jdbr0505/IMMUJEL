@@ -1,4 +1,4 @@
-// form.js – Lógica de envío actualizada (parroquia solo en modo normal)
+// form.js – Lógica de envío del formulario de asesoría (tablas en español)
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('report-form');
     const incognitoCheck = document.getElementById('incognito');
@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const phone = phoneInput.value.trim();
         const description = descriptionTextarea.value.trim();
 
-        // Validación de teléfono (obligatorio siempre)
         if (!phone) {
             errorDiv.textContent = 'El número de teléfono es obligatorio.';
             errorDiv.classList.remove('hidden');
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const phoneRegex = /^[0-9+\-\s]{7,15}$/;
         if (!phoneRegex.test(phone)) {
-            errorDiv.textContent = 'Ingresa un número de teléfono válido.';
+            errorDiv.textContent = 'Ingresa un número de teléfono válido (ej: 0412-1234567).';
             errorDiv.classList.remove('hidden');
             phoneInput.focus();
             return;
@@ -63,42 +62,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         } else {
-            // Modo incógnito: no se envía parroquia ni otros datos personales
             parroquia = null;
         }
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando solicitud...';
 
         try {
             const { data: { user } } = await window.supabase.auth.getUser();
-            const user_id = user ? user.id : null;
+            const usuario_id = user ? user.id : null;
 
             const { error } = await window.supabase
-                .from('reports')
+                .from('solicitudes')
                 .insert([{
-                    user_id,
-                    full_name,
-                    id_number,
-                    phone,
-                    email,
-                    parroquia,          // será null en modo incógnito
-                    description: description || null,
-                    is_anonymous: incognito
+                    usuario_id,
+                    nombre_completo: full_name,
+                    cedula: id_number,
+                    telefono: phone,
+                    correo: email,
+                    parroquia,
+                    descripcion: description || null,
+                    es_anonimo: incognito,
+                    estado: 'pendiente'
                 }]);
 
             if (error) throw error;
 
-            successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Tu solicitud ha sido enviada. Pronto nos pondremos en contacto contigo.';
+            successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Tu solicitud ha sido enviada con éxito. Pronto nos pondremos en contacto contigo.';
             successDiv.classList.remove('hidden');
             form.reset();
-            // Restablecer UI
             document.getElementById('full-personal-info').style.display = 'block';
             phoneInput.required = true;
+            document.getElementById('phone-required-indicator')?.classList.add('hidden');
+
+            // Scroll suave al mensaje
+            successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch (error) {
             console.error(error);
-            errorDiv.textContent = 'Ocurrió un error al enviar. Por favor intenta de nuevo.';
+            let mensaje = 'Ocurrió un error al enviar tu solicitud.';
+            if (error.message?.includes('duplicate')) {
+                mensaje = 'Ya existe una solicitud con estos datos.';
+            } else if (error.message?.includes('network')) {
+                mensaje = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
+            } else if (error.message) {
+                mensaje = error.message;
+            }
+            errorDiv.textContent = mensaje;
             errorDiv.classList.remove('hidden');
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Solicitar asesoría';

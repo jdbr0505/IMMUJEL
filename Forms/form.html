@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head>    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asesoría Legal | IMMUJEL</title>
@@ -22,11 +22,19 @@
 <body class="antialiased">
 
     <!-- ========== HEADER / NAVBAR (idéntico al home) ========== -->
-    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100">
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
+        
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
-            <a href="../index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
-                <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
-            </a>
+             <!-- Logo y enlace al panel -->
+             <div class="flex items-center space-x-4">
+                <a href="../index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
+                </a>
+                <!-- Contenedor del botón Panel (se llena con auth.js) -->
+                <div id="panel-link"></div>
+            </div>
+
+            <!-- Botón menú móvil -->
             <div class="flex items-center gap-4">
                 <button id="menu-btn" class="block lg:hidden text-gray-600 hover:text-purple-700 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -35,18 +43,42 @@
             <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
                 <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
                     <li><a href="../index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
+                    
                     <!-- Dropdown Servicios (funcional con clic) -->
-                    <li class="relative">
-                        <button id="servicios-btn" class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">
-                            SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        <li class="relative">
+                        <button id="servicios-btn" 
+                                class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition"
+                                aria-expanded="false"
+                                aria-haspopup="true">
+                            SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" id="servicios-arrow"></i>
                         </button>
-                        <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden">
-                            <li><a href="form.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Asesorías</a></li>
-                            <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Eventos</a></li>
-                            <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Semanario Institucional</a></li>
+                        <ul id="servicios-dropdown" 
+                            class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none"
+                            role="menu"
+                            aria-labelledby="servicios-btn">
+                            <li role="none">
+                                <a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="../semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="../noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero
+                                </a>
+                            </li>
                         </ul>
                     </li>
-                    <li><a href="#" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
+                    <li><a href="../NavBar's/Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
                     <li><a href="../NavBar's/Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
                     <li class="hidden lg:flex space-x-4 pl-4 border-l border-gray-200">
                         <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
@@ -61,14 +93,13 @@
                             <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"/></svg>
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <a href="../Login/login.html" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-full transition shadow-md text-sm">Iniciar Sesión</a>
-                        <a href="../Login/signup.html" class="border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">Registrarse</a>
-                    </div>
+                    <div id="auth-section" class="flex items-center space-x-3 mt-4 lg:mt-0 lg:ml-8">
+                     <!-- Los botones se generan con JavaScript -->
+                    </div> 
                 </div>
             </div>
         </div>
-    </header>
+     </header>
 
     <!-- ========== CONTENIDO ========== -->
     <main class="container mx-auto px-4 py-12 max-w-4xl">
@@ -180,8 +211,8 @@
                     <h3 class="font-bold text-gray-800 mb-3">Enlaces rápidos</h3>
                     <ul class="space-y-2 text-sm">
                         <li><a href="../NavBar's/Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
-                        <li><a href="form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Programas</a></li>
+                        <li><a href="../Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
+                        <li><a href="../NavBar's/Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
                         <li><a href="../NavBar's/FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
                     </ul>
                 </div>
@@ -204,8 +235,10 @@
 
     <!-- Scripts -->
     <script src="form.js"></script>
+    <script src="../auth.js"></script>
     <script>
         (function() {
+            
             // Menú móvil
             const menuBtn = document.getElementById('menu-btn');
             const menu = document.getElementById('menu');
@@ -213,19 +246,43 @@
                 menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
             }
 
-            // Dropdown Servicios funcional con clic
+            // ---------- DROPDOWN SERVICIOS (clase activa) ----------
             const serviciosBtn = document.getElementById('servicios-btn');
             const serviciosDropdown = document.getElementById('servicios-dropdown');
+            const serviciosArrow = document.getElementById('servicios-arrow');
+
             if (serviciosBtn && serviciosDropdown) {
                 serviciosBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    serviciosDropdown.classList.toggle('hidden');
-                });
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        serviciosDropdown.classList.add('hidden');
+                    e.preventDefault();
+                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
+                    
+                    if (isOpen) {
+                        cerrarDropdown();
+                    } else {
+                        abrirDropdown();
                     }
                 });
+
+                // Cierra al hacer clic fuera del dropdown
+                document.addEventListener('click', (e) => {
+                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
+                        cerrarDropdown();
+                    }
+                });
+
+                function abrirDropdown() {
+                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                    serviciosBtn.setAttribute('aria-expanded', 'true');
+                    serviciosArrow.classList.add('rotate-180');
+                }
+
+                function cerrarDropdown() {
+                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                    serviciosBtn.setAttribute('aria-expanded', 'false');
+                    serviciosArrow.classList.remove('rotate-180');
+                }
             }
 
             // Tema oscuro
@@ -262,5 +319,29 @@
             updateIncognitoUI();
         })();
     </script>
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <script>
+        (function() {
+            const btn = document.getElementById('scrollToTop');
+            if (!btn) return;
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        btn.classList.toggle('visible', window.scrollY > 300);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+    </script>
+    <script src="../animations.js"></script>
 </body>
 </html>

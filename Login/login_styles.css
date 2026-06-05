@@ -22,7 +22,6 @@ body::before {
     filter: blur(75px);
     z-index: 0;
     pointer-events: none;
-    animation: floatSmoke 8s infinite alternate ease-in-out;
 }
 
 body::after {
@@ -36,7 +35,6 @@ body::after {
     filter: blur(90px);
     z-index: 0;
     pointer-events: none;
-    animation: floatSmoke 7s infinite alternate-reverse ease-in-out;
 }
 
 @keyframes floatSmoke {

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | IMMUJEL</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Fuentes oficiales -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Estilos globales -->
+    <link rel="stylesheet" href="../styles.css">
+    <!-- Estilos propios del panel -->
+    <link rel="stylesheet" href="Admin_styles.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../Login/Login_supabase.js"></script>
+    <link rel="icon" href="../Images/HEAD.svg">
+</head>
+<body class="font-sans antialiased">
+
+    <!-- ========== HEADER / NAVBAR ========== -->
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all border-b border-purple-100">
+        <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
+            <!-- Logo + nombre del panel -->
+            <div class="flex items-center space-x-4">
+                <a href="../index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
+                </a>
+                <div id="panel-link"></div>
+                <span class="hidden md:inline text-sm font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">Panel de Administración</span>
+            </div>
+
+            <!-- Botón menú móvil -->
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="block lg:hidden text-gray-600 hover:text-purple-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+
+            <!-- Menú principal -->
+            <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
+                <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
+                    <li><a href="../index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
+                    <li class="relative">
+                        <button id="servicios-btn" class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition" aria-expanded="false" aria-haspopup="true">
+                            SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" id="servicios-arrow"></i>
+                        </button>
+                        <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none" role="menu" aria-labelledby="servicios-btn">
+                            <li role="none"><a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
+                            <li role="none"><a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos</a></li>
+                            <li role="none"><a href="../semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional</a></li>
+                            <li role="none"><a href="../noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../NavBar's/Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
+                    <li><a href="../NavBar's/Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
+                    <li class="hidden lg:flex space-x-4 pl-4 border-l border-gray-200">
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-whatsapp text-xl"></i></a>
+                    </li>
+                </ul>
+                <div class="flex items-center space-x-3 mt-4 lg:mt-0 lg:ml-8">
+                    <!-- Tema oscuro -->
+                    <div id="theme-toggle" class="theme-switch" role="button" aria-label="Cambiar modo oscuro">
+                        <div class="slider">
+                            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Zm11.394-5.834a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18Zm-5.834-2.166a.75.75 0 0 0-1.06 1.06l1.59 1.591a.75.75 0 1 0 1.061-1.06l-1.59-1.591ZM5.25 12a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H4.5a.75.75 0 0 1 .75.75Zm.894-5.834a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" clip-rule="evenodd"/></svg>
+                            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"/></svg>
+                        </div>
+                    </div>
+                    <!-- Auth section -->
+                    <div id="auth-section" class="flex items-center space-x-3 mt-4 lg:mt-0 lg:ml-8"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- Tabs de navegación -->
+        <div class="flex gap-1 mb-8 border-b border-gray-200">
+            <button id="tab-asesorias" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition bg-purple-600 text-white" data-tab="asesorias">
+                <i class="fas fa-gavel mr-1"></i> Asesorías
+            </button>
+            <button id="tab-cms" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="cms">
+                <i class="fas fa-newspaper mr-1"></i> CMS
+            </button>
+        </div>
+
+        <!-- ===== SECCIÓN ASESORÍAS ===== -->
+        <div id="section-asesorias" class="tab-content">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-gray-800">Gestión de Asesorías</h1>
+                <p class="text-gray-500 mt-1">Supervisa y gestiona todas las solicitudes recibidas. <span id="user-name" class="font-semibold text-purple-700"></span></p>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-purple-600">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Total</p>
+                        <p id="kpi-total" class="text-2xl font-bold text-gray-800">0</p>
+                    </div>
+                    <i class="fas fa-clipboard-list text-purple-500 text-3xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Pendientes</p>
+                        <p id="kpi-pendiente" class="text-2xl font-bold text-yellow-600">0</p>
+                    </div>
+                    <i class="fas fa-hourglass-half text-yellow-500 text-3xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-blue-600">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">En Proceso</p>
+                        <p id="kpi-enproceso" class="text-2xl font-bold text-blue-600">0</p>
+                    </div>
+                    <i class="fas fa-spinner text-blue-500 text-3xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-green-600">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Finalizados</p>
+                        <p id="kpi-finalizado" class="text-2xl font-bold text-green-600">0</p>
+                    </div>
+                    <i class="fas fa-check-circle text-green-500 text-3xl opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-8">
+            <div class="flex flex-wrap items-end gap-4">
+                <div>
+                    <label class="text-sm text-gray-600 font-medium">Parroquia</label>
+                    <select id="filter-parroquia" class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-purple-500 focus:border-purple-500">
+                        <option value="">Todas</option>
+                        <option>Alonso de Ojeda (Paraute)</option>
+                        <option>Libertad</option>
+                        <option>Campo Lara</option>
+                        <option>Eleazar López Contreras</option>
+                        <option>Venezuela</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 font-medium">Estado</label>
+                    <select id="filter-status" class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-purple-500 focus:border-purple-500">
+                        <option value="">Todos</option>
+                        <option>pendiente</option>
+                        <option>en proceso</option>
+                        <option>finalizado</option>
+                        <option>cancelado</option>
+                    </select>
+                </div>
+                <button id="apply-filter" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md">Filtrar</button>
+                <button id="reset-filter" class="text-purple-600 hover:text-purple-800 font-medium underline text-sm">Limpiar filtros</button>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nombre</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Parroquia</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada</th>
+                        <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-tbody" class="divide-y divide-gray-100"></tbody>
+            </table>
+            <div id="loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando solicitudes...</div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="report-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-xl w-full mx-4 p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Detalle de la Solicitud</h2>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+            <div id="report-detail-content" class="space-y-3 text-sm text-gray-700"></div>
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Añadir nota interna</label>
+                <textarea id="new-note" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-purple-500 focus:border-purple-500"></textarea>
+                <button id="add-note-btn" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition">Agregar Nota</button>
+            </div>
+            <div class="mt-6 flex gap-3 justify-end">
+                <button id="mark-in-progress" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded-lg transition">En Proceso</button>
+                <button id="mark-finalized" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition">Finalizar</button>
+                <button id="mark-cancelled" class="bg-gray-500 hover:bg-gray-600 text-white font-medium px-4 py-2 rounded-lg transition">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+        </div><!-- fin section-asesorias -->
+
+        <!-- ===== SECCIÓN CMS ===== -->
+        <div id="section-cms" class="tab-content hidden">
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-black text-gray-800">CMS - Publicaciones</h1>
+                    <p class="text-gray-500 mt-1">Gestiona el Semanario Institucional y el Noticiero.</p>
+                </div>
+                <button id="cms-create-btn" class="mt-4 md:mt-0 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md">
+                    <i class="fas fa-plus mr-1"></i> Nueva publicación
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div id="cms-stats-container">
+                <div class="cms-stat-card">
+                    <div class="cms-stat-icon stat-purple"><i class="fas fa-layer-group"></i></div>
+                    <div class="cms-stat-info">
+                        <span class="cms-stat-value" id="cms-stat-total">0</span>
+                        <span class="cms-stat-label">Total</span>
+                    </div>
+                </div>
+                <div class="cms-stat-card">
+                    <div class="cms-stat-icon stat-green"><i class="fas fa-check-circle"></i></div>
+                    <div class="cms-stat-info">
+                        <span class="cms-stat-value" id="cms-stat-published">0</span>
+                        <span class="cms-stat-label">Publicados</span>
+                    </div>
+                </div>
+                <div class="cms-stat-card">
+                    <div class="cms-stat-icon stat-yellow"><i class="fas fa-pen-fancy"></i></div>
+                    <div class="cms-stat-info">
+                        <span class="cms-stat-value" id="cms-stat-drafts">0</span>
+                        <span class="cms-stat-label">Borradores</span>
+                    </div>
+                </div>
+                <div class="cms-stat-card">
+                    <div class="cms-stat-icon stat-purple-light"><i class="fas fa-newspaper"></i></div>
+                    <div class="cms-stat-info">
+                        <span class="cms-stat-value" id="cms-stat-semanario">0</span>
+                        <span class="cms-stat-label">Semanarios</span>
+                    </div>
+                </div>
+                <div class="cms-stat-card">
+                    <div class="cms-stat-icon stat-blue"><i class="fas fa-bullhorn"></i></div>
+                    <div class="cms-stat-info">
+                        <span class="cms-stat-value" id="cms-stat-noticiero">0</span>
+                        <span class="cms-stat-label">Noticieros</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="bg-white rounded-xl shadow-md p-5 mb-8">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex-1 min-w-[200px] relative">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="cms-search" placeholder="Buscar publicaciones..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm">
+                    </div>
+                    <div>
+                        <select id="cms-filter-tipo" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm">
+                            <option value="">Todos los tipos</option>
+                            <option value="semanario">Semanario</option>
+                            <option value="noticiero">Noticiero</option>
+                        </select>
+                    </div>
+                    <button id="cms-apply-filter" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md text-sm">
+                        <i class="fas fa-filter mr-1"></i> Filtrar
+                    </button>
+                    <button id="cms-clear-search" class="text-gray-500 hover:text-gray-700 text-sm font-medium transition hidden">
+                        <i class="fas fa-times mr-1"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bulk Actions Bar -->
+            <div id="cms-bulk-bar" class="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 hidden items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check-square text-purple-600"></i>
+                    <span class="text-sm font-medium text-purple-800"><span id="cms-selected-count">0</span> seleccionados</span>
+                </div>
+                <div class="flex gap-2">
+                    <button id="cms-bulk-publish" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition"><i class="fas fa-eye mr-1"></i> Publicar</button>
+                    <button id="cms-bulk-unpublish" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg transition"><i class="fas fa-eye-slash mr-1"></i> Ocultar</button>
+                    <button id="cms-bulk-delete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition"><i class="fas fa-trash mr-1"></i> Eliminar</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="cms-table min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="cms-th cms-check-col"><input type="checkbox" id="cms-select-all" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"></th>
+                                <th class="cms-th cms-img-col">Imagen</th>
+                                <th class="cms-th">Título</th>
+                                <th class="cms-th cms-type-col">Tipo</th>
+                                <th class="cms-th cms-date-col">Fecha</th>
+                                <th class="cms-th cms-status-col">Estado</th>
+                                <th class="cms-th cms-actions-col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cms-tbody" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+                <div id="cms-loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando publicaciones...</div>
+                <div id="cms-empty" class="hidden"></div>
+            </div>
+        </div><!-- fin section-cms -->
+
+        <!-- ===== MODAL CMS (Crear/Editar) ===== -->
+        <div id="cms-modal" class="hidden">
+            <div class="cms-modal-panel">
+                <div class="cms-modal-header">
+                    <h2 id="cms-modal-title" class="text-xl font-bold text-gray-800">Nueva publicación</h2>
+                    <button id="cms-close-modal" class="cms-modal-close" title="Cerrar (Esc)"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="cms-modal-tabs">
+                    <button class="cms-tab active" data-tab="basic" type="button"><i class="fas fa-info-circle"></i><span>Información</span></button>
+                    <button class="cms-tab" data-tab="content" type="button"><i class="fas fa-file-alt"></i><span>Contenido</span></button>
+                    <button class="cms-tab" data-tab="media" type="button"><i class="fas fa-images"></i><span>Multimedia</span></button>
+                </div>
+                <form id="cms-form" class="cms-form-body">
+                    <input type="hidden" id="cms-edit-id">
+
+                    <!-- Tab: Información Básica -->
+                    <div class="cms-tab-panel active" id="tab-basic">
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <input type="text" id="cms-titulo" placeholder=" " autocomplete="off">
+                                <label for="cms-titulo">Título <span class="text-red-500">*</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <select id="cms-tipo">
+                                    <option value="semanario">Semanario Institucional</option>
+                                    <option value="noticiero">Noticiero</option>
+                                </select>
+                                <label for="cms-tipo">Tipo <span class="text-red-500">*</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <input type="date" id="cms-fecha" placeholder=" ">
+                                <label for="cms-fecha">Fecha de publicación <span class="text-red-500">*</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <textarea id="cms-resumen" rows="3" placeholder=" "></textarea>
+                                <label for="cms-resumen">Resumen</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="cms-publicado" class="toggle-checkbox">
+                                <span class="toggle-switch"></span>
+                                <span class="toggle-text">Publicado</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Contenido -->
+                    <div class="cms-tab-panel" id="tab-content">
+                        <div class="form-group">
+                            <div class="rich-text-wrapper">
+                                <div class="rich-toolbar">
+                                    <button type="button" class="rich-btn" data-cmd="bold" title="Negrita"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="rich-btn" data-cmd="italic" title="Cursiva"><i class="fas fa-italic"></i></button>
+                                    <button type="button" class="rich-btn" data-cmd="underline" title="Subrayado"><i class="fas fa-underline"></i></button>
+                                    <span class="rich-separator"></span>
+                                    <button type="button" class="rich-btn" data-cmd="insertUnorderedList" title="Lista"><i class="fas fa-list-ul"></i></button>
+                                    <button type="button" class="rich-btn" data-cmd="insertOrderedList" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+                                    <span class="rich-separator"></span>
+                                    <button type="button" class="rich-btn" data-cmd="formatBlock" data-value="h3" title="Título"><i class="fas fa-heading"></i></button>
+                                    <button type="button" class="rich-btn" data-cmd="formatBlock" data-value="p" title="Párrafo"><i class="fas fa-paragraph"></i></button>
+                                </div>
+                                <div id="cms-contenido-editor" class="rich-editor" contenteditable="true"></div>
+                                <textarea id="cms-contenido" class="hidden"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Multimedia -->
+                    <div class="cms-tab-panel" id="tab-media">
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <input type="url" id="cms-imagen" placeholder=" " autocomplete="off">
+                                <label for="cms-imagen">URL de imagen destacada</label>
+                            </div>
+                            <div id="cms-imagen-preview-container" class="image-preview-container hidden">
+                                <img id="cms-imagen-preview" class="image-preview" alt="Vista previa">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="floating-label">
+                                <input type="url" id="cms-pdf" placeholder=" " autocomplete="off">
+                                <label for="cms-pdf">URL de PDF</label>
+                            </div>
+                            <div id="cms-pdf-info" class="cms-pdf-info hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="cms-form-footer">
+                        <div class="footer-actions">
+                            <button type="button" id="cms-cancel-btn" class="btn-secondary">Cancelar</button>
+                            <button type="submit" id="cms-save-btn" class="btn-primary"><i class="fas fa-save mr-1"></i> Guardar</button>
+                        </div>
+                        <p class="footer-hint"><i class="fas fa-keyboard"></i> Ctrl+S para guardar · Esc para cerrar</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
+        <div class="container mx-auto px-4 py-10">
+            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                <div>
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
+                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                    <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3">Enlaces rápidos</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../NavBar's/Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
+                        <li><a href="../Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
+                        <li><a href="../NavBar's/Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
+                        <li><a href="../NavBar's/FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
+                    <div class="flex justify-center md:justify-start space-x-5">
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://twitter.com/immujellags" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-6 text-center text-gray-500 text-sm">
+                © 2026 IMMUJEL. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../auth.js"></script>
+    <script src="Admin.js"></script>
+    <script src="Admin_cms.js"></script>
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <script>
+        (function() {
+            const btn = document.getElementById('scrollToTop');
+            if (!btn) return;
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        btn.classList.toggle('visible', window.scrollY > 300);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+    </script>
+    <script src="../animations.js"></script>
+</body>
+</html>
