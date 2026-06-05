@@ -1,10 +1,11 @@
-# Web-App
+# IMMUJEL Progressive-Web-App
 Project: https://github.com/jdbr0505/IMMUJEL
 First Prob
 # Project deployed on Github Pages:
+https://jdbr0505.github.io/IMMUJEL/
+# Project's QR:
+![codigo_qr](https://github.com/user-attachments/assets/8f82201b-ec2f-48a0-a14b-79e4422809b4)
 
-# Project QR:
-![codigo_qr](https://github.com/user-attachments/assets/97a11517-cb49-431a-8c4c-279a3fff41c3)
 
 
 
