@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semanario Institucional | IMMUJEL</title>
+    <title>Noticiero | IMMUJEL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="./Images/HEAD.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./Login/Login_supabase.js"></script>
+    <script src="../Login/Login_supabase.js"></script>
 </head>
 <body class="antialiased">
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
             <div class="flex items-center space-x-4">
-                <a href="./index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
+                <a href="../index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
                 </a>
                 <div id="panel-link"></div>
             </div>
@@ -28,20 +28,20 @@
             </div>
             <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
                 <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
-                    <li><a href="./index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
+                    <li><a href="../index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
                     <li class="relative">
                         <button id="servicios-btn" class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition" aria-expanded="false" aria-haspopup="true">
                             SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" id="servicios-arrow"></i>
                         </button>
                         <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none" role="menu">
-                            <li role="none"><a href="./Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
+                            <li role="none"><a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
                             <li role="none"><a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos</a></li>
                             <li role="none"><a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional</a></li>
                             <li role="none"><a href="./noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero</a></li>
                         </ul>
                     </li>
-                    <li><a href="./NavBar's/Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
-                    <li><a href="./NavBar's/Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
+                    <li><a href="./Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
+                    <li><a href="./Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
                     <li class="hidden lg:flex space-x-4 pl-4 border-l border-gray-200">
                         <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
                         <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-facebook-f text-xl"></i></a>
@@ -63,31 +63,36 @@
 
     <main class="container mx-auto px-4 py-12 max-w-6xl">
         <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-3"><i class="fas fa-newspaper text-purple-600 mr-2"></i> Semanario Institucional</h1>
-            <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mb-4"></div>
-            <p class="text-gray-600 text-lg">Mantente informada sobre nuestras gestiones y logros semanales.</p>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-3"><i class="fas fa-bullhorn text-blue-600 mr-2"></i> Noticiero IMMUJEL</h1>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-500 mx-auto rounded-full mb-4"></div>
+            <p class="text-gray-600 text-lg">Las últimas noticias y novedades del Instituto.</p>
         </div>
 
-        <div id="semanario-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal"></div>
-        <div id="semanario-loading" class="text-center py-16 text-gray-500"><i class="fas fa-spinner fa-spin mr-2 text-2xl"></i><br>Cargando ediciones...</div>
-        <div id="semanario-empty" class="hidden text-center py-16 text-gray-400"><i class="fas fa-file-alt text-5xl mb-4"></i><p>No hay ediciones publicadas aún.</p></div>
+        <div id="noticiero-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal"></div>
+        <div id="noticiero-loading" class="text-center py-16 text-gray-500"><i class="fas fa-spinner fa-spin mr-2 text-2xl"></i><br>Cargando noticias...</div>
+        <div id="noticiero-empty" class="hidden text-center py-16 text-gray-400"><i class="fas fa-newspaper text-5xl mb-4"></i><p>No hay noticias publicadas aún.</p></div>
+        <div id="noticiero-load-more" class="hidden text-center mt-8">
+            <button id="noticiero-load-more-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition shadow-md">
+                <i class="fas fa-chevron-down mr-2"></i> Cargar más noticias
+            </button>
+        </div>
     </main>
 
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
                 <div>
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
                     <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Enlaces rápidos</h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="./NavBar's/Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
-                        <li><a href="./Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
-                        <li><a href="./NavBar's/Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
-                        <li><a href="./NavBar's/FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
+                        <li><a href="./Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
+                        <li><a href="../Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
+                        <li><a href="./Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
+                        <li><a href="./FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
                     </ul>
                 </div>
                 <div>
@@ -107,45 +112,90 @@
         </div>
     </footer>
 
-    <script src="./auth.js"></script>
+    <script src="../auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const supabase = window.supabase;
-            const grid = document.getElementById('semanario-grid');
-            const loading = document.getElementById('semanario-loading');
-            const empty = document.getElementById('semanario-empty');
+            if (!supabase) return;
+            const grid = document.getElementById('noticiero-grid');
+            const loading = document.getElementById('noticiero-loading');
+            const empty = document.getElementById('noticiero-empty');
+            const loadMoreDiv = document.getElementById('noticiero-load-more');
+            const loadMoreBtn = document.getElementById('noticiero-load-more-btn');
+            let page = 0;
+            const pageSize = 9;
+            let loadingMore = false;
+            let hasMore = true;
 
-            const { data, error } = await supabase
-                .from('publicaciones')
-                .select('*')
-                .eq('tipo', 'semanario')
-                .eq('publicado', true)
-                .order('fecha_publicacion', { ascending: false });
+            async function loadNews(append) {
+                if (!append) {
+                    page = 0;
+                    hasMore = true;
+                    grid.innerHTML = '';
+                    loading.classList.remove('hidden');
+                    empty.classList.add('hidden');
+                    if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
+                }
+                const from = page * pageSize;
+                const to = from + pageSize - 1;
+                const { data, error, count } = await supabase
+                    .from('publicaciones')
+                    .select('id, titulo, resumen, imagen_url, fecha_publicacion', { count: 'exact' })
+                    .eq('tipo', 'noticiero')
+                    .eq('publicado', true)
+                    .order('fecha_publicacion', { ascending: false, nullsFirst: false })
+                    .order('creado_en', { ascending: false })
+                    .range(from, to);
 
-            loading.classList.add('hidden');
+                loading.classList.add('hidden');
+                if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
 
-            if (error || !data || data.length === 0) {
-                empty.classList.remove('hidden');
-                return;
+                if (error || !data || data.length === 0) {
+                    if (!append) empty.classList.remove('hidden');
+                    if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
+                    hasMore = false;
+                    return;
+                }
+
+                empty.classList.add('hidden');
+                const html = data.map(p => `
+                    <a href="./publicacion.html?id=${p.id}" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition group cursor-pointer ${append ? 'reveal-scale' : ''}">
+                        ${p.imagen_url ? `<img src="${p.imagen_url}" alt="${p.titulo}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">` : `<div class="h-48 bg-gradient-to-br from-blue-200 to-purple-200 flex items-center justify-center group-hover:from-blue-300 group-hover:to-purple-300 transition-all"><i class="fas fa-bullhorn text-4xl text-blue-500 group-hover:scale-110 transition-transform"></i></div>`}
+                        <div class="p-5">
+                            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Noticia</span>
+                            <h3 class="text-lg font-bold mt-2 mb-2 text-gray-800 group-hover:text-blue-700 transition-colors">${p.titulo}</h3>
+                            ${p.resumen ? `<p class="text-gray-600 text-sm mb-3">${p.resumen}</p>` : ''}
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-400"><i class="far fa-calendar-alt mr-1"></i>${p.fecha_publicacion || ''}</span>
+                                <span class="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold">Leer más <i class="fas fa-arrow-right ml-1"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+                if (append) grid.insertAdjacentHTML('beforeend', html);
+                else grid.innerHTML = html;
+
+                page++;
+                hasMore = (page * pageSize) < count;
+                if (hasMore && loadMoreDiv) loadMoreDiv.classList.remove('hidden');
             }
 
-            grid.innerHTML = data.map(p => `
-                <a href="./publicacion.html?id=${p.id}" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition group cursor-pointer reveal-scale">
-                    ${p.imagen_url ? `<img src="${p.imagen_url}" alt="${p.titulo}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="h-48 bg-gradient-to-br from-purple-200 to-blue-200 flex items-center justify-center group-hover:from-purple-300 group-hover:to-blue-300 transition-all"><i class="fas fa-newspaper text-4xl text-purple-500 group-hover:scale-110 transition-transform"></i></div>`}
-                    <div class="p-5">
-                        <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Semanario</span>
-                        <h3 class="text-lg font-bold mt-2 mb-2 text-gray-800 group-hover:text-purple-700 transition-colors">${p.titulo}</h3>
-                        ${p.resumen ? `<p class="text-gray-600 text-sm mb-3">${p.resumen}</p>` : ''}
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-400"><i class="far fa-calendar-alt mr-1"></i>${p.fecha_publicacion || ''}</span>
-                            <span class="text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold">Leer más <i class="fas fa-arrow-right ml-1"></i></span>
-                        </div>
-                    </div>
-                </a>
-            `).join('');
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', async () => {
+                    if (loadingMore) return;
+                    loadingMore = true;
+                    loadMoreBtn.disabled = true;
+                    loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Cargando...';
+                    await loadNews(true);
+                    loadMoreBtn.disabled = false;
+                    loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down mr-2"></i> Cargar más noticias';
+                    loadingMore = false;
+                });
+            }
+
+            loadNews(false);
         });
 
-        // Menú móvil, dropdown y tema
         (function() {
             const menuBtn = document.getElementById('menu-btn');
             const menu = document.getElementById('menu');
@@ -216,6 +266,6 @@
             });
         })();
     </script>
-    <script src="./animations.js"></script>
+    <script src="../animations.js"></script>
 </body>
 </html>

@@ -44,15 +44,38 @@
             <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
                 <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
                     <li><a href="../index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
+                  <!-- Dropdown Servicios  -->
                     <li class="relative">
-                        <button id="servicios-btn" class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition" aria-expanded="false" aria-haspopup="true">
+                        <button id="servicios-btn" 
+                                class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition"
+                                aria-expanded="false"
+                                aria-haspopup="true">
                             SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" id="servicios-arrow"></i>
                         </button>
-                        <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none" role="menu" aria-labelledby="servicios-btn">
-                            <li role="none"><a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
-                            <li role="none"><a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos</a></li>
-                            <li role="none"><a href="../semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional</a></li>
-                            <li role="none"><a href="../noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero</a></li>
+                        <ul id="servicios-dropdown" 
+                            class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none"
+                            role="menu"
+                            aria-labelledby="servicios-btn">
+                            <li role="none">
+                                <a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="./NavBar's/semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a href="./NavBar's/noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
+                                    <i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li><a href="../NavBar's/Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
@@ -322,6 +345,9 @@
                 <div id="cms-loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando publicaciones...</div>
                 <div id="cms-empty" class="hidden"></div>
             </div>
+
+            <!-- Paginación -->
+            <div id="cms-pagination" class="hidden"></div>
         </div><!-- fin section-cms -->
 
         <!-- ===== MODAL CMS (Crear/Editar) ===== -->
@@ -401,19 +427,35 @@
                     <!-- Tab: Multimedia -->
                     <div class="cms-tab-panel" id="tab-media">
                         <div class="form-group">
-                            <div class="floating-label">
-                                <input type="url" id="cms-imagen" placeholder=" " autocomplete="off">
-                                <label for="cms-imagen">URL de imagen destacada</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Imagen destacada</label>
+                            <div class="flex gap-2 items-start mb-2">
+                                <div class="flex-1 floating-label">
+                                    <input type="url" id="cms-imagen" placeholder=" " autocomplete="off">
+                                    <label for="cms-imagen">URL de imagen</label>
+                                </div>
+                                <button type="button" id="cms-image-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2" title="Subir imagen desde tu computadora">
+                                    <i class="fas fa-upload"></i> Subir imagen
+                                </button>
+                                <input type="file" id="cms-image-upload" accept="image/*" class="hidden">
                             </div>
+                            <p class="text-xs text-gray-400 mb-2">Sube una imagen o pega una URL externa</p>
                             <div id="cms-imagen-preview-container" class="image-preview-container hidden">
                                 <img id="cms-imagen-preview" class="image-preview" alt="Vista previa">
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="floating-label">
-                                <input type="url" id="cms-pdf" placeholder=" " autocomplete="off">
-                                <label for="cms-pdf">URL de PDF</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">PDF adjunto</label>
+                            <div class="flex gap-2 items-start">
+                                <div class="flex-1 floating-label">
+                                    <input type="url" id="cms-pdf" placeholder=" " autocomplete="off">
+                                    <label for="cms-pdf">URL de PDF</label>
+                                </div>
+                                <button type="button" id="cms-pdf-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2" title="Subir PDF desde tu computadora">
+                                    <i class="fas fa-upload"></i> Subir PDF
+                                </button>
+                                <input type="file" id="cms-pdf-upload" accept=".pdf,application/pdf" class="hidden">
                             </div>
+                            <p class="text-xs text-gray-400 mt-2">Sube un PDF o pega una URL externa (Google Drive, etc.)</p>
                             <div id="cms-pdf-info" class="cms-pdf-info hidden"></div>
                         </div>
                     </div>
@@ -467,6 +509,76 @@
 
     <!-- Scripts -->
     <script src="../auth.js"></script>
+    
+    <script>
+           // Funciones de navegación, carrusel y menú móvil
+            // ---------- MENÚ MÓVIL Y DROPDOWN ----------
+            const menuBtn = document.getElementById('menu-btn');
+            const menu = document.getElementById('menu');
+            if (menuBtn && menu) {
+                menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+            }
+
+           // ---------- DROPDOWN SERVICIOS (clase activa) ----------
+            const serviciosBtn = document.getElementById('servicios-btn');
+            const serviciosDropdown = document.getElementById('servicios-dropdown');
+            const serviciosArrow = document.getElementById('servicios-arrow');
+
+            if (serviciosBtn && serviciosDropdown) {
+                serviciosBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
+                    
+                    if (isOpen) {
+                        cerrarDropdown();
+                    } else {
+                        abrirDropdown();
+                    }
+                });
+
+                // Cierra al hacer clic fuera del dropdown
+                document.addEventListener('click', (e) => {
+                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
+                        cerrarDropdown();
+                    }
+                });
+
+                function abrirDropdown() {
+                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                    serviciosBtn.setAttribute('aria-expanded', 'true');
+                    serviciosArrow.classList.add('rotate-180');
+                }
+
+                function cerrarDropdown() {
+                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                    serviciosBtn.setAttribute('aria-expanded', 'false');
+                    serviciosArrow.classList.remove('rotate-180');
+                }
+        }
+        // Cambio de pestañas (Asesorías / CMS)
+        document.addEventListener('DOMContentLoaded', function() {
+            var tabBtns = document.querySelectorAll('.tab-btn');
+            var tabContents = document.querySelectorAll('.tab-content');
+            tabBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = this.dataset.tab;
+                    tabBtns.forEach(function(b) {
+                        b.classList.remove('bg-purple-600', 'text-white');
+                        b.classList.add('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+                    });
+                    this.classList.add('bg-purple-600', 'text-white');
+                    this.classList.remove('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+                    tabContents.forEach(function(c) {
+                        c.classList.add('hidden');
+                    });
+                    var section = document.getElementById('section-' + target);
+                    if (section) section.classList.remove('hidden');
+                });
+            });
+        });
+    </script>
     <script src="Admin.js"></script>
     <script src="Admin_cms.js"></script>
     <!-- Scroll to Top Button -->
@@ -494,4 +606,5 @@
     </script>
     <script src="../animations.js"></script>
 </body>
-</html>
+</html> 
+}

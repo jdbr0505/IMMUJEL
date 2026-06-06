@@ -7,17 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="./Images/HEAD.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./Login/Login_supabase.js"></script>
+    <script src="../Login/Login_supabase.js"></script>
 </head>
 <body class="antialiased">
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
             <div class="flex items-center space-x-4">
-                <a href="./index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
+                <a href="../index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
                 </a>
                 <div id="panel-link"></div>
             </div>
@@ -28,20 +28,20 @@
             </div>
             <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
                 <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
-                    <li><a href="./index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
+                    <li><a href="../index.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">INICIO</a></li>
                     <li class="relative">
                         <button id="servicios-btn" class="flex items-center py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition" aria-expanded="false" aria-haspopup="true">
                             SERVICIOS <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" id="servicios-arrow"></i>
                         </button>
                         <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none" role="menu">
-                            <li role="none"><a href="./Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
+                            <li role="none"><a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
                             <li role="none"><a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos</a></li>
                             <li role="none"><a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional</a></li>
                             <li role="none"><a href="./noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero</a></li>
                         </ul>
                     </li>
-                    <li><a href="./NavBar's/Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
-                    <li><a href="./NavBar's/Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
+                    <li><a href="./Programas.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">PROGRAMAS</a></li>
+                    <li><a href="./Sobre Nosotras.html" class="block py-2 px-3 text-gray-700 hover:text-purple-700 font-medium transition">SOBRE NOSOTRAS</a></li>
                     <li class="hidden lg:flex space-x-4 pl-4 border-l border-gray-200">
                         <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
                         <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-facebook-f text-xl"></i></a>
@@ -68,7 +68,7 @@
         <div id="publicacion-error" class="hidden text-center py-20">
             <i class="fas fa-exclamation-circle text-5xl text-red-400 mb-4"></i>
             <p class="text-gray-600">No se pudo cargar la publicación.</p>
-            <a href="./index.html" class="text-purple-600 hover:underline mt-4 inline-block">Volver al inicio</a>
+            <a href="../index.html" class="text-purple-600 hover:underline mt-4 inline-block">Volver al inicio</a>
         </div>
         <article id="publicacion-content" class="hidden reveal">
             <div class="mb-6">
@@ -102,17 +102,17 @@
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
                 <div>
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
                     <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Enlaces rápidos</h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="./NavBar's/Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
-                        <li><a href="./Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
-                        <li><a href="./NavBar's/Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
-                        <li><a href="./NavBar's/FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
+                        <li><a href="./Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
+                        <li><a href="../Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
+                        <li><a href="./Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
+                        <li><a href="./FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
                     </ul>
                 </div>
                 <div>
@@ -132,7 +132,7 @@
         </div>
     </footer>
 
-    <script src="./auth.js"></script>
+    <script src="../auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const supabase = window.supabase;
@@ -285,6 +285,6 @@
             });
         })();
     </script>
-    <script src="./animations.js"></script>
+    <script src="../animations.js"></script>
 </body>
 </html>

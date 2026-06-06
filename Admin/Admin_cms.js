@@ -1,10 +1,10 @@
-﻿// Admin_cms.js – Gestión de publicaciones (Semanario + Noticiero) - Enhanced
+﻿// Admin_cms.js – CMS de publicaciones con paginación, búsqueda y subida de archivos
 document.addEventListener('DOMContentLoaded', () => {
   const supabase = window.supabase;
   if (!supabase) return;
   if (!document.getElementById('section-cms')) return;
 
-  // ===== TOAST SYSTEM =====
+  // ===== TOAST =====
   function createToastContainer() {
     let c = document.getElementById('toast-container');
     if (!c) { c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); }
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const icons = {success:'fa-check-circle',error:'fa-exclamation-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
     t.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + ' toast-icon"></i><span>' + msg + '</span>';
     c.appendChild(t);
-    setTimeout(function() { t.classList.add('toast-leaving'); setTimeout(function() { t.remove(); }, 300); }, duration);
+    setTimeout(() => { t.classList.add('toast-leaving'); setTimeout(() => t.remove(), 300); }, duration);
   }
 
   // ===== CONFIRMATION DIALOG =====
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var d = document.getElementById('confirm-dialog');
     if (!d) {
       d = document.createElement('div'); d.id = 'confirm-dialog'; d.className = 'hidden';
-      d.innerHTML = '<div class="confirm-panel"><h3 id="confirm-title">Estas segura?</h3><p id="confirm-message">Esta accion no se puede deshacer.</p><div class="confirm-actions"><button id="confirm-cancel" class="btn-secondary">Cancelar</button><button id="confirm-ok" class="btn-danger">Confirmar</button></div></div>';
+      d.innerHTML = '<div class="confirm-panel"><h3 id="confirm-title">¿Estás segura?</h3><p id="confirm-message">Esta acción no se puede deshacer.</p><div class="confirm-actions"><button id="confirm-cancel" class="btn-secondary">Cancelar</button><button id="confirm-ok" class="btn-danger">Confirmar</button></div></div>';
       document.body.appendChild(d);
     }
     return d;
@@ -67,11 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
   var cmsCloseModal = $('cms-close-modal'), cmsCancelBtn = $('cms-cancel-btn');
   var cmsImagenPreview = $('cms-imagen-preview'), cmsImagenPreviewContainer = $('cms-imagen-preview-container');
   var cmsPdfInfo = $('cms-pdf-info');
+  var cmsImageUpload = $('cms-image-upload'), cmsImageUploadBtn = $('cms-image-upload-btn');
+  var cmsPdfUpload = $('cms-pdf-upload'), cmsPdfUploadBtn = $('cms-pdf-upload-btn');
+  var cmsPagination = $('cms-pagination');
 
   var allPublications = [];
   var selectedIds = {};
   var cmsTabs = document.querySelectorAll('.cms-tab');
   var cmsTabPanels = document.querySelectorAll('.cms-tab-panel');
+
+  // ===== STATE DE PAGINACIÓN Y BÚSQUEDA =====
+  var currentPage = 1;
+  var PAGE_SIZE = 15;
+  var totalCount = 0;
+  var currentSearch = '';
+  var currentTipo = '';
+  var searchTimeout = null;
+  var isLoading = false;
+  var uploadInProgress = false;
 
   // ===== RICH TEXT EDITOR =====
   function initRichTextEditor() {
@@ -120,6 +133,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ===== SUBIDA DE ARCHIVOS A SUPABASE STORAGE =====
+  async function uploadFile(file, bucket) {
+    var ext = file.name.split('.').pop().toLowerCase();
+    var name = Date.now() + '_' + Math.random().toString(36).substring(2, 8) + '.' + ext;
+    var path = 'publicaciones/' + name;
+    var { error } = await supabase.storage.from(bucket).upload(path, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+    if (error) throw error;
+    var { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(path);
+    return publicUrl;
+  }
+
+  function initFileUploads() {
+    // Imagen
+    if (cmsImageUpload && cmsImageUploadBtn) {
+      cmsImageUploadBtn.addEventListener('click', function() { cmsImageUpload.click(); });
+      cmsImageUpload.addEventListener('change', async function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes', 'error'); return; }
+        if (file.size > 5 * 1024 * 1024) { showToast('La imagen no debe superar 5MB', 'error'); return; }
+        try {
+          uploadInProgress = true;
+          cmsImageUploadBtn.disabled = true;
+          cmsImageUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
+          var url = await uploadFile(file, 'publicacion-imagenes');
+          if (cmsImagen) cmsImagen.value = url;
+          var ev = new Event('input'); cmsImagen.dispatchEvent(ev);
+          showToast('Imagen subida correctamente', 'success');
+        } catch(err) {
+          showToast('Error al subir imagen: ' + err.message, 'error');
+        } finally {
+          uploadInProgress = false;
+          cmsImageUploadBtn.disabled = false;
+          cmsImageUploadBtn.innerHTML = '<i class="fas fa-upload"></i> Subir imagen';
+          cmsImageUpload.value = '';
+        }
+      });
+    }
+    // PDF
+    if (cmsPdfUpload && cmsPdfUploadBtn) {
+      cmsPdfUploadBtn.addEventListener('click', function() { cmsPdfUpload.click(); });
+      cmsPdfUpload.addEventListener('change', async function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) { showToast('Solo se permiten archivos PDF', 'error'); return; }
+        if (file.size > 20 * 1024 * 1024) { showToast('El PDF no debe superar 20MB', 'error'); return; }
+        try {
+          uploadInProgress = true;
+          cmsPdfUploadBtn.disabled = true;
+          cmsPdfUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
+          var url = await uploadFile(file, 'publicacion-pdfs');
+          if (cmsPdf) cmsPdf.value = url;
+          var ev = new Event('input'); cmsPdf.dispatchEvent(ev);
+          showToast('PDF subido correctamente', 'success');
+        } catch(err) {
+          showToast('Error al subir PDF: ' + err.message, 'error');
+        } finally {
+          uploadInProgress = false;
+          cmsPdfUploadBtn.disabled = false;
+          cmsPdfUploadBtn.innerHTML = '<i class="fas fa-upload"></i> Subir PDF';
+          cmsPdfUpload.value = '';
+        }
+      });
+    }
+  }
+
   // ===== PDF VALIDATION =====
   function validatePdfUrl(url) {
     if (!url) return { valid: true };
@@ -128,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!p.endsWith('.pdf') && !url.includes('drive.google.com') && !url.includes('docs.google.com'))
         return { valid: false, message: 'La URL no parece apuntar a un PDF. Verifica que termine en .pdf' };
       return { valid: true };
-    } catch(e) { return { valid: false, message: 'La URL no es valida' }; }
+    } catch(e) { return { valid: false, message: 'La URL no es válida' }; }
   }
   function initPdfValidation() {
     if (!cmsPdf || !cmsPdfInfo) return;
@@ -138,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
       var r = validatePdfUrl(url);
       if (r.valid) {
         cmsPdfInfo.className = 'cms-pdf-info valid';
-        cmsPdfInfo.innerHTML = '<i class="fas fa-check-circle"></i> URL de PDF valida';
+        cmsPdfInfo.innerHTML = '<i class="fas fa-check-circle"></i> URL de PDF válida';
         cmsPdfInfo.classList.remove('hidden');
         cmsPdf.classList.remove('input-error'); cmsPdf.classList.add('input-success');
       } else {
@@ -162,22 +244,32 @@ document.addEventListener('DOMContentLoaded', () => {
     for (var i = 0; i < errs.length; i++) errs[i].remove();
     var errInputs = document.querySelectorAll('.input-error');
     for (var i = 0; i < errInputs.length; i++) errInputs[i].classList.remove('input-error');
-    if (!cmsTitulo.value.trim()) { showFieldError(cmsTitulo, 'El titulo es obligatorio'); valid = false; }
+    if (!cmsTitulo.value.trim()) { showFieldError(cmsTitulo, 'El título es obligatorio'); valid = false; }
     if (!cmsTipo.value) { showFieldError(cmsTipo, 'Selecciona un tipo'); valid = false; }
     if (!cmsFecha.value) { showFieldError(cmsFecha, 'La fecha es obligatoria'); valid = false; }
-    if (cmsImagen.value.trim()) { try { new URL(cmsImagen.value.trim()); } catch(e) { showFieldError(cmsImagen, 'URL de imagen no valida'); valid = false; } }
+    if (cmsImagen.value.trim()) { try { new URL(cmsImagen.value.trim()); } catch(e) { showFieldError(cmsImagen, 'URL de imagen no válida'); valid = false; } }
     if (cmsPdf.value.trim()) { var r = validatePdfUrl(cmsPdf.value.trim()); if (!r.valid) { showFieldError(cmsPdf, r.message); valid = false; } }
     return valid;
   }
 
-  // ===== STATS =====
-  function updateStats(pubs) {
-    function setStat(id, v) { var el = $(id); if (el) el.textContent = v; }
-    setStat('cms-stat-total', pubs.length);
-    setStat('cms-stat-published', pubs.filter(function(p) { return p.publicado; }).length);
-    setStat('cms-stat-drafts', pubs.filter(function(p) { return !p.publicado; }).length);
-    setStat('cms-stat-semanario', pubs.filter(function(p) { return p.tipo === 'semanario'; }).length);
-    setStat('cms-stat-noticiero', pubs.filter(function(p) { return p.tipo === 'noticiero'; }).length);
+  // ===== STATS (queries ligeras head:true) =====
+  async function updateStats() {
+    try {
+      var q = supabase.from('publicaciones');
+      var [totalR, pubR, draftR, semR, notR] = await Promise.all([
+        q.select('*', { count: 'exact', head: true }),
+        q.select('*', { count: 'exact', head: true }).eq('publicado', true),
+        q.select('*', { count: 'exact', head: true }).eq('publicado', false),
+        q.select('*', { count: 'exact', head: true }).eq('tipo', 'semanario'),
+        q.select('*', { count: 'exact', head: true }).eq('tipo', 'noticiero')
+      ]);
+      function setStat(id, v) { var el = $(id); if (el) el.textContent = v != null ? v : '0'; }
+      setStat('cms-stat-total', totalR.count);
+      setStat('cms-stat-published', pubR.count);
+      setStat('cms-stat-drafts', draftR.count);
+      setStat('cms-stat-semanario', semR.count);
+      setStat('cms-stat-noticiero', notR.count);
+    } catch(e) { console.error('Stats error:', e); }
   }
 
   function escapeHtml(t) { if (!t) return ''; var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
@@ -202,14 +294,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== RENDER TABLE =====
   function renderTable(pubs) {
     if (!cmsTbody) return;
-    if (pubs.length === 0) {
+    if (!pubs || pubs.length === 0) {
       cmsTbody.innerHTML = '';
       if (cmsEmpty) {
         cmsEmpty.classList.remove('hidden');
-        var isFiltered = (cmsSearch && cmsSearch.value.trim()) || (cmsFilterTipo && cmsFilterTipo.value);
-        cmsEmpty.innerHTML = isFiltered
-          ? '<div class="text-center py-16 text-gray-400"><i class="fas fa-search text-5xl mb-4 block text-gray-300"></i><p class="text-lg font-medium text-gray-500 mb-1">Sin resultados</p><p class="text-sm">Intenta con otros terminos de busqueda</p></div>'
-          : '<div class="text-center py-16 text-gray-400"><i class="fas fa-newspaper text-5xl mb-4 block text-gray-300"></i><p class="text-lg font-medium text-gray-500 mb-1">No hay publicaciones aun</p><p class="text-sm">Crea la primera publicacion!</p></div>';
+        cmsEmpty.innerHTML = currentSearch || currentTipo
+          ? '<div class="text-center py-16 text-gray-400"><i class="fas fa-search text-5xl mb-4 block text-gray-300"></i><p class="text-lg font-medium text-gray-500 mb-1">Sin resultados</p><p class="text-sm">Intenta con otros términos de búsqueda</p></div>'
+          : '<div class="text-center py-16 text-gray-400"><i class="fas fa-newspaper text-5xl mb-4 block text-gray-300"></i><p class="text-lg font-medium text-gray-500 mb-1">No hay publicaciones aún</p><p class="text-sm">Crea la primera publicación</p></div>';
       }
       return;
     }
@@ -217,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var html = '';
     for (var i = 0; i < pubs.length; i++) {
       var p = pubs[i];
-      var sel = selectedIds[p.id] ? true : false;
+      var sel = selectedIds[p.id] || false;
       var img = p.imagen_url || '';
       var imgHtml = img
         ? '<img src="' + escapeHtml(img) + '" alt="" class="cms-thumb-img" loading="lazy" onerror="this.parentElement.innerHTML=\'<div class=\\\\\'cms-thumb-placeholder\\\\\'><i class=\\\\\'fas fa-image\\\\\'></i></div>\'">'
@@ -227,11 +318,11 @@ document.addEventListener('DOMContentLoaded', () => {
       var ti = p.tipo === 'semanario' ? 'fa-newspaper' : 'fa-bullhorn';
       var sl = p.publicado ? 'Publicado' : 'Borrador';
       var sc = p.publicado ? 'status-published' : 'status-draft';
-      var ds = p.fecha_publicacion || '\u2014';
+      var ds = p.fecha_publicacion || '—';
       html += '<tr class="cms-row' + (sel ? ' selected' : '') + '" data-id="' + p.id + '">' +
         '<td class="cms-td cms-check-col" data-label=""><input type="checkbox" class="cms-row-checkbox" data-id="' + p.id + '"' + (sel ? ' checked' : '') + '></td>' +
         '<td class="cms-td cms-img-col" data-label="Imagen"><div class="cms-thumb-wrapper">' + imgHtml + '</div></td>' +
-        '<td class="cms-td cms-title-col" data-label="Titulo"><div class="cms-title-cell"><p class="cms-title-text">' + escapeHtml(p.titulo) + '</p>' + (p.resumen ? '<p class="cms-summary-text">' + escapeHtml(p.resumen) + '</p>' : '') + '</div></td>' +
+        '<td class="cms-td cms-title-col" data-label="Título"><div class="cms-title-cell"><p class="cms-title-text">' + escapeHtml(p.titulo) + '</p>' + (p.resumen ? '<p class="cms-summary-text">' + escapeHtml(p.resumen) + '</p>' : '') + '</div></td>' +
         '<td class="cms-td cms-type-col" data-label="Tipo"><span class="cms-type-badge ' + tc + '"><i class="fas ' + ti + '"></i> ' + tl + '</span></td>' +
         '<td class="cms-td cms-date-col" data-label="Fecha"><span class="cms-date-text">' + ds + '</span></td>' +
         '<td class="cms-td cms-status-col" data-label="Estado"><span class="cms-status-badge ' + sc + '"><span class="status-dot ' + (p.publicado ? 'dot-green' : 'dot-gray') + '"></span> ' + sl + '</span></td>' +
@@ -250,27 +341,76 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBulkBar();
   }
 
-  // ===== SEARCH / FILTER =====
-  function handleSearchFilter() {
-    var term = cmsSearch ? cmsSearch.value.trim().toLowerCase() : '';
-    var tipo = cmsFilterTipo ? cmsFilterTipo.value : '';
-    var filtered = [];
-    for (var i = 0; i < allPublications.length; i++) {
-      var p = allPublications[i];
-      if (tipo && p.tipo !== tipo) continue;
-      if (term) {
-        var match = (p.titulo && p.titulo.toLowerCase().indexOf(term) >= 0) ||
-                    (p.resumen && p.resumen.toLowerCase().indexOf(term) >= 0) ||
-                    (p.tipo && p.tipo.toLowerCase().indexOf(term) >= 0);
-        if (!match) continue;
+  // ===== LOAD PUBLICATIONS (con paginación y búsqueda server-side) =====
+  async function loadPublications() {
+    if (isLoading) return;
+    isLoading = true;
+    if (cmsTbody) cmsTbody.innerHTML = generateSkeletons(5);
+    if (cmsLoading) cmsLoading.classList.remove('hidden');
+    if (cmsEmpty) cmsEmpty.classList.add('hidden');
+    try {
+      var query = supabase.from('publicaciones').select('*', { count: 'exact' });
+      if (currentTipo) query = query.eq('tipo', currentTipo);
+      if (currentSearch) query = query.or('titulo.ilike.%' + currentSearch + '%,resumen.ilike.%' + currentSearch + '%');
+      var from = (currentPage - 1) * PAGE_SIZE;
+      var to = from + PAGE_SIZE - 1;
+      var result = await query
+        .order('fecha_publicacion', { ascending: false, nullsFirst: false })
+        .order('creado_en', { ascending: false })
+        .range(from, to);
+      if (cmsLoading) cmsLoading.classList.add('hidden');
+      if (result.error) throw result.error;
+      allPublications = result.data || [];
+      totalCount = result.count || 0;
+      renderTable(allPublications);
+      updatePagination();
+      if (cmsClearSearch) {
+        if (currentSearch || currentTipo) cmsClearSearch.classList.remove('hidden');
+        else cmsClearSearch.classList.add('hidden');
       }
-      filtered.push(p);
-    }
-    renderTable(filtered);
-    if (cmsClearSearch) {
-      if (!term && !tipo) cmsClearSearch.classList.add('hidden');
-      else cmsClearSearch.classList.remove('hidden');
-    }
+    } catch(err) {
+      if (cmsLoading) cmsLoading.classList.add('hidden');
+      if (cmsTbody) cmsTbody.innerHTML = '<tr class="error-row"><td colspan="7" class="text-center py-10 text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error: ' + err.message + '</td></tr>';
+    } finally { isLoading = false; }
+  }
+
+  // ===== PAGINACIÓN =====
+  function updatePagination() {
+    if (!cmsPagination) return;
+    var totalPages = Math.ceil(totalCount / PAGE_SIZE);
+    if (totalPages <= 1) { cmsPagination.classList.add('hidden'); return; }
+    cmsPagination.classList.remove('hidden');
+    var html = '<div class="cms-pag-info">Página ' + currentPage + ' de ' + totalPages + ' (' + totalCount + ' publicaciones)</div>';
+    html += '<div class="cms-pag-buttons">';
+    html += '<button class="cms-pag-btn" onclick="goToPageCMS(' + (currentPage - 1) + ')"' + (currentPage <= 1 ? ' disabled' : '') + '><i class="fas fa-chevron-left"></i> Anterior</button>';
+    var startP = Math.max(1, currentPage - 2);
+    var endP = Math.min(totalPages, currentPage + 2);
+    if (startP > 1) { html += '<button class="cms-pag-btn" onclick="goToPageCMS(1)">1</button>'; if (startP > 2) html += '<span class="cms-pag-ellipsis">...</span>'; }
+    for (var p = startP; p <= endP; p++) html += '<button class="cms-pag-btn' + (p === currentPage ? ' active' : '') + '" onclick="goToPageCMS(' + p + ')">' + p + '</button>';
+    if (endP < totalPages) { if (endP < totalPages - 1) html += '<span class="cms-pag-ellipsis">...</span>'; html += '<button class="cms-pag-btn" onclick="goToPageCMS(' + totalPages + ')">' + totalPages + '</button>'; }
+    html += '<button class="cms-pag-btn" onclick="goToPageCMS(' + (currentPage + 1) + ')"' + (currentPage >= totalPages ? ' disabled' : '') + '>Siguiente <i class="fas fa-chevron-right"></i></button>';
+    html += '</div>';
+    cmsPagination.innerHTML = html;
+  }
+  window.goToPageCMS = function(page) {
+    var totalPages = Math.ceil(totalCount / PAGE_SIZE);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    loadPublications();
+  };
+
+  // ===== SEARCH / FILTER =====
+  function triggerSearch() {
+    currentSearch = cmsSearch ? cmsSearch.value.trim() : '';
+    currentTipo = cmsFilterTipo ? cmsFilterTipo.value : '';
+    currentPage = 1;
+    selectedIds = {};
+    updateBulkBar();
+    loadPublications();
+  }
+  function handleSearchInput() {
+    if (searchTimeout) clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(triggerSearch, 350);
   }
 
   // ===== BULK ACTIONS =====
@@ -297,29 +437,29 @@ document.addEventListener('DOMContentLoaded', () => {
   async function handleBulkPublish() {
     var ids = getSelectedArray();
     if (ids.length === 0) return;
-    if (!(await showConfirm('Publicar seleccionados', 'Publicar ' + ids.length + ' publicacion(es)?', 'Publicar', 'btn-success'))) return;
+    if (!(await showConfirm('Publicar seleccionados', 'Publicar ' + ids.length + ' publicación(es)?', 'Publicar', 'btn-success'))) return;
     var result = await supabase.from('publicaciones').update({ publicado: true }).in('id', ids);
     if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
-    showToast(ids.length + ' publicacion(es) publicada(s)', 'success');
-    selectedIds = {}; await loadPublications();
+    showToast(ids.length + ' publicación(es) publicada(s)', 'success');
+    selectedIds = {}; await loadPublications(); await updateStats();
   }
   async function handleBulkUnpublish() {
     var ids = getSelectedArray();
     if (ids.length === 0) return;
-    if (!(await showConfirm('Ocultar seleccionados', 'Ocultar ' + ids.length + ' publicacion(es)?', 'Ocultar', 'btn-warning'))) return;
+    if (!(await showConfirm('Ocultar seleccionados', 'Ocultar ' + ids.length + ' publicación(es)?', 'Ocultar', 'btn-warning'))) return;
     var result = await supabase.from('publicaciones').update({ publicado: false }).in('id', ids);
     if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
-    showToast(ids.length + ' publicacion(es) ocultada(s)', 'success');
-    selectedIds = {}; await loadPublications();
+    showToast(ids.length + ' publicación(es) ocultada(s)', 'success');
+    selectedIds = {}; await loadPublications(); await updateStats();
   }
   async function handleBulkDelete() {
     var ids = getSelectedArray();
     if (ids.length === 0) return;
-    if (!(await showConfirm('Eliminar seleccionados', 'Eliminar ' + ids.length + ' publicacion(es)? Esta accion no se puede deshacer.', 'Eliminar', 'btn-danger'))) return;
+    if (!(await showConfirm('Eliminar seleccionados', 'Eliminar ' + ids.length + ' publicación(es)? Esta acción no se puede deshacer.', 'Eliminar', 'btn-danger'))) return;
     var result = await supabase.from('publicaciones').delete().in('id', ids);
     if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
-    showToast(ids.length + ' publicacion(es) eliminada(s)', 'success');
-    selectedIds = {}; await loadPublications();
+    showToast(ids.length + ' publicación(es) eliminada(s)', 'success');
+    selectedIds = {}; await loadPublications(); await updateStats();
   }
 
   // ===== AUTO-SAVE DRAFTS =====
@@ -368,39 +508,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ===== LOAD PUBLICATIONS =====
-  async function loadPublications() {
-    if (cmsTbody) cmsTbody.innerHTML = generateSkeletons(5);
-    if (cmsLoading) cmsLoading.classList.remove('hidden');
-    if (cmsEmpty) cmsEmpty.classList.add('hidden');
-    var query = supabase.from('publicaciones').select('*').order('fecha_publicacion', { ascending: false, nullsFirst: false }).order('creado_en', { ascending: false });
-    var tipo = cmsFilterTipo ? cmsFilterTipo.value : '';
-    if (tipo) query = query.eq('tipo', tipo);
-    var result = await query;
-    if (cmsLoading) cmsLoading.classList.add('hidden');
-    if (result.error) {
-      if (cmsTbody) cmsTbody.innerHTML = '<tr class="error-row"><td colspan="7" class="text-center py-10 text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error: ' + result.error.message + '</td></tr>';
-      return;
-    }
-    allPublications = result.data || [];
-    updateStats(allPublications);
-    handleSearchFilter();
-  }
-
   // ===== EVENT HANDLERS =====
-  window.viewCMS = function(id) { window.open('../publicacion.html?id=' + id, '_blank'); };
+  window.viewCMS = function(id) { window.open('../NavBar\'s/publicacion.html?id=' + id, '_blank'); };
 
   window.togglePublishCMS = async function(id, currentStatus) {
-    await supabase.from('publicaciones').update({ publicado: !currentStatus }).eq('id', id);
-    showToast(currentStatus ? 'Publicacion oculta' : 'Publicacion publicada', 'success');
-    delete selectedIds[id]; await loadPublications();
+    var result = await supabase.from('publicaciones').update({ publicado: !currentStatus }).eq('id', id);
+    if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
+    showToast(currentStatus ? 'Publicación oculta' : 'Publicación publicada', 'success');
+    delete selectedIds[id];
+    // Actualizar localmente
+    for (var i = 0; i < allPublications.length; i++) {
+      if (allPublications[i].id === id) { allPublications[i].publicado = !currentStatus; break; }
+    }
+    renderTable(allPublications);
+    updateStats();
   };
 
   // Create button
   if (cmsCreateBtn) {
     cmsCreateBtn.addEventListener('click', function() {
       cmsForm.reset(); cmsEditId.value = '';
-      if (cmsModalTitle) cmsModalTitle.textContent = 'Nueva publicacion';
+      if (cmsModalTitle) cmsModalTitle.textContent = 'Nueva publicación';
       setEditorContent('');
       if (cmsFecha) { var t = new Date(); cmsFecha.value = t.toISOString().split('T')[0]; }
       if (cmsPublicado) cmsPublicado.checked = true;
@@ -413,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
       var ft = cmsTabs[0]; if (ft) ft.click();
       var draft = restoreDraft();
       if (draft) {
-        showToast('Borrador recuperado de la sesion anterior', 'info');
+        showToast('Borrador recuperado de la sesión anterior', 'info');
         if (cmsTitulo) cmsTitulo.value = draft.titulo || '';
         if (cmsTipo) cmsTipo.value = draft.tipo || 'semanario';
         if (cmsResumen) cmsResumen.value = draft.resumen || '';
@@ -431,13 +559,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Edit
   window.editCMS = async function(id) {
     var result = await supabase.from('publicaciones').select('*').eq('id', id).single();
-    if (result.error || !result.data) { showToast('Error al cargar la publicacion', 'error'); return; }
+    if (result.error || !result.data) { showToast('Error al cargar la publicación', 'error'); return; }
     var data = result.data;
     cmsEditId.value = id; cmsTitulo.value = data.titulo || ''; cmsTipo.value = data.tipo || 'semanario';
     cmsResumen.value = data.resumen || ''; setEditorContent(data.contenido || '');
     cmsImagen.value = data.imagen_url || ''; cmsPdf.value = data.pdf_url || '';
     cmsFecha.value = data.fecha_publicacion || ''; cmsPublicado.checked = data.publicado || false;
-    if (cmsModalTitle) cmsModalTitle.textContent = 'Editar publicacion';
+    if (cmsModalTitle) cmsModalTitle.textContent = 'Editar publicación';
     if (data.imagen_url) { var ev = new Event('input'); cmsImagen.dispatchEvent(ev); }
     var ft = cmsTabs[0]; if (ft) ft.click();
     var errs = document.querySelectorAll('.field-error');
@@ -449,17 +577,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Delete
   window.deleteCMS = async function(id) {
-    if (!(await showConfirm('Eliminar publicacion', 'Estas segura de eliminar esta publicacion? Esta accion no se puede deshacer.', 'Eliminar', 'btn-danger'))) return;
+    if (!(await showConfirm('Eliminar publicación', '¿Estás segura de eliminar esta publicación? Esta acción no se puede deshacer.', 'Eliminar', 'btn-danger'))) return;
     var result = await supabase.from('publicaciones').delete().eq('id', id);
     if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
-    showToast('Publicacion eliminada', 'success');
-    delete selectedIds[id]; await loadPublications();
+    showToast('Publicación eliminada', 'success');
+    delete selectedIds[id];
+    // Eliminar localmente sin recargar todo
+    for (var i = 0; i < allPublications.length; i++) {
+      if (allPublications[i].id === id) { allPublications.splice(i, 1); break; }
+    }
+    totalCount = Math.max(0, totalCount - 1);
+    if (allPublications.length === 0 && currentPage > 1) { currentPage--; loadPublications(); return; }
+    renderTable(allPublications);
+    updatePagination();
+    updateStats();
   };
 
   // Submit form
   if (cmsForm) {
     cmsForm.addEventListener('submit', async function(e) {
       e.preventDefault();
+      if (uploadInProgress) { showToast('Espera a que termine la subida de archivos', 'warning'); return; }
       var ed = document.getElementById('cms-contenido-editor');
       if (ed && cmsContenido) cmsContenido.value = ed.innerHTML;
       if (!validateForm()) { showToast('Corrige los errores en el formulario', 'error'); return; }
@@ -474,18 +612,20 @@ document.addEventListener('DOMContentLoaded', () => {
         imagen_url: cmsImagen.value.trim() || null,
         pdf_url: cmsPdf.value.trim() || null,
         fecha_publicacion: cmsFecha.value || null,
-        publicado: cmsPublicado.checked
+        publicado: cmsPublicado.checked,
+        updated_at: new Date().toISOString()
       };
       var eid = cmsEditId.value;
       var result;
       if (eid) { result = await supabase.from('publicaciones').update(payload).eq('id', eid); }
       else { result = await supabase.from('publicaciones').insert(payload); }
       if (result.error) { showToast('Error al guardar: ' + result.error.message, 'error'); if (sb) { sb.disabled = false; sb.innerHTML = obh; } return; }
-      showToast(eid ? 'Publicacion actualizada' : 'Publicacion creada', 'success');
+      showToast(eid ? 'Publicación actualizada' : 'Publicación creada', 'success');
       clearDraft();
       if (cmsModal) cmsModal.classList.add('hidden');
       if (sb) { sb.disabled = false; sb.innerHTML = obh; }
       await loadPublications();
+      await updateStats();
     });
   }
 
@@ -494,14 +634,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cmsCancelBtn) cmsCancelBtn.addEventListener('click', function() { if (cmsModal) cmsModal.classList.add('hidden'); });
   if (cmsModal) cmsModal.addEventListener('click', function(e) { if (e.target === cmsModal) cmsModal.classList.add('hidden'); });
 
-  // Filter
-  if (cmsApplyFilter) cmsApplyFilter.addEventListener('click', handleSearchFilter);
-  if (cmsSearch) cmsSearch.addEventListener('input', handleSearchFilter);
+  // Search / Filter events
+  if (cmsSearch) cmsSearch.addEventListener('input', handleSearchInput);
+  if (cmsFilterTipo) cmsFilterTipo.addEventListener('change', triggerSearch);
+  if (cmsApplyFilter) cmsApplyFilter.addEventListener('click', triggerSearch);
   if (cmsClearSearch) {
     cmsClearSearch.addEventListener('click', function() {
       if (cmsSearch) cmsSearch.value = '';
       if (cmsFilterTipo) cmsFilterTipo.value = '';
-      handleSearchFilter();
+      triggerSearch();
     });
   }
 
@@ -547,6 +688,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initRichTextEditor();
   initImagePreview();
   initPdfValidation();
+  initFileUploads();
   initModalTabs();
   loadPublications();
+  updateStats();
 });
