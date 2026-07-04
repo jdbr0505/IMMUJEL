@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Panel de Administración | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,7 +33,6 @@
                     <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
                 </a>
                 <div id="panel-link"></div>
-                <span class="hidden md:inline text-sm font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">Panel de Administración</span>
             </div>
 
             <!-- Botón menú móvil -->
@@ -95,7 +97,9 @@
                         </div>
                     </div>
                     <!-- Auth section -->
-                    <div id="auth-section" class="flex items-center space-x-3 mt-4 lg:mt-0 lg:ml-8"></div>
+                    <div id="auth-section" class="flex items-center space-x-3 mt-4 lg:mt-0 lg:ml-8">
+                        <button id="logout-btn" class="hidden text-sm font-semibold text-red-500 hover:text-red-700 transition"><i class="fas fa-sign-out-alt mr-1"></i> Salir</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,11 +110,14 @@
 
         <!-- Tabs de navegación -->
         <div class="flex gap-1 mb-8 border-b border-gray-200">
-            <button id="tab-asesorias" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition bg-purple-600 text-white" data-tab="asesorias">
+            <button id="tab-asesorias" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition bg-purple-600 text-white" data-tab="asesorias" onclick="switchTab('asesorias')">
                 <i class="fas fa-gavel mr-1"></i> Asesorías
             </button>
-            <button id="tab-cms" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="cms">
+            <button id="tab-cms" class="tab-btn px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="cms" onclick="switchTab('cms')">
                 <i class="fas fa-newspaper mr-1"></i> CMS
+            </button>
+            <button id="tab-usuarios" class="tab-btn hidden px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="usuarios" onclick="switchTab('usuarios')">
+                <i class="fas fa-users mr-1"></i> Usuarias
             </button>
         </div>
 
@@ -122,6 +129,9 @@
                 <h1 class="text-3xl font-black text-gray-800">Gestión de Asesorías</h1>
                 <p class="text-gray-500 mt-1">Supervisa y gestiona todas las solicitudes recibidas. <span id="user-name" class="font-semibold text-purple-700"></span></p>
             </div>
+            <button id="btn-nueva-asesoria" class="mt-4 md:mt-0 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md">
+                <i class="fas fa-plus mr-1"></i> Nueva Asesoría
+            </button>
         </div>
 
         <!-- KPIs -->
@@ -203,7 +213,8 @@
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono</th>
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Parroquia</th>
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
-                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada por</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada a</th>
                         <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
@@ -211,33 +222,10 @@
             </table>
             <div id="loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando solicitudes...</div>
         </div>
-    </main>
-
-    <!-- Modal -->
-    <div id="report-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl max-w-xl w-full mx-4 p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Detalle de la Solicitud</h2>
-                <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
-            </div>
-            <div id="report-detail-content" class="space-y-3 text-sm text-gray-700"></div>
-            <div class="mt-6">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Añadir nota interna</label>
-                <textarea id="new-note" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-purple-500 focus:border-purple-500"></textarea>
-                <button id="add-note-btn" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition">Agregar Nota</button>
-            </div>
-            <div class="mt-6 flex gap-3 justify-end">
-                <button id="mark-in-progress" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded-lg transition">En Proceso</button>
-                <button id="mark-finalized" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition">Finalizar</button>
-                <button id="mark-cancelled" class="bg-gray-500 hover:bg-gray-600 text-white font-medium px-4 py-2 rounded-lg transition">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
         </div><!-- fin section-asesorias -->
 
         <!-- ===== SECCIÓN CMS ===== -->
-        <div id="section-cms" class="tab-content hidden">
+        <div id="section-cms" class="tab-content">
 
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                 <div>
@@ -427,36 +415,44 @@
                     <!-- Tab: Multimedia -->
                     <div class="cms-tab-panel" id="tab-media">
                         <div class="form-group">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Imagen destacada</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes</label>
+                            <div id="cms-imagenes-list" class="flex flex-wrap gap-2 mb-3 min-h-[60px]"></div>
                             <div class="flex gap-2 items-start mb-2">
                                 <div class="flex-1 floating-label">
-                                    <input type="url" id="cms-imagen" placeholder=" " autocomplete="off">
-                                    <label for="cms-imagen">URL de imagen</label>
+                                    <input type="url" id="cms-imagen-url" placeholder=" " autocomplete="off">
+                                    <label for="cms-imagen-url">URL de imagen externa</label>
                                 </div>
-                                <button type="button" id="cms-image-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2" title="Subir imagen desde tu computadora">
+                                <button type="button" id="cms-image-add-url" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2" title="Agregar URL">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <button type="button" id="cms-image-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2">
                                     <i class="fas fa-upload"></i> Subir imagen
                                 </button>
                                 <input type="file" id="cms-image-upload" accept="image/*" class="hidden">
                             </div>
-                            <p class="text-xs text-gray-400 mb-2">Sube una imagen o pega una URL externa</p>
-                            <div id="cms-imagen-preview-container" class="image-preview-container hidden">
-                                <img id="cms-imagen-preview" class="image-preview" alt="Vista previa">
-                            </div>
+                            <p class="text-xs text-gray-400 mt-2">Puedes agregar múltiples imágenes. Se mostrarán como galería.</p>
                         </div>
                         <div class="form-group">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">PDF adjunto</label>
-                            <div class="flex gap-2 items-start">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Documentos PDF</label>
+                            <div id="cms-pdfs-list" class="space-y-2 mb-3"></div>
+                            <div class="flex gap-2 items-start mb-2">
                                 <div class="flex-1 floating-label">
-                                    <input type="url" id="cms-pdf" placeholder=" " autocomplete="off">
-                                    <label for="cms-pdf">URL de PDF</label>
+                                    <input type="url" id="cms-pdf-url" placeholder=" " autocomplete="off">
+                                    <label for="cms-pdf-url">URL de PDF externo</label>
                                 </div>
-                                <button type="button" id="cms-pdf-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2" title="Subir PDF desde tu computadora">
+                                <button type="button" id="cms-pdf-add-url" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <button type="button" id="cms-pdf-upload-btn" class="btn-outline-brand px-3 py-2.5 whitespace-nowrap text-sm rounded-lg border-2">
                                     <i class="fas fa-upload"></i> Subir PDF
                                 </button>
                                 <input type="file" id="cms-pdf-upload" accept=".pdf,application/pdf" class="hidden">
                             </div>
-                            <p class="text-xs text-gray-400 mt-2">Sube un PDF o pega una URL externa (Google Drive, etc.)</p>
-                            <div id="cms-pdf-info" class="cms-pdf-info hidden"></div>
+                            <p class="text-xs text-gray-400 mt-2">Puedes agregar múltiples documentos PDF.</p>
                         </div>
                     </div>
 
@@ -471,6 +467,203 @@
                 </form>
             </div>
         </div>
+
+        <!-- ===== SECCIÓN USUARIAS ===== -->
+        <!--
+        ################################################################
+        MODALES GLOBALES (fuera de tab-content para no ocultarse)
+        ################################################################
+        -->
+        <!-- Modal Detalle Solicitud -->
+        <div id="report-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl max-w-xl w-full mx-4 p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Detalle de la Solicitud</h2>
+                    <button id="close-modal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+                </div>
+                <div id="report-detail-content" class="space-y-3 text-sm text-gray-700"></div>
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Añadir nota interna</label>
+                    <textarea id="new-note" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-purple-500 focus:border-purple-500"></textarea>
+                    <button id="add-note-btn" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition">Agregar Nota</button>
+                </div>
+                <div class="mt-6 flex gap-3 justify-end">
+                    <button id="mark-in-progress" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded-lg transition">En Proceso</button>
+                    <button id="mark-finalized" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition">Finalizar</button>
+                    <button id="mark-cancelled" class="bg-gray-500 hover:bg-gray-600 text-white font-medium px-4 py-2 rounded-lg transition">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Nueva Asesoría -->
+        <div id="nueva-asesoria-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl max-w-xl w-full mx-4 p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Nueva Asesoría</h2>
+                    <button id="close-nueva-asesoria" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+                </div>
+                <form id="nueva-asesoria-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo <span class="text-red-500">*</span></label>
+                            <input type="text" id="na-nombre" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cédula</label>
+                            <input type="text" id="na-cedula" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono <span class="text-red-500">*</span></label>
+                            <input type="text" id="na-telefono" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
+                            <input type="email" id="na-correo" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Parroquia <span class="text-red-500">*</span></label>
+                            <select id="na-parroquia" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500" required>
+                                <option value="">Seleccionar</option>
+                                <option>Alonso de Ojeda (Paraute)</option>
+                                <option>Libertad</option>
+                                <option>Campo Lara</option>
+                                <option>Eleazar López Contreras</option>
+                                <option>Venezuela</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de asesoría <span class="text-red-500">*</span></label>
+                            <select id="na-tipo" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500" required>
+                                <option value="juridica">Jurídica</option>
+                                <option value="psicologica">Psicológica</option>
+                                <option value="social">Social</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                        <textarea id="na-descripcion" rows="4" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500"></textarea>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="na-anonimo" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
+                        <label for="na-anonimo" class="text-sm text-gray-600">Solicitud anónima</label>
+                    </div>
+                    <div class="flex gap-3 justify-end pt-4 border-t border-gray-100">
+                        <button type="button" id="cancelar-na" class="px-5 py-2.5 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition">Cancelar</button>
+                        <button type="submit" id="guardar-na" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition shadow-md">
+                            <i class="fas fa-save mr-1"></i> Crear asesoría
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="section-usuarios" class="tab-content hidden">
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-black text-gray-800">Gestión de Usuarias</h1>
+                    <p class="text-gray-500 mt-1">Administra los roles y permisos del personal.</p>
+                </div>
+            </div>
+
+            <!-- KPIs de usuarias -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-purple-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Total</p>
+                            <p id="usu-kpi-total" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <i class="fas fa-users text-purple-500 text-3xl opacity-80"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-blue-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Asesoras</p>
+                            <p id="usu-kpi-asesora" class="text-2xl font-bold text-blue-600">0</p>
+                        </div>
+                        <i class="fas fa-user-tie text-blue-500 text-3xl opacity-80"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-green-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Admins</p>
+                            <p id="usu-kpi-admin" class="text-2xl font-bold text-green-600">0</p>
+                        </div>
+                        <i class="fas fa-crown text-green-500 text-3xl opacity-80"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-gray-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Usuarias</p>
+                            <p id="usu-kpi-usuaria" class="text-2xl font-bold text-gray-600">0</p>
+                        </div>
+                        <i class="fas fa-user text-gray-500 text-3xl opacity-80"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Búsqueda -->
+            <div class="bg-white rounded-xl shadow-md p-5 mb-8">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex-1 min-w-[200px] relative">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="usu-search" placeholder="Buscar por nombre, usuario o email..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm">
+                    </div>
+                    <div>
+                        <select id="usu-filter-rol" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-sm">
+                            <option value="">Todos los roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="asesora">Asesora</option>
+                            <option value="usuaria">Usuaria</option>
+                        </select>
+                    </div>
+                    <button id="usu-apply-filter" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md text-sm">
+                        <i class="fas fa-filter mr-1"></i> Filtrar
+                    </button>
+                    <button id="usu-reset-filter" class="text-gray-500 hover:text-gray-700 text-sm font-medium transition">
+                        <i class="fas fa-times mr-1"></i> Limpiar
+                    </button>
+                    <button id="usu-refresh" class="text-blue-600 hover:text-blue-800 text-sm font-medium transition" title="Recargar desde servidor">
+                        <i class="fas fa-sync-alt mr-1"></i> Recargar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de usuarias -->
+            <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nombre</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Usuario</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Rol actual</th>
+                            <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Nuevo rol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuarios-tbody" class="divide-y divide-gray-100"></tbody>
+                </table>
+                <div id="usuarios-loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando usuarias...</div>
+                <div id="usuarios-empty" class="hidden text-center py-10 text-gray-400">
+                    <i class="fas fa-users text-3xl mb-2 block"></i>
+                    <p>No hay usuarias registradas</p>
+                </div>
+            </div>
+
+        </div><!-- fin section-usuarios -->
+
+    </main><!-- fin contenido principal -->
 
     <!-- ========== FOOTER ========== -->
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
@@ -557,30 +750,49 @@
                     serviciosArrow.classList.remove('rotate-180');
                 }
         }
-        // Cambio de pestañas (Asesorías / CMS)
-        document.addEventListener('DOMContentLoaded', function() {
-            var tabBtns = document.querySelectorAll('.tab-btn');
-            var tabContents = document.querySelectorAll('.tab-content');
-            tabBtns.forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var target = this.dataset.tab;
-                    tabBtns.forEach(function(b) {
-                        b.classList.remove('bg-purple-600', 'text-white');
-                        b.classList.add('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
-                    });
-                    this.classList.add('bg-purple-600', 'text-white');
-                    this.classList.remove('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
-                    tabContents.forEach(function(c) {
-                        c.classList.add('hidden');
-                    });
-                    var section = document.getElementById('section-' + target);
-                    if (section) section.classList.remove('hidden');
+        // Cambio de pestañas (función global)
+        window.switchTab = function(tabName) {
+            console.log('switchTab llamado:', tabName);
+            var section = document.getElementById('section-' + tabName);
+            if (!section) { console.error('switchTab: section-' + tabName + ' no encontrada'); return; }
+            // Ocultar todas las secciones
+            var sections = document.querySelectorAll('.tab-content');
+            for (var i = 0; i < sections.length; i++) { sections[i].style.display = 'none'; }
+            // Mostrar la sección objetivo
+            section.style.display = 'block';
+            section.classList.remove('hidden');
+            // Actualizar botones
+            var btns = document.querySelectorAll('.tab-btn');
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('bg-purple-600', 'text-white');
+                btns[i].classList.add('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+            }
+            var active = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+            if (active) {
+                active.classList.add('bg-purple-600', 'text-white');
+                active.classList.remove('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+            }
+        };
+        // Asegurar estado inicial
+        switchTab('asesorias');
+
+        // ---------- TEMA OSCURO ----------
+        (function() {
+            var body = document.body;
+            var themeToggle = document.getElementById('theme-toggle');
+            body.classList.remove('dark-theme');
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') body.classList.add('dark-theme');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    body.classList.toggle('dark-theme');
+                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
                 });
-            });
-        });
+            }
+        })();
     </script>
-    <script src="Admin.js"></script>
-    <script src="Admin_cms.js"></script>
+    <script src="Admin.js?v=7"></script>
+    <script src="Admin_cms.js?v=7"></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
@@ -606,5 +818,4 @@
     </script>
     <script src="../animations.js"></script>
 </body>
-</html> 
-}
+</html>

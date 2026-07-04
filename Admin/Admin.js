@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUserId = user.id;
   const isAdmin = profile.rol === 'admin';
 
+  // Mostrar tab de Usuarias solo para admin
+  const tabUsuarios = document.getElementById('tab-usuarios');
+  if (tabUsuarios) {
+    if (isAdmin) tabUsuarios.classList.remove('hidden');
+    else tabUsuarios.classList.add('hidden');
+  }
+
   const userNameEl = document.getElementById('user-name');
   if (userNameEl) {
     userNameEl.textContent = profile.nombre_usuario || profile.nombre_completo || 'Asesora';
@@ -60,12 +67,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Cargar lista de asesoras para asignación
   async function loadAsesoras() {
-    if (!isAdmin) return;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('perfiles')
       .select('id, nombre_completo, nombre_usuario')
       .in('rol', ['admin', 'asesora']);
+    if (error) console.error('Error cargando asesoras:', error);
     asesorasCache = data || [];
+  }
+
+  // Total stats (unfiltered) para KPIs
+  async function updateKPIGlobal() {
+    const { count: total } = await supabase.from('solicitudes').select('*', { count: 'exact', head: true });
+    const { count: pend } = await supabase.from('solicitudes').select('*', { count: 'exact', head: true }).eq('estado', 'pendiente');
+    const { count: prog } = await supabase.from('solicitudes').select('*', { count: 'exact', head: true }).eq('estado', 'en proceso');
+    const { count: fin } = await supabase.from('solicitudes').select('*', { count: 'exact', head: true }).eq('estado', 'finalizado');
+    if (kpiTotal) kpiTotal.textContent = total ?? 0;
+    if (kpiPendiente) kpiPendiente.textContent = pend ?? 0;
+    if (kpiEnProceso) kpiEnProceso.textContent = prog ?? 0;
+    if (kpiFinalizado) kpiFinalizado.textContent = fin ?? 0;
   }
 
   // 3. Cargar solicitudes
@@ -82,17 +101,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await query;
     if (error) {
       console.error('Error al cargar solicitudes:', error);
-      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-500">
+      if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-red-500">
         <i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</td></tr>`;
       if (loading) loading.classList.add('hidden');
       return;
     }
 
     allReports = data || [];
-    updateKPI(allReports);
+    updateKPIGlobal();
 
     // Cargar nombres de quien asignó
-    const userIds = [...new Set(allReports.filter(r => r.asignada_por || r.asignada_a).map(r => r.asignada_por || r.asignada_a).filter(Boolean))];
+    const userIds = [...new Set(allReports.flatMap(r => [r.asignada_por, r.asignada_a].filter(Boolean)))];
     let usersMap = {};
     if (userIds.length > 0) {
       const { data: users } = await supabase.from('perfiles').select('id, nombre_completo').in('id', userIds);
@@ -103,10 +122,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (tbody) {
       if (allReports.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-gray-400">
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-gray-400">
           <i class="fas fa-inbox text-3xl mb-2 block"></i>No hay solicitudes registradas aún</td></tr>`;
       } else {
         tbody.innerHTML = allReports.map(r => {
+          const asignadaPorNombre = r.asignada_por ? (usersMap[r.asignada_por] || '—') : '—';
           const asignadaNombre = r.asignada_a ? (usersMap[r.asignada_a] || '—') : '—';
           return `<tr class="hover:bg-gray-50 transition">
             <td class="px-4 py-3 text-sm whitespace-nowrap">${r.creado_en ? new Date(r.creado_en).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}</td>
@@ -124,6 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${r.estado}
               </span>
             </td>
+            <td class="px-4 py-3 text-sm">${asignadaPorNombre}</td>
             <td class="px-4 py-3 text-sm">${asignadaNombre}</td>
             <td class="px-4 py-3 text-center">
               <button onclick="openModal('${r.id}')" class="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium">Ver</button>
@@ -156,6 +177,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     ).join('');
 
     if (reportDetail) {
+      const asigPorName = report.asignada_por ? (asesorasCache.find(a => a.id === report.asignada_por)?.nombre_completo || '—') : '—';
+      const asigAName = report.asignada_a ? (asesorasCache.find(a => a.id === report.asignada_a)?.nombre_completo || '—') : '—';
       reportDetail.innerHTML = `
         <div class="grid grid-cols-2 gap-3">
           <div><p class="text-xs text-gray-400">Nombre</p><p class="font-medium">${report.nombre_completo || 'Anónimo'}</p></div>
@@ -164,6 +187,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div><p class="text-xs text-gray-400">Correo</p><p class="font-medium">${report.correo || 'N/A'}</p></div>
           <div><p class="text-xs text-gray-400">Parroquia</p><p class="font-medium">${report.parroquia || 'N/A'}</p></div>
           <div><p class="text-xs text-gray-400">Estado</p><p class="font-medium capitalize">${report.estado}</p></div>
+          ${report.tipo_asesoria ? `<div><p class="text-xs text-gray-400">Tipo</p><p class="font-medium capitalize">${report.tipo_asesoria}</p></div>` : ''}
+          <div><p class="text-xs text-gray-400">Asignada por</p><p class="font-medium">${asigPorName}</p></div>
+          <div><p class="text-xs text-gray-400">Asignada a</p><p class="font-medium">${asigAName}</p></div>
         </div>
         <div class="mt-3 pt-3 border-t border-gray-100">
           <p class="text-xs text-gray-400 mb-1">Descripción</p>
@@ -198,8 +224,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           asignada_a: asignarA || null,
           asignada_por: currentUserId
         }).eq('id', currentReportId);
-        openModal(currentReportId);
-        loadReports({});
+        await openModal(currentReportId);
+        await loadReports({});
       });
     }
 
@@ -224,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
       if (newNote) newNote.value = '';
-      openModal(currentReportId);
+      await openModal(currentReportId);
     });
   }
 
@@ -240,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     if (modal) modal.classList.add('hidden');
-    loadReports({});
+    await loadReports({});
   }
 
   if (markInProgress) markInProgress.addEventListener('click', () => updateEstado('en proceso'));
@@ -278,7 +304,267 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Carga inicial
+  // 8. Nueva Asesoría manual
+  const btnNuevaAsesoria = document.getElementById('btn-nueva-asesoria');
+  const naModal = document.getElementById('nueva-asesoria-modal');
+  const naForm = document.getElementById('nueva-asesoria-form');
+
+  if (btnNuevaAsesoria && naModal) {
+    btnNuevaAsesoria.addEventListener('click', () => {
+      naModal.classList.remove('hidden');
+      naForm.reset();
+    });
+  }
+
+  document.getElementById('close-nueva-asesoria')?.addEventListener('click', () => naModal?.classList.add('hidden'));
+  document.getElementById('cancelar-na')?.addEventListener('click', () => naModal?.classList.add('hidden'));
+  if (naModal) naModal.addEventListener('click', (e) => { if (e.target === naModal) naModal.classList.add('hidden'); });
+
+  if (naForm) {
+    naForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      const getSel = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+      const getChk = (id) => { const el = document.getElementById(id); return el ? el.checked : false; };
+      const nombre = getVal('na-nombre');
+      const cedula = getVal('na-cedula');
+      const telefono = getVal('na-telefono');
+      const correo = getVal('na-correo');
+      const parroquia = getSel('na-parroquia');
+      const tipo = getSel('na-tipo');
+      const descripcion = getVal('na-descripcion');
+      const anonimo = getChk('na-anonimo');
+
+      if (!nombre || !telefono || !parroquia) {
+        alert('Completa los campos obligatorios.');
+        return;
+      }
+
+      const btn = document.getElementById('guardar-na');
+      if (!btn) return;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando...';
+
+      const { error } = await supabase.from('solicitudes').insert({
+        nombre_completo: anonimo ? null : nombre,
+        cedula: anonimo ? null : (cedula || null),
+        telefono,
+        correo: anonimo ? null : (correo || null),
+        parroquia: anonimo ? null : parroquia,
+        descripcion: descripcion || null,
+        es_anonimo: anonimo,
+        tipo_asesoria: tipo,
+        estado: 'pendiente',
+        asignada_por: currentUserId,
+        creado_en: new Date().toISOString()
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save mr-1"></i> Crear asesoría';
+
+      if (error) {
+        alert('Error al crear: ' + error.message);
+        return;
+      }
+
+      naModal.classList.add('hidden');
+      await loadReports({});
+    });
+  }
+
+  // 9. Gestión de Usuarias (solo admin)
+  const usuariosTbody = document.getElementById('usuarios-tbody');
+  const usuariosLoading = document.getElementById('usuarios-loading');
+  const usuariosEmpty = document.getElementById('usuarios-empty');
+  const usuSearch = document.getElementById('usu-search');
+  const usuFilterRol = document.getElementById('usu-filter-rol');
+  const usuApplyFilter = document.getElementById('usu-apply-filter');
+  const usuResetFilter = document.getElementById('usu-reset-filter');
+
+  // KPIs de usuarias
+  const usuKpiTotal = document.getElementById('usu-kpi-total');
+  const usuKpiAsesora = document.getElementById('usu-kpi-asesora');
+  const usuKpiAdmin = document.getElementById('usu-kpi-admin');
+  const usuKpiUsuaria = document.getElementById('usu-kpi-usuaria');
+
+  let allUsersCache = [];
+
+  function updateUsuKPI(users) {
+    const total = users.length;
+    const asesoras = users.filter(u => u.rol === 'asesora').length;
+    const admins = users.filter(u => u.rol === 'admin').length;
+    const usuarias = users.filter(u => u.rol === 'usuaria' || !u.rol).length;
+    if (usuKpiTotal) usuKpiTotal.textContent = total;
+    if (usuKpiAsesora) usuKpiAsesora.textContent = asesoras;
+    if (usuKpiAdmin) usuKpiAdmin.textContent = admins;
+    if (usuKpiUsuaria) usuKpiUsuaria.textContent = usuarias;
+  }
+
+  function filterUsers(users, searchTerm, rolFilter) {
+    return users.filter(u => {
+      if (rolFilter && u.rol !== rolFilter) return false;
+      if (!searchTerm) return true;
+      const s = searchTerm.toLowerCase();
+      return (u.nombre_completo || '').toLowerCase().includes(s)
+        || (u.nombre_usuario || '').toLowerCase().includes(s)
+        || (u.email || '').toLowerCase().includes(s);
+    });
+  }
+
+  function renderUsuarios(users) {
+    if (!usuariosTbody) return;
+    if (users.length === 0) {
+      usuariosTbody.innerHTML = '';
+      if (usuariosEmpty) usuariosEmpty.classList.remove('hidden');
+      return;
+    }
+    if (usuariosEmpty) usuariosEmpty.classList.add('hidden');
+
+    const roles = ['usuaria', 'asesora', 'admin'];
+    const roleColors = {
+      admin: 'bg-purple-100 text-purple-800',
+      asesora: 'bg-blue-100 text-blue-800',
+      usuaria: 'bg-gray-100 text-gray-700'
+    };
+
+    usuariosTbody.innerHTML = users.map(u => {
+      const isSelf = u.id === currentUserId;
+      return `<tr class="hover:bg-gray-50 transition">
+        <td class="px-4 py-3 font-medium">${u.nombre_completo || '—'}</td>
+        <td class="px-4 py-3 text-sm font-mono">${u.nombre_usuario || '—'}</td>
+        <td class="px-4 py-3 text-sm">${u.email || '—'}</td>
+        <td class="px-4 py-3 text-sm">${u.telefono || '—'}</td>
+        <td class="px-4 py-3">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full font-semibold ${roleColors[u.rol] || 'bg-gray-100 text-gray-700'}">
+            <span class="w-1.5 h-1.5 rounded-full ${u.rol === 'admin' ? 'bg-purple-500' : u.rol === 'asesora' ? 'bg-blue-500' : 'bg-gray-500'}"></span>
+            ${u.rol || 'usuaria'}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-center">
+          ${isSelf
+            ? '<span class="text-xs text-gray-400 italic">(tú, no puedes cambiarte)</span>'
+            : `<select class="rol-select text-xs border border-gray-300 rounded-lg p-1.5 focus:ring-purple-500 focus:border-purple-500 min-w-[110px]" data-userid="${u.id}" data-current="${u.rol || 'usuaria'}" data-name="${u.nombre_completo || u.nombre_usuario || 'usuaria'}">
+                ${roles.map(r => `<option value="${r}" ${(u.rol || 'usuaria') === r ? 'selected' : ''}>${r === 'admin' ? '👑 Admin' : r === 'asesora' ? '🛡️ Asesora' : '👤 Usuaria'}</option>`).join('')}
+              </select>`
+          }
+        </td>
+      </tr>`;
+    }).join('');
+
+    // Handler para cambio de rol
+    document.querySelectorAll('.rol-select').forEach(sel => {
+      sel.addEventListener('change', async function() {
+        const newRol = this.value;
+        const userId = this.dataset.userid;
+        const current = this.dataset.current;
+        const userName = this.dataset.name;
+
+        if (!confirm(`¿Estás segura de cambiar el rol de "${userName}" a "${newRol}"?`)) {
+          this.value = current;
+          return;
+        }
+
+        const { error } = await supabase.from('perfiles').update({ rol: newRol }).eq('id', userId);
+        if (error) {
+          alert('Error al cambiar rol: ' + error.message);
+          this.value = current;
+          return;
+        }
+
+        this.dataset.current = newRol;
+        window.showToast?.('success', `Rol de "${userName}" cambiado a "${newRol}"`);
+        allUsersCache = [];
+        await loadUsuarios();
+      });
+    });
+  }
+
+  async function loadUsuarios(searchTerm, rolFilter) {
+    if (!isAdmin || !usuariosTbody) return;
+    if (usuariosLoading) usuariosLoading.classList.remove('hidden');
+    if (usuariosEmpty) usuariosEmpty.classList.add('hidden');
+
+    // Only fetch from server if cache is empty or no filters provided
+    if (allUsersCache.length === 0) {
+      const { data: users, error } = await supabase
+        .from('perfiles')
+        .select('*')
+        .order('nombre_completo', { ascending: true });
+
+      if (error) {
+        console.error('Error al cargar usuarias:', error);
+        usuariosTbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-500">
+          <i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</td></tr>`;
+        if (usuariosLoading) usuariosLoading.classList.add('hidden');
+        return;
+      }
+      allUsersCache = users || [];
+    }
+
+    if (usuariosLoading) usuariosLoading.classList.add('hidden');
+
+    let filtered = [...allUsersCache];
+    if (searchTerm || rolFilter) {
+      filtered = filterUsers(filtered, searchTerm, rolFilter);
+    }
+
+    updateUsuKPI(filtered);
+    renderUsuarios(filtered);
+  }
+
+  // Search handlers with debounce
+  let searchDebounceTimer;
+  if (usuSearch) {
+    usuSearch.addEventListener('input', () => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        loadUsuarios(usuSearch.value, usuFilterRol?.value || '');
+      }, 350);
+    });
+    // Enter key triggers search immediately
+    usuSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        clearTimeout(searchDebounceTimer);
+        loadUsuarios(usuSearch.value, usuFilterRol?.value || '');
+      }
+    });
+  }
+
+  if (usuApplyFilter) {
+    usuApplyFilter.addEventListener('click', () => {
+      clearTimeout(searchDebounceTimer);
+      loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
+    });
+  }
+
+  if (usuResetFilter) {
+    usuResetFilter.addEventListener('click', () => {
+      if (usuSearch) usuSearch.value = '';
+      if (usuFilterRol) usuFilterRol.value = '';
+      clearTimeout(searchDebounceTimer);
+      loadUsuarios('', '');
+    });
+  }
+
+  // Botón Refresh: limpia caché y recarga del servidor
+  document.getElementById('usu-refresh')?.addEventListener('click', () => {
+    allUsersCache = [];
+    loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
+  });
+
+  // Cargar asesorías al cambiar al tab de asesorías
+  document.getElementById('tab-asesorias')?.addEventListener('click', async () => {
+    await loadAsesoras();
+    await loadReports({});
+  });
+
+  // Cargar usuarios solo si es admin al cambiar al tab
+  document.getElementById('tab-usuarios')?.addEventListener('click', async () => {
+    if (isAdmin) await loadUsuarios('', '');
+  });
+
+  // Carga inicial de asesoras para el dropdown
   await loadAsesoras();
-  loadReports({});
+  await loadReports({});
+  if (isAdmin) await loadUsuarios('', '');
 });

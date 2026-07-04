@@ -35,15 +35,12 @@
       if (panelLink) {
         if (rol === 'admin' || rol === 'asesora') {
           panelLink.innerHTML = `
-            <a href="${basePath}Admin/Admin.html" class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-purple-700 to-blue-700 text-white font-semibold py-2 pl-3 pr-5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:from-purple-600 hover:to-blue-600 hover:scale-105 text-sm overflow-hidden">
-              <span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-              <span class="relative flex items-center justify-center w-6 h-6 rounded-full bg-white/20 group-hover:bg-white/30 transition">
-                <i class="fas fa-shield-halved text-xs"></i>
+            <a href="${basePath}Admin/Admin.html" class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-semibold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 text-sm">
+              <span class="flex items-center justify-center w-7 h-7 rounded-lg bg-white/15 group-hover:bg-white/25 transition">
+                <i class="fas fa-crown text-xs"></i>
               </span>
-              <span class="relative">Panel</span>
-              <span class="relative flex items-center gap-1 text-[10px] opacity-70 ml-1">
-                <i class="fas fa-crown"></i>
-              </span>
+              <span class="tracking-wide">Admin</span>
+              <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white animate-pulse" style="border-color: white;"></span>
             </a>`;
         } else {
           panelLink.innerHTML = '';

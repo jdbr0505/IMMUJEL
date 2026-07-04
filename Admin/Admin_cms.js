@@ -1,16 +1,13 @@
 ﻿// Admin_cms.js – CMS de publicaciones con paginación, búsqueda y subida de archivos
-document.addEventListener('DOMContentLoaded', () => {
-  const supabase = window.supabase;
-  if (!supabase) return;
-  if (!document.getElementById('section-cms')) return;
 
-  // ===== TOAST =====
+// ===== TOAST (global, fuera de DOMContentLoaded para Admin.js) =====
+(function() {
   function createToastContainer() {
     let c = document.getElementById('toast-container');
     if (!c) { c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); }
     return c;
   }
-  function showToast(msg, type, duration) {
+  window.showToast = function showToast(msg, type, duration) {
     if (!type) type = 'success';
     if (!duration) duration = 4000;
     const c = createToastContainer();
@@ -20,7 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     t.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + ' toast-icon"></i><span>' + msg + '</span>';
     c.appendChild(t);
     setTimeout(() => { t.classList.add('toast-leaving'); setTimeout(() => t.remove(), 300); }, duration);
-  }
+  };
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const supabase = window.supabase;
+  if (!supabase) return;
+  if (!document.getElementById('section-cms')) return;
 
   // ===== CONFIRMATION DIALOG =====
   function createConfirmDialog() {
@@ -57,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var cmsModal = $('cms-modal'), cmsForm = $('cms-form'), cmsModalTitle = $('cms-modal-title');
   var cmsEditId = $('cms-edit-id'), cmsTitulo = $('cms-titulo'), cmsTipo = $('cms-tipo');
   var cmsResumen = $('cms-resumen'), cmsContenido = $('cms-contenido');
-  var cmsImagen = $('cms-imagen'), cmsPdf = $('cms-pdf'), cmsFecha = $('cms-fecha');
+  var cmsFecha = $('cms-fecha');
   var cmsPublicado = $('cms-publicado'), cmsSearch = $('cms-search');
   var cmsFilterTipo = $('cms-filter-tipo'), cmsApplyFilter = $('cms-apply-filter');
   var cmsClearSearch = $('cms-clear-search'), cmsSelectAll = $('cms-select-all');
@@ -65,11 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
   var cmsBulkPublish = $('cms-bulk-publish'), cmsBulkUnpublish = $('cms-bulk-unpublish');
   var cmsBulkDelete = $('cms-bulk-delete'), cmsCreateBtn = $('cms-create-btn');
   var cmsCloseModal = $('cms-close-modal'), cmsCancelBtn = $('cms-cancel-btn');
-  var cmsImagenPreview = $('cms-imagen-preview'), cmsImagenPreviewContainer = $('cms-imagen-preview-container');
-  var cmsPdfInfo = $('cms-pdf-info');
   var cmsImageUpload = $('cms-image-upload'), cmsImageUploadBtn = $('cms-image-upload-btn');
   var cmsPdfUpload = $('cms-pdf-upload'), cmsPdfUploadBtn = $('cms-pdf-upload-btn');
   var cmsPagination = $('cms-pagination');
+  // Multi-file arrays
+  var cmsImagenUrl = $('cms-imagen-url'), cmsImageAddUrl = $('cms-image-add-url');
+  var cmsPdfUrl = $('cms-pdf-url'), cmsPdfAddUrl = $('cms-pdf-add-url');
+  var cmsImagenesList = $('cms-imagenes-list'), cmsPdfsList = $('cms-pdfs-list');
+  var cmsImagenes = [], cmsPdfs = [];
 
   var allPublications = [];
   var selectedIds = {};
@@ -118,19 +124,79 @@ document.addEventListener('DOMContentLoaded', () => {
     return ed ? ed.innerHTML : (cmsContenido ? cmsContenido.value : '');
   }
 
-  // ===== IMAGE PREVIEW =====
-  function initImagePreview() {
-    if (!cmsImagen || !cmsImagenPreviewContainer || !cmsImagenPreview) return;
-    cmsImagen.addEventListener('input', function() {
-      var url = cmsImagen.value.trim();
-      if (url) {
-        cmsImagenPreview.src = url;
-        cmsImagenPreview.onload = function() { cmsImagenPreviewContainer.classList.remove('hidden'); };
-        cmsImagenPreview.onerror = function() { cmsImagenPreviewContainer.classList.add('hidden'); };
-      } else {
-        cmsImagenPreviewContainer.classList.add('hidden');
-      }
+  // ===== MULTI-FILE MANAGEMENT =====
+  function renderImageList() {
+    if (!cmsImagenesList) return;
+    if (cmsImagenes.length === 0) {
+      cmsImagenesList.innerHTML = '<div class="text-xs text-gray-400 w-full text-center py-4 border-2 border-dashed border-gray-200 rounded-lg">No hay imágenes agregadas</div>';
+      return;
+    }
+    cmsImagenesList.innerHTML = cmsImagenes.map(function(url, i) {
+      var isImg = url.match(/\.(jpe?g|png|gif|webp|svg)(\?|$)/i) || url.startsWith('data:image');
+      return '<div class="relative group inline-block" title="' + url.replace(/"/g,'&quot;') + '">' +
+        (isImg
+          ? '<img src="' + url.replace(/"/g,'&quot;') + '" class="w-20 h-20 object-cover rounded-lg border border-gray-200 shadow-sm">'
+          : '<div class="w-20 h-20 flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200 text-gray-400"><i class="fas fa-image text-2xl"></i></div>') +
+        '<button type="button" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-red-600 shadow" data-remove-imagen="' + i + '"><i class="fas fa-times"></i></button>' +
+        '</div>';
+    }).join('');
+    cmsImagenesList.querySelectorAll('[data-remove-imagen]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.dataset.removeImagen);
+        cmsImagenes.splice(idx, 1);
+        renderImageList();
+      });
     });
+  }
+
+  function renderPdfList() {
+    if (!cmsPdfsList) return;
+    if (cmsPdfs.length === 0) {
+      cmsPdfsList.innerHTML = '<div class="text-xs text-gray-400 w-full text-center py-4 border-2 border-dashed border-gray-200 rounded-lg">No hay PDFs agregados</div>';
+      return;
+    }
+    cmsPdfsList.innerHTML = cmsPdfs.map(function(url, i) {
+      var name = url.split('/').pop().split('?')[0] || 'documento.pdf';
+      if (name.length > 30) name = name.substring(0, 27) + '...';
+      return '<div class="flex items-center justify-between bg-red-50 border border-red-200 rounded-lg px-3 py-2 group">' +
+        '<div class="flex items-center gap-2 min-w-0 flex-1">' +
+        '<i class="fas fa-file-pdf text-red-500"></i>' +
+        '<span class="text-sm text-gray-700 truncate" title="' + url.replace(/"/g,'&quot;') + '">' + name + '</span>' +
+        '</div>' +
+        '<button type="button" class="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition flex-shrink-0 ml-2" data-remove-pdf="' + i + '"><i class="fas fa-times-circle"></i></button>' +
+        '</div>';
+    }).join('');
+    cmsPdfsList.querySelectorAll('[data-remove-pdf]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.dataset.removePdf);
+        cmsPdfs.splice(idx, 1);
+        renderPdfList();
+      });
+    });
+  }
+
+  function addImageUrl(url) {
+    url = url.trim();
+    if (!url) return;
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:')) {
+      showToast('La URL no es válida', 'error');
+      return;
+    }
+    cmsImagenes.push(url);
+    renderImageList();
+    if (cmsImagenUrl) cmsImagenUrl.value = '';
+  }
+
+  function addPdfUrl(url) {
+    url = url.trim();
+    if (!url) return;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      showToast('La URL no es válida', 'error');
+      return;
+    }
+    cmsPdfs.push(url);
+    renderPdfList();
+    if (cmsPdfUrl) cmsPdfUrl.value = '';
   }
 
   // ===== SUBIDA DE ARCHIVOS A SUPABASE STORAGE =====
@@ -148,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initFileUploads() {
-    // Imagen
+    // Imagen - subir a storage y agregar a lista
     if (cmsImageUpload && cmsImageUploadBtn) {
       cmsImageUploadBtn.addEventListener('click', function() { cmsImageUpload.click(); });
       cmsImageUpload.addEventListener('change', async function(e) {
@@ -161,8 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cmsImageUploadBtn.disabled = true;
           cmsImageUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
           var url = await uploadFile(file, 'publicacion-imagenes');
-          if (cmsImagen) cmsImagen.value = url;
-          var ev = new Event('input'); cmsImagen.dispatchEvent(ev);
+          addImageUrl(url);
           showToast('Imagen subida correctamente', 'success');
         } catch(err) {
           showToast('Error al subir imagen: ' + err.message, 'error');
@@ -174,7 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    // PDF
+    // Agregar URL de imagen manualmente
+    if (cmsImageAddUrl && cmsImagenUrl) {
+      cmsImageAddUrl.addEventListener('click', function() { addImageUrl(cmsImagenUrl.value); });
+      cmsImagenUrl.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); addImageUrl(cmsImagenUrl.value); } });
+    }
+    // PDF - subir a storage y agregar a lista
     if (cmsPdfUpload && cmsPdfUploadBtn) {
       cmsPdfUploadBtn.addEventListener('click', function() { cmsPdfUpload.click(); });
       cmsPdfUpload.addEventListener('change', async function(e) {
@@ -187,8 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cmsPdfUploadBtn.disabled = true;
           cmsPdfUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
           var url = await uploadFile(file, 'publicacion-pdfs');
-          if (cmsPdf) cmsPdf.value = url;
-          var ev = new Event('input'); cmsPdf.dispatchEvent(ev);
+          addPdfUrl(url);
           showToast('PDF subido correctamente', 'success');
         } catch(err) {
           showToast('Error al subir PDF: ' + err.message, 'error');
@@ -199,6 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
           cmsPdfUpload.value = '';
         }
       });
+    }
+    // Agregar URL de PDF manualmente
+    if (cmsPdfAddUrl && cmsPdfUrl) {
+      cmsPdfAddUrl.addEventListener('click', function() { addPdfUrl(cmsPdfUrl.value); });
+      cmsPdfUrl.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); addPdfUrl(cmsPdfUrl.value); } });
     }
   }
 
@@ -213,23 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch(e) { return { valid: false, message: 'La URL no es válida' }; }
   }
   function initPdfValidation() {
-    if (!cmsPdf || !cmsPdfInfo) return;
-    cmsPdf.addEventListener('input', function() {
-      var url = cmsPdf.value.trim();
-      if (!url) { cmsPdfInfo.classList.add('hidden'); cmsPdf.classList.remove('input-error','input-success'); return; }
-      var r = validatePdfUrl(url);
-      if (r.valid) {
-        cmsPdfInfo.className = 'cms-pdf-info valid';
-        cmsPdfInfo.innerHTML = '<i class="fas fa-check-circle"></i> URL de PDF válida';
-        cmsPdfInfo.classList.remove('hidden');
-        cmsPdf.classList.remove('input-error'); cmsPdf.classList.add('input-success');
-      } else {
-        cmsPdfInfo.className = 'cms-pdf-info invalid';
-        cmsPdfInfo.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + r.message;
-        cmsPdfInfo.classList.remove('hidden');
-        cmsPdf.classList.remove('input-success'); cmsPdf.classList.add('input-error');
-      }
-    });
+    // PDF validation now inline in addPdfUrl and per-item in the array
   }
 
   // ===== FORM VALIDATION =====
@@ -247,8 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cmsTitulo.value.trim()) { showFieldError(cmsTitulo, 'El título es obligatorio'); valid = false; }
     if (!cmsTipo.value) { showFieldError(cmsTipo, 'Selecciona un tipo'); valid = false; }
     if (!cmsFecha.value) { showFieldError(cmsFecha, 'La fecha es obligatoria'); valid = false; }
-    if (cmsImagen.value.trim()) { try { new URL(cmsImagen.value.trim()); } catch(e) { showFieldError(cmsImagen, 'URL de imagen no válida'); valid = false; } }
-    if (cmsPdf.value.trim()) { var r = validatePdfUrl(cmsPdf.value.trim()); if (!r.valid) { showFieldError(cmsPdf, r.message); valid = false; } }
     return valid;
   }
 
@@ -309,7 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
     for (var i = 0; i < pubs.length; i++) {
       var p = pubs[i];
       var sel = selectedIds[p.id] || false;
-      var img = p.imagen_url || '';
+      var firstImg = '';
+      try { var imgs = typeof p.imagenes === 'string' ? JSON.parse(p.imagenes) : p.imagenes; if (imgs && imgs.length > 0) firstImg = imgs[0]; } catch(e) {}
+      var img = firstImg || p.imagen_url || '';
       var imgHtml = img
         ? '<img src="' + escapeHtml(img) + '" alt="" class="cms-thumb-img" loading="lazy" onerror="this.parentElement.innerHTML=\'<div class=\\\\\'cms-thumb-placeholder\\\\\'><i class=\\\\\'fas fa-image\\\\\'></i></div>\'">'
         : '<div class="cms-thumb-placeholder"><i class="fas fa-image"></i></div>';
@@ -349,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmsLoading) cmsLoading.classList.remove('hidden');
     if (cmsEmpty) cmsEmpty.classList.add('hidden');
     try {
+      console.log('CMS: fetching publicaciones page', currentPage);
       var query = supabase.from('publicaciones').select('*', { count: 'exact' });
       if (currentTipo) query = query.eq('tipo', currentTipo);
       if (currentSearch) query = query.or('titulo.ilike.%' + currentSearch + '%,resumen.ilike.%' + currentSearch + '%');
@@ -358,17 +417,37 @@ document.addEventListener('DOMContentLoaded', () => {
         .order('fecha_publicacion', { ascending: false, nullsFirst: false })
         .order('creado_en', { ascending: false })
         .range(from, to);
+      console.log('CMS: query result:', result);
       if (cmsLoading) cmsLoading.classList.add('hidden');
       if (result.error) throw result.error;
       allPublications = result.data || [];
       totalCount = result.count || 0;
+      console.log('CMS: loaded', allPublications.length, 'publications, total:', totalCount);
+      // Debug pre-render
+      console.log('CMS: cmsTbody element:', cmsTbody);
+      console.log('CMS: section-cms classes:', document.getElementById('section-cms')?.className);
+      console.log('CMS: cms-loading classes:', document.getElementById('cms-loading')?.className);
       renderTable(allPublications);
+      // Debug post-render
+      console.log('CMS: tbody child count:', cmsTbody ? cmsTbody.children.length : 'null');
+      if (cmsTbody) {
+        console.log('CMS: tbody HTML length:', cmsTbody.innerHTML.length);
+        if (cmsTbody.children.length > 0) {
+          console.log('CMS: first row HTML:', cmsTbody.children[0].innerHTML.substring(0, 100));
+        } else {
+          // Force a test row to verify DOM manipulation works
+          console.log('CMS: tbody empty, inserting test row');
+          cmsTbody.innerHTML = '<tr><td colspan="7" class="text-center p-4 bg-red-100">TEST ROW - si ves esto, innerHTML funciona</td></tr>';
+          console.log('CMS: after test insert, child count:', cmsTbody.children.length);
+        }
+      }
       updatePagination();
       if (cmsClearSearch) {
         if (currentSearch || currentTipo) cmsClearSearch.classList.remove('hidden');
         else cmsClearSearch.classList.add('hidden');
       }
     } catch(err) {
+      console.error('CMS loadPublications error:', err);
       if (cmsLoading) cmsLoading.classList.add('hidden');
       if (cmsTbody) cmsTbody.innerHTML = '<tr class="error-row"><td colspan="7" class="text-center py-10 text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error: ' + err.message + '</td></tr>';
     } finally { isLoading = false; }
@@ -466,20 +545,19 @@ document.addEventListener('DOMContentLoaded', () => {
   var DRAFT_KEY = 'cms_draft';
   var draftTimeout = null;
   function autoSaveDraft() {
-    if (!cmsEditId.value) {
-      var draft = {
-        titulo: cmsTitulo ? cmsTitulo.value : '',
-        tipo: cmsTipo ? cmsTipo.value : '',
-        resumen: cmsResumen ? cmsResumen.value : '',
-        contenido: getEditorContent(),
-        imagen_url: cmsImagen ? cmsImagen.value : '',
-        pdf_url: cmsPdf ? cmsPdf.value : '',
-        fecha: cmsFecha ? cmsFecha.value : '',
-        publicado: cmsPublicado ? cmsPublicado.checked : false,
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-    }
+    var draft = {
+      editId: cmsEditId ? cmsEditId.value : '',
+      titulo: cmsTitulo ? cmsTitulo.value : '',
+      tipo: cmsTipo ? cmsTipo.value : '',
+      resumen: cmsResumen ? cmsResumen.value : '',
+      contenido: getEditorContent(),
+      imagenes: cmsImagenes,
+      pdfs: cmsPdfs,
+      fecha: cmsFecha ? cmsFecha.value : '',
+      publicado: cmsPublicado ? cmsPublicado.checked : false,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
   }
   function scheduleAutoSave() { if (draftTimeout) clearTimeout(draftTimeout); draftTimeout = setTimeout(autoSaveDraft, 2000); }
   function restoreDraft() {
@@ -532,8 +610,8 @@ document.addEventListener('DOMContentLoaded', () => {
       setEditorContent('');
       if (cmsFecha) { var t = new Date(); cmsFecha.value = t.toISOString().split('T')[0]; }
       if (cmsPublicado) cmsPublicado.checked = true;
-      if (cmsImagenPreviewContainer) cmsImagenPreviewContainer.classList.add('hidden');
-      if (cmsPdfInfo) cmsPdfInfo.classList.add('hidden');
+      cmsImagenes = []; cmsPdfs = [];
+      renderImageList(); renderPdfList();
       var errs = document.querySelectorAll('.field-error');
       for (var i = 0; i < errs.length; i++) errs[i].remove();
       var errInputs = document.querySelectorAll('.input-error');
@@ -546,11 +624,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cmsTipo) cmsTipo.value = draft.tipo || 'semanario';
         if (cmsResumen) cmsResumen.value = draft.resumen || '';
         setEditorContent(draft.contenido || '');
-        if (cmsImagen) cmsImagen.value = draft.imagen_url || '';
-        if (cmsPdf) cmsPdf.value = draft.pdf_url || '';
+        if (draft.imagenes && Array.isArray(draft.imagenes)) cmsImagenes = draft.imagenes.slice();
+        else if (draft.imagen_url) cmsImagenes = [draft.imagen_url];
+        if (draft.pdfs && Array.isArray(draft.pdfs)) cmsPdfs = draft.pdfs.slice();
+        else if (draft.pdf_url) cmsPdfs = [draft.pdf_url];
+        renderImageList();
+        renderPdfList();
         if (cmsFecha) cmsFecha.value = draft.fecha || '';
         if (cmsPublicado) cmsPublicado.checked = draft.publicado !== undefined ? draft.publicado : true;
-        if (draft.imagen_url) { var ev = new Event('input'); cmsImagen.dispatchEvent(ev); }
       }
       if (cmsModal) cmsModal.classList.remove('hidden');
     });
@@ -563,10 +644,21 @@ document.addEventListener('DOMContentLoaded', () => {
     var data = result.data;
     cmsEditId.value = id; cmsTitulo.value = data.titulo || ''; cmsTipo.value = data.tipo || 'semanario';
     cmsResumen.value = data.resumen || ''; setEditorContent(data.contenido || '');
-    cmsImagen.value = data.imagen_url || ''; cmsPdf.value = data.pdf_url || '';
     cmsFecha.value = data.fecha_publicacion || ''; cmsPublicado.checked = data.publicado || false;
+    // Cargar arrays de imágenes y PDFs
+    try { cmsImagenes = (typeof data.imagenes === 'string' ? JSON.parse(data.imagenes) : data.imagenes) || []; } catch(e) { cmsImagenes = data.imagen_url ? [data.imagen_url] : []; }
+    try { cmsPdfs = (typeof data.pdfs === 'string' ? JSON.parse(data.pdfs) : data.pdfs) || []; } catch(e) { cmsPdfs = data.pdf_url ? [data.pdf_url] : []; }
+    renderImageList();
+    renderPdfList();
+    // Restaurar draft si existe (edición con cambios sin guardar)
+    try { var draft = JSON.parse(localStorage.getItem('cms-draft') || 'null'); if (draft && draft.editId === id) {
+      cmsTitulo.value = draft.titulo || ''; cmsResumen.value = draft.resumen || '';
+      setEditorContent(draft.contenido || '');
+      if (draft.imagenes) { cmsImagenes = draft.imagenes; renderImageList(); }
+      if (draft.pdfs) { cmsPdfs = draft.pdfs; renderPdfList(); }
+      showToast('Borrador recuperado para esta edición', 'info');
+    } } catch(e) {}
     if (cmsModalTitle) cmsModalTitle.textContent = 'Editar publicación';
-    if (data.imagen_url) { var ev = new Event('input'); cmsImagen.dispatchEvent(ev); }
     var ft = cmsTabs[0]; if (ft) ft.click();
     var errs = document.querySelectorAll('.field-error');
     for (var i = 0; i < errs.length; i++) errs[i].remove();
@@ -609,8 +701,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tipo: cmsTipo.value,
         resumen: cmsResumen.value.trim() || null,
         contenido: (cmsContenido ? cmsContenido.value.trim() : '') || null,
-        imagen_url: cmsImagen.value.trim() || null,
-        pdf_url: cmsPdf.value.trim() || null,
+        imagenes: JSON.stringify(cmsImagenes),
+        pdfs: JSON.stringify(cmsPdfs),
+        imagen_url: cmsImagenes.length > 0 ? cmsImagenes[0] : null,
+        pdf_url: cmsPdfs.length > 0 ? cmsPdfs[0] : null,
         fecha_publicacion: cmsFecha.value || null,
         publicado: cmsPublicado.checked,
         updated_at: new Date().toISOString()
@@ -673,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ===== AUTO-SAVE ON CHANGES =====
-  var autoSaveFields = [cmsTitulo, cmsTipo, cmsResumen, cmsImagen, cmsPdf, cmsFecha, cmsPublicado];
+  var autoSaveFields = [cmsTitulo, cmsTipo, cmsResumen, cmsImagenUrl, cmsPdfUrl, cmsFecha, cmsPublicado];
   for (var i = 0; i < autoSaveFields.length; i++) {
     var f = autoSaveFields[i];
     if (f) {
@@ -686,10 +780,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== INIT =====
   initRichTextEditor();
-  initImagePreview();
   initPdfValidation();
   initFileUploads();
   initModalTabs();
+  renderImageList();
+  renderPdfList();
   loadPublications();
   updateStats();
 });

@@ -42,13 +42,13 @@
     <div class="w-full max-w-md login-card-wrapper">
         <div class="flex justify-center mb-6">
             <a href="../index.html">
-                <img src="../Images/HEAD.svg"alt="IMMUJEL" class="h-24 w-auto drop-shadow-md">
+                <img src="../Images/HEAD.svg" alt="IMMUJEL" class="h-24 w-auto drop-shadow-md">
             </a>
         </div>
 
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden p-8 md:p-10">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienvenida</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienvenida <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">IMMUJEL</span></h2>
                 <p class="text-gray-600">Inicia sesión para acceder a tu cuenta</p>
             </div>
 
@@ -59,7 +59,7 @@
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-user"></i></span>
                         <input type="text" id="email" required 
-                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition bg-white" 
                                placeholder="usuario o correo@ejemplo.com">
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-lock"></i></span>
                         <input type="password" id="password" required 
-                               class="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition bg-white" 
+                               class="w-full pl-11 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition bg-white" 
                                placeholder="••••••••">
                         <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
                             <i class="fas fa-eye"></i>
@@ -80,7 +80,7 @@
 
                 <!-- Enlace de olvidé mi contraseña -->
                 <div class="text-right">
-                    <button type="button" id="forgot-password" class="text-sm text-pink-600 hover:underline focus:outline-none">¿Olvidaste tu contraseña?</button>
+                    <button type="button" id="forgot-password" class="text-sm text-purple-600 hover:underline focus:outline-none">¿Olvidaste tu contraseña?</button>
                 </div>
 
                 <!-- Mensaje de error -->
@@ -88,19 +88,19 @@
 
                 <!-- Botón submit -->
                 <button type="submit" id="submit-btn" 
-                        class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-pink-600 hover:to-rose-600 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 shadow-md">
-                    Iniciar Sesión
+                        class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-700 hover:to-blue-700 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 shadow-md">
+                    <i class="fas fa-arrow-right-to-bracket mr-2"></i> Iniciar Sesión
                 </button>
 
                 <p class="text-center text-gray-600 mt-6">
                     ¿No tienes cuenta? 
-                    <a href="signup.html" class="text-pink-600 font-semibold hover:underline">Regístrate aquí</a>
+                    <a href="signup.html" class="text-purple-600 font-semibold hover:underline">Regístrate aquí</a>
                 </p>
             </form>
         </div>
 
         <div class="text-center mt-6">
-            <a href="../index.html" class="text-gray-600 hover:text-pink-600 text-sm inline-flex items-center">
+            <a href="../index.html" class="text-gray-600 hover:text-purple-600 text-sm inline-flex items-center">
                 <i class="fas fa-arrow-left mr-2"></i> Volver al inicio
             </a>
         </div>
@@ -110,15 +110,15 @@
     <div id="reset-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-all duration-300">
         <div class="bg-white rounded-2xl max-w-md w-full mx-4 p-6 shadow-2xl">
             <div class="text-center">
-                <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-key text-pink-600 text-2xl"></i>
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-key text-purple-600 text-2xl"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Restablecer contraseña</h3>
                 <p class="text-gray-600 mb-4">Ingresa tu correo electrónico y te enviaremos un enlace para crear una nueva contraseña.</p>
                 <input type="email" id="reset-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4" placeholder="tuemail@ejemplo.com">
                 <div class="flex gap-3">
                     <button id="close-reset-modal" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition">Cancelar</button>
-                    <button id="send-reset-link" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-lg transition">Enviar enlace</button>
+                    <button id="send-reset-link" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition">Enviar enlace</button>
                 </div>
             </div>
         </div>
@@ -139,6 +139,23 @@
                     localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
                 });
             }
+        })();
+    </script>
+    <script src="../auth.js"></script>
+    <!-- Scroll to top -->
+    <button id="scrollToTop" class="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-white opacity-0 invisible transition-all duration-300"
+        style="background:linear-gradient(135deg,#A506AD,#0362CF)"
+        aria-label="Volver arriba">
+        <i class="fas fa-chevron-up text-lg"></i>
+    </button>
+    <script>
+        (function() {
+            const btn = document.getElementById('scrollToTop');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) { btn.classList.remove('opacity-0','invisible'); btn.classList.add('opacity-100','visible'); }
+                else { btn.classList.add('opacity-0','invisible'); btn.classList.remove('opacity-100','visible'); }
+            });
+            btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         })();
     </script>
 </body>

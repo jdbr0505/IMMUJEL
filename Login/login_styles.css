@@ -1,8 +1,8 @@
-/* login_styles.css – Fondo claro institucional + elementos visibles */
+/* login_styles.css – Fondo claro institucional con colores IMMUJEL */
 
-/* ========== MODO CLARO (default: degradado celeste-rosa-blanco) ========== */
+/* ========== MODO CLARO ========== */
 body {
-    background: linear-gradient(135deg, #e5f6ff 0%, #ffffff 50%, #ffebfa 100%);
+    background: linear-gradient(135deg, #F0F5FF 0%, #ffffff 50%, #F8F0FF 100%);
     position: relative;
     overflow-x: hidden;
     margin: 0;
@@ -10,7 +10,6 @@ body {
     color: #1f2937;
 }
 
-/* Manchas decorativas de luz (celeste y rosa) – permanecen igual */
 body::before {
     content: '';
     position: fixed;
@@ -18,7 +17,7 @@ body::before {
     left: 5%;
     width: 65%;
     height: 75%;
-    background: radial-gradient(circle, rgba(197, 241, 255, 0.8) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(186, 215, 248, 0.5) 0%, transparent 70%);
     filter: blur(75px);
     z-index: 0;
     pointer-events: none;
@@ -31,7 +30,7 @@ body::after {
     right: 0%;
     width: 70%;
     height: 80%;
-    background: radial-gradient(circle, rgba(255, 204, 249, 0.8) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(252, 191, 255, 0.5) 0%, transparent 70%);
     filter: blur(90px);
     z-index: 0;
     pointer-events: none;
@@ -42,11 +41,10 @@ body::after {
     100% { transform: translate(25px, -20px) scale(1.1); }
 }
 
-/* ========== ELEMENTOS DECORATIVOS FLOTANTES (ahora visibles en claro) ========== */
+/* ========== ELEMENTOS DECORATIVOS FLOTANTES ========== */
 .decorative-element {
     position: fixed;
-    /* Rosa pálido semitransparente, visible sobre el fondo claro */
-    color: rgba(255, 105, 180, 0.15);
+    color: rgba(165, 6, 173, 0.08);
     font-size: 5rem;
     z-index: 0;
     pointer-events: none;
@@ -64,20 +62,19 @@ body::after {
 }
 
 .bg-white {
-    background-color: rgba(255, 255, 255, 0.85) !important;
+    background-color: rgba(255, 255, 255, 0.88) !important;
     backdrop-filter: blur(15px);
-    border-top: 4px solid #ff3399;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #A506AD;
+    box-shadow: 0 15px 30px rgba(165, 6, 173, 0.08);
     transition: transform 0.3s ease;
     color: #1f2937;
 }
 
 .bg-white:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 35px rgba(165, 6, 173, 0.12);
 }
 
-/* Detalles decorativos (puntos y esquina) */
 .bg-white::after {
     content: '';
     position: absolute;
@@ -85,9 +82,9 @@ body::after {
     right: -15px;
     width: 80px;
     height: 80px;
-    background-image: radial-gradient(#ff3399 2px, transparent 2px);
+    background-image: radial-gradient(#A506AD 2px, transparent 2px);
     background-size: 15px 15px;
-    opacity: 0.25;
+    opacity: 0.15;
     border-radius: 50%;
     pointer-events: none;
 }
@@ -99,33 +96,32 @@ body::after {
     left: -10px;
     width: 60px;
     height: 60px;
-    border-left: 3px solid #ff3399;
-    border-bottom: 3px solid #ff3399;
-    opacity: 0.4;
+    border-left: 3px solid #0362CF;
+    border-bottom: 3px solid #0362CF;
+    opacity: 0.3;
     border-radius: 0 0 0 12px;
     pointer-events: none;
 }
 
-/* Inputs y botones */
 input, select, textarea {
     transition: all 0.2s ease;
 }
 
 input:focus {
-    border-color: #ff3399 !important;
-    box-shadow: 0 0 0 3px rgba(255, 51, 153, 0.2) !important;
+    border-color: #A506AD !important;
+    box-shadow: 0 0 0 3px rgba(165, 6, 173, 0.15) !important;
     transform: scale(1.01);
 }
 
 button[type="submit"] {
-    background: linear-gradient(135deg, #ff3399, #cc0066) !important;
+    background: linear-gradient(135deg, #A506AD, #0362CF) !important;
     border: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button[type="submit"]:hover:not(:disabled) {
     transform: scale(1.02);
-    box-shadow: 0 10px 25px rgba(255, 51, 153, 0.4);
+    box-shadow: 0 10px 25px rgba(165, 6, 173, 0.35);
 }
 
 /* Mensajes de error y modal */
@@ -216,6 +212,6 @@ body.dark-theme #reset-modal .bg-white {
     color: #F3F4F6;
 }
 
-body.dark-theme a.text-pink-600 {
+body.dark-theme a.text-purple-600 {
     color: #c474e8 !important;
 }

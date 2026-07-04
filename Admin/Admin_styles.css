@@ -20,7 +20,9 @@ body.dark-theme .text-gray-700 { color: #F3F4F6 !important; }
 body.dark-theme .text-gray-600,
 body.dark-theme .text-gray-500 { color: #D1D5DB !important; }
 body.dark-theme .border-gray-200,
-body.dark-theme .border-gray-100 { border-color: #4B5563 !important; }
+body.dark-theme .border-gray-100,
+body.dark-theme .border-purple-100 { border-color: #4B5563 !important; }
+body.dark-theme header.sticky { background: rgba(15, 10, 35, 0.95) !important; }
 body.dark-theme input,
 body.dark-theme select,
 body.dark-theme textarea { background-color: #1e1e2f; color: #F3F4F6; border-color: #4B5563; }
@@ -92,6 +94,7 @@ tbody tr { transition: background-color 0.15s ease; }
     box-shadow: -10px 0 40px rgba(0,0,0,0.12);
 }
 #cms-modal:not(.hidden) .cms-modal-panel { transform: translateX(0); }
+#cms-modal.hidden { display: flex !important; } /* override Tailwind display:none so CSS transition works */
 .cms-modal-header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 1.25rem 2rem; border-bottom: 1px solid #e5e7eb;

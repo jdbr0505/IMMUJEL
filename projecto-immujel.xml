@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proyecto>
+  <meta>
+    <nombre>IMMUJEL - Instituto Municipal de la Mujer de Lagunillas</nombre>
+    <descripcion>Sitio web institucional del Instituto Municipal de la Mujer del Municipio Lagunillas del Estado Zulia, Venezuela. Plataforma informativa y administrativa para la gestión de asesorías, publicación de contenido institucional y administración de roles.</descripcion>
+    <url>https://jdbr0505.github.io/IMMUJEL/</url>
+    <repositorio>https://github.com/jdbr0505/IMMUJEL</repositorio>
+    <backend>Supabase (PostgreSQL, Auth, Storage)</backend>
+    <frontend>HTML plano + CSS + JavaScript (Tailwind CDN, Font Awesome, Google Fonts)</frontend>
+    <despliegue>GitHub Pages</despliegue>
+    <supabase_url>https://vhgfyqodiieblhfwbama.supabase.co</supabase_url>
+    <supabase_anon_key>sb_publishable_UeGzzEedQ6XNCQCxzANvKw_JgYYV1QS</supabase_anon_key>
+  </meta>
+
+  <sistema_diseno>
+    <colores_oficiales>
+      <color hex="#A506AD" nombre="Púrpura Institucional" uso="Botones, encabezados, enlaces, fondos principales"/>
+      <color hex="#F66EFD" nombre="Magenta" uso="Acentos vibrantes, gradientes, badges"/>
+      <color hex="#FCBFFF" nombre="Lavanda" uso="Fondos suaves, glows, bordes"/>
+      <color hex="#0362CF" nombre="Azul Corporativo" uso="Botones secundarios, enlaces, tablas"/>
+      <color hex="#4190EB" nombre="Azul Cielo" uso="Fondos de sección, hover states"/>
+      <color hex="#BAD7F8" nombre="Azul Pálido" uso="Fondos alternos, glows sutiles"/>
+      <color hex="#02162E" nombre="Azul Profundo" uso="Modo oscuro, fondos hero, texto oscuro"/>
+      <color hex="#FFFFFF" nombre="Blanco" uso="Fondos de tarjetas, texto sobre oscuro"/>
+    </colores_oficiales>
+    <paletas_temporales>
+      <paleta nombre="Día Naranja" uso="25 de cada mes">
+        <color hex="#FF4D19"/><color hex="#FF734B"/><color hex="#FF7A00"/><color hex="#341206"/>
+      </paleta>
+      <paleta nombre="Octubre Rosa" uso="Prevención cáncer de mama">
+        <color hex="#FFBCD4"/><color hex="#FF70B2"/><color hex="#ED3991"/><color hex="#F81B96"/>
+      </paleta>
+      <paleta nombre="16 Días de Activismo" uso="Violencia de género">
+        <color hex="#E8B5FF"/><color hex="#DF99FF"/><color hex="#C474E8"/><color hex="#9614D0"/><color hex="#56007D"/>
+      </paleta>
+    </paletas_temporales>
+    <tipografia>
+      <fuente nombre="Montserrat" uso="Titulares (UltraGruesa), Subtítulos (Negrita), Cuerpo (Media)"/>
+      <fuente nombre="Arial Nova" uso="Cuerpos extensos"/>
+      <fuente nombre="Breathing" uso="Acento script"/>
+      <fuente nombre="Monarda" uso="Decorativa"/>
+      <fuente nombre="Placard Next Condensed" uso="Técnica/display"/>
+      <fuente nombre="Oswald" uso="Digital/moderna"/>
+    </tipografia>
+    <logotipo>
+      <descripcion>Símbolo Venus + silueta del Mural de la institución</descripcion>
+      <archivo src="Images/HEAD.svg" uso="Favicon, marca de agua"/>
+      <archivo src="Images/LOGO IMMUJEL.png" uso="Navbar, footer, encabezados"/>
+    </logotipo>
+  </sistema_diseno>
+
+  <estructura_archivos>
+    <raiz>
+      <archivo nombre="index.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página principal / Landing page</descripcion>
+        <funcionalidades>
+          <item>Navbar sticky con dropdown "Servicios" (Semanario, Noticiero, Eventos)</item>
+          <item>Carrusel de 8 slides institucionales con indicadores</item>
+          <item>Sección "Bienvenida" con texto institucional</item>
+          <item>3 tarjetas de servicios: Asesoría Jurídica, Apoyo Psicológico, Formación y Talleres</item>
+          <item>Sección "Líneas de Atención" con botones de contacto (WhatsApp, Instagram, Facebook, Teléfono)</item>
+          <item>Sección "Nuestro Impacto" con contadores animados vía IntersectionObserver</item>
+          <item>Footer completo con enlaces institucionales y redes sociales</item>
+          <item>Modo oscuro toggle</item>
+          <item>Scroll-to-top flotante</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="styles.css">
+        <tipo>CSS</tipo>
+        <descripcion>Hoja de estilos global (~1440 líneas)</descripcion>
+        <funcionalidades>
+          <item>Variables CSS con paleta oficial completa</item>
+          <item>Degradados hero animados (hero-gradient, hero-gradient-warm)</item>
+          <item>Glassmorphism (glass, glass-strong, glass-card)</item>
+          <item>Botones gradiente con efecto shine (btn-gradient-pink, btn-gradient-blue, btn-gradient-purple)</item>
+          <item>Texto gradiente (text-gradient, text-gradient-pink, text-gradient-warm, text-gradient-blue, text-gradient-full)</item>
+          <item>Badges gradiente y pills</item>
+          <item>Animaciones: pulseGlow, float, shimmer, scale-in, slide-in-right, stagger-fade</item>
+          <item>Formularios brand (inputs, selects, textareas, checkboxes)</item>
+          <item>Tablas CMS responsive</item>
+          <item>Toasts animados</item>
+          <item>Modo oscuro completo con variables</item>
+          <item>Scrollbar personalizada</item>
+          <item>Marca de agua del logo (logo-watermark)</item>
+          <item>Photo overlay degradado (photo-overlay)</item>
+          <item>Fondos de sección alternados (section-brand-*)</item>
+          <item>Fondo body con glows radiales de colores oficiales</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="animations.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Animaciones scroll-reveal con IntersectionObserver</descripcion>
+        <funcionalidades>
+          <item>Clases: .reveal (fade-in-up), .reveal-left (slide from left), .reveal-right (slide from right), .reveal-scale (scale in)</item>
+          <item>Fallback para navegadores sin IntersectionObserver</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="auth.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Manejador de sesión global - navbar dinámico</descripcion>
+        <funcionalidades>
+          <item>Verificación de sesión vía supabase.auth.getUser()</item>
+          <item>Inyecta enlace "Panel" en navbar para admin/asesora</item>
+          <item>Inyecta sección auth-section (login/register o username + logout)</item>
+          <item>Manejo de cierre de sesión</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="email-confirmacion.html">
+        <tipo>HTML</tipo>
+        <descripcion>Template de correo electrónico de confirmación de registro</descripcion>
+        <funcionalidades>
+          <item>SVG inline del símbolo institucional (Venus + mural)</item>
+          <item>Degradado púrpura→azul→profundo en header</item>
+          <item>Botón "Confirmar mi cuenta" con efecto glow</item>
+          <item>Tarjeta de valores institucionales (Gratuidad, Confidencialidad, Equidad)</item>
+          <item>Responsive, sin dependencia de imágenes externas</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="alter_publicaciones.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Migración: columnas JSONB imagenes y pdfs en publicaciones</descripcion>
+        <funcionalidades>
+          <item>ADD COLUMN imagenes JSONB DEFAULT '[]'</item>
+          <item>ADD COLUMN pdfs JSONB DEFAULT '[]'</item>
+          <item>Migra datos de imagen_url/pdf_url a arrays</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="alter_perfiles.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Migración: created_at en perfiles + políticas RLS</descripcion>
+        <funcionalidades>
+          <item>ADD COLUMN created_at TIMESTAMPTZ</item>
+          <item>CREATE POLICY perfiles_select FOR SELECT TO authenticated</item>
+          <item>CREATE POLICY perfiles_update FOR UPDATE TO authenticated</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="README.md">
+        <tipo>Markdown</tipo>
+        <descripcion>Documentación del proyecto con enlaces a GitHub y GitHub Pages</descripcion>
+      </archivo>
+    </raiz>
+
+    <directorio nombre="Admin/">
+      <archivo nombre="Admin.html">
+        <tipo>HTML</tipo>
+        <descripcion>Panel de administración con 3 tabs</descripcion>
+        <funcionalidades>
+          <item>Tab "Asesorías": tabla de solicitudes con KPIs, filtros, paginación</item>
+          <item>Tab "CMS": CRUD de publicaciones con editor enriquecido, subida de archivos</item>
+          <item>Tab "Usuarias": gestión de roles (solo admin)</item>
+          <item>Modal detalle de solicitud con notas internas</item>
+          <item>Modal "Nueva Asesoría" para creación manual por defensoras</item>
+          <item>Dashboard con 4 KPIs (total, pendiente, en proceso, finalizado)</item>
+          <item>Búsqueda con debounce y filtro por rol</item>
+          <item>Selectores de estado (pendiente, en proceso, finalizado, cancelado)</item>
+          <item>Asignación de asesora a solicitud</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="Admin.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Lógica del panel: asesorías + usuarias</descripcion>
+        <funcionalidades>
+          <item>Verificación de sesión y rol (admin/asesora)</item>
+          <item>loadReports(): carga solicitudes con filtros, resuelve nombres de asignación</item>
+          <item>Modal de detalle con notas de seguimiento (tabla notas_solicitud)</item>
+          <item>Actualización de estado (updateEstado)</item>
+          <item>Asignación de asesora con registro de asignada_por</item>
+          <item>Nueva asesoría manual: insert en solicitudes con tipo_asesoria</item>
+          <item>loadUsuarios(): carga perfiles, cache en allUsersCache</item>
+          <item>filterUsers(): filtro en cliente por texto y rol</item>
+          <item>renderUsuarios(): tabla con badge de rol y dropdown de cambio</item>
+          <item>Cambio de rol con confirmación y toast</item>
+          <item>KPIs de usuarias (total, asesoras, admins, usuarias)</item>
+          <item>Debounce de búsqueda (350ms)</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="Admin_cms.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>CMS de publicaciones con paginación, búsqueda, subida de archivos (~762 líneas)</descripcion>
+        <funcionalidades>
+          <item>showToast global (expuesto en window para Admin.js)</item>
+          <item>Paginación server-side con .range() (15 por página)</item>
+          <item>Búsqueda server-side con .ilike() y debounce 350ms</item>
+          <item>Stats con head:true (5 queries paralelas de conteo)</item>
+          <item>CRUD completo: crear, editar, publicar/ocultar, eliminar</item>
+          <item>Modal slide-in con 3 tabs: Contenido, Multimedia, SEO</item>
+          <item>Editor de texto enriquecido (toolbar con bold, italic, lists, headings)</item>
+          <item>Subida de imágenes a bucket publicacion-imagenes (máx 5MB)</item>
+          <item>Subida de PDFs a bucket publicacion-pdfs (máx 20MB)</item>
+          <item>Soporte multi-archivo: arrays JSONB imagenes[] y pdfs[]</item>
+          <item>Vista previa de imagen en vivo</item>
+          <item>Bulk actions: publicar/ocultar/eliminar múltiples</item>
+          <item>Keyboard shortcuts: Escape=Cancelar, Ctrl+S=Guardar</item>
+          <item>Auto-save drafts a localStorage cada 2s</item>
+          <item>Confirm dialog personalizado</item>
+          <item>Loading skeletons</item>
+          <item>Validación de formulario con errores por campo</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="Admin_styles.css">
+        <tipo>CSS</tipo>
+        <descripcion>Estilos del panel admin (~584 líneas)</descripcion>
+        <funcionalidades>
+          <item>Modal slide-in desde la derecha</item>
+          <item>Floating labels en formularios</item>
+          <item>Toggle switch personalizado</item>
+          <item>Toolbar y editor de texto enriquecido</item>
+          <item>Vista previa de imágenes con thumbnails</item>
+          <item>Validación visual de PDFs</item>
+          <item>Stats cards grid responsive</item>
+          <item>Tabla responsive → cards en móvil</item>
+          <item>Paginación con botones</item>
+          <item>Modo oscuro admin</item>
+        </funcionalidades>
+      </archivo>
+    </directorio>
+
+    <directorio nombre="Forms/">
+      <archivo nombre="form.html">
+        <tipo>HTML</tipo>
+        <descripcion>Formulario público de solicitud de asesoría</descripcion>
+        <funcionalidades>
+          <item>Checkbox "Solicitar de forma anónima" que oculta campos personales</item>
+          <item>Campo: nombre, cédula, teléfono, correo, parroquia (dropdown), descripción</item>
+          <item>Select de parroquias: Alonso de Ojeda, Libertad, Rómulo Gallegos, San Timoteo, Pedro Lucas Urribarrí</item>
+          <item>Teléfono siempre obligatorio</item>
+          <item>Navbar/footer idénticos al sitio principal</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="form.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Lógica de envío del formulario de asesoría</descripcion>
+        <funcionalidades>
+          <item>Validación de campos obligatorios según modo anónimo</item>
+          <item>Inserción en tabla solicitudes vía Supabase</item>
+          <item>Manejo de errores y feedback visual</item>
+          <item>Reset del formulario tras éxito</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="form_styles.css">
+        <tipo>CSS</tipo>
+        <descripcion>Estilos del formulario público</descripcion>
+        <funcionalidades>
+          <item>Fondo degradado institucional</item>
+          <item>Inputs y botones con colores brand</item>
+          <item>Adaptaciones modo oscuro</item>
+        </funcionalidades>
+      </archivo>
+    </directorio>
+
+    <directorio nombre="Images/">
+      <archivo nombre="LOGO IMMUJEL.png" tipo="PNG" descripcion="Logotipo completo institucional"/>
+      <archivo nombre="HEAD.svg" tipo="SVG" descripcion="Símbolo Venus + Mural (favicon y marca de agua)"/>
+      <archivo nombre="First Slade.png" tipo="PNG" descripcion="Slide 1: Conoce IMMUJEL"/>
+      <archivo nombre="Second Slade.png" tipo="PNG" descripcion="Slide 2: Nuestra Historia"/>
+      <archivo nombre="Third Slade.png" tipo="PNG" descripcion="Slide 3: Nuestra Labor"/>
+      <archivo nombre="Fourth Slade.png" tipo="PNG" descripcion="Slide 4: Red de Defensoría"/>
+      <archivo nombre="Fifth Slade.png" tipo="PNG" descripcion="Slide 5: Apoyo Comunitario"/>
+      <archivo nombre="Sixth Slade.png" tipo="PNG" descripcion="Slide 6: Construyendo Futuro"/>
+      <archivo nombre="Seventh Slade.png" tipo="PNG" descripcion="Slide 7: Atención a la Comunidad"/>
+      <archivo nombre="Eighth Slade.png" tipo="PNG" descripcion="Slide 8: Estamos para Escuchar"/>
+    </directorio>
+
+    <directorio nombre="Login/">
+      <archivo nombre="Login_supabase.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Inicialización del cliente Supabase</descripcion>
+        <funcionalidades>
+          <item>window.supabase = supabase.createClient(url, anonKey)</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="login.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de inicio de sesión</descripcion>
+        <funcionalidades>
+          <item>Input único: usuario o correo electrónico</item>
+          <item>Toggle visibilidad de contraseña</item>
+          <item>Modal de "Olvidé mi contraseña" con envío de reset</item>
+          <item>Enlace a registro</item>
+          <item>Redirección según rol (admin/asesora → Admin.html)</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="login.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Lógica de inicio de sesión</descripcion>
+        <funcionalidades>
+          <item>resolveEmail(): resuelve nombre_usuario → email consultando perfiles</item>
+          <item>signInWithPassword() con email resuelto</item>
+          <item>Manejo de errores: credenciales inválidas, email no confirmado</item>
+          <item>Redirección post-login según rol</item>
+          <item>Recuperación de contraseña con resetPasswordForEmail()</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="login_styles.css">
+        <tipo>CSS</tipo>
+        <descripcion>Estilos de login con fondo degradado brand</descripcion>
+        <funcionalidades>
+          <item>Fondo con pseudo-elementos decorativos (blobs, iconos flotantes)</item>
+          <item>Tarjeta glass con sombra</item>
+          <item>Animación shake en error</item>
+          <item>Modal con scale-in</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="signup.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de registro de usuarias</descripcion>
+        <funcionalidades>
+          <item>Campos: nombre completo, nombre de usuario, email, teléfono, contraseña, confirmar contraseña</item>
+          <item>Toggle visibilidad de contraseña</item>
+          <item>Validación de coincidencia de contraseñas</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="signup.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Lógica de registro</descripcion>
+        <funcionalidades>
+          <item>Validación de campos (teléfono venezolano con regex)</item>
+          <item>supabase.auth.signUp() para crear usuario</item>
+          <item>Inserción en tabla perfiles con rol='usuaria' por defecto</item>
+          <item>Redirección a login tras 3 segundos</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="signup.css">
+        <tipo>CSS</tipo>
+        <descripcion>Estilos de registro (misma familia que login_styles.css)</descripcion>
+      </archivo>
+
+      <archivo nombre="update-password.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de cambio de contraseña post-reset</descripcion>
+        <funcionalidades>
+          <item>Input de nueva contraseña con indicador de fortaleza</item>
+          <item>Confirmar contraseña</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="update-password.js">
+        <tipo>JavaScript</tipo>
+        <descripcion>Lógica de actualización de contraseña</descripcion>
+        <funcionalidades>
+          <item>Extrae access_token de URL hash</item>
+          <item>setSession() para establecer sesión</item>
+          <item>Verificador de fortaleza de contraseña</item>
+          <item>supabase.auth.updateUser() para cambiar contraseña</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="update-password.css">
+        <tipo>CSS</tipo>
+        <descripcion>Estilos de cambio de contraseña</descripcion>
+      </archivo>
+    </directorio>
+
+    <directorio nombre="NavBar's/">
+      <archivo nombre="Sobre Nosotras.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página institucional "Sobre Nosotras" con historia, misión, visión, valores</descripcion>
+        <funcionalidades>
+          <item>Hero con degradado animado y burbujas</item>
+          <item>Antecedentes: contexto constitucional venezolano (Constitución 1999, Ley Orgánica 2007)</item>
+          <item>Nacimiento de IMMUJEL: 2009 (Gaceta N°833), Resolución N°2023-043</item>
+          <item>Lcda. Yohanna Boscan como presidenta (2024)</item>
+          <item>Línea de tiempo visual (2009 → 2023 → 2024 → Presente)</item>
+          <item>Misión y Visión en tarjetas con iconos</item>
+          <item>Valores y Principios: Gratuidad, Honestidad, Equidad, Calidez, Confidencialidad, Sororidad, Solidaridad</item>
+          <item>Áreas de Atención: Psicológica, Jurídica, Social con photo-overlay</item>
+          <item>Cifras institucionales: 500+ atendidas, 50+ talleres, 3 áreas, 100% gratuito</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="Programas.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de programas y servicios</descripcion>
+        <funcionalidades>
+          <item>Hero con gradiente y burbujas animadas</item>
+          <item>3 tarjetas de programas: Empoderamiento, Prevención VBG, Atención Integral</item>
+          <item>Sección CTA con botones de contacto</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="FL.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de Fundamentos Legales</descripcion>
+        <funcionalidades>
+          <item>Hero gradiente con texto clip</item>
+          <item>6 leyes nacionales: LOPM, LOSPPD, Ley Orgánica del Trabajo, LOTTT, LOPNNA, Ley de VBG</item>
+          <item>2 tratados internacionales: CEDAW, Convención Belem do Pará</item>
+          <item>Ordenanza Municipal de Lagunillas</item>
+          <item>Botón de descarga de documentos</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="semanario.html">
+        <tipo>HTML</tipo>
+        <descripcion>Listado público del Semanario institucional</descripcion>
+        <funcionalidades>
+          <item>Grid de tarjetas con paginación "Cargar más" (9 en 9)</item>
+          <item>Select('id, titulo, resumen, imagenes, fecha_publicacion')</item>
+          <item>.range() server-side</item>
+          <item>Usa primera imagen del array imagenes[]</item>
+          <item>Enlace a publicacion.html?id=</item>
+          <item>Estado vacío con mensaje</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="noticiero.html">
+        <tipo>HTML</tipo>
+        <descripcion>Listado público de noticias</descripcion>
+        <funcionalidades>
+          <item>Misma estructura que semanario.html pero con tipo='noticiero'</item>
+          <item>Tema azul en icono de reemplazo</item>
+          <item>Botón "Cargar más noticias"</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="publicacion.html">
+        <tipo>HTML</tipo>
+        <descripcion>Página de detalle de publicación individual</descripcion>
+        <funcionalidades>
+          <item>Galería de imágenes navegable con snap-scroll horizontal y dots indicadores</item>
+          <item>Badge de tipo (Semanario/Noticia)</item>
+          <item>Fecha de publicación</item>
+          <item>Resumen destacado</item>
+          <item>Contenido HTML renderizado</item>
+          <item>Lista de PDFs adjuntos con enlaces de descarga</item>
+          <item>Navegación "Volver" según tipo</item>
+        </funcionalidades>
+      </archivo>
+
+      <subdirectorio nombre="Events/">
+        <descripcion>Directorio placeholder para futura sección de eventos</descripcion>
+      </subdirectorio>
+    </directorio>
+  </estructura_archivos>
+
+  <base_de_datos>
+    <esquema>public</esquema>
+
+    <tabla nombre="perfiles">
+      <descripcion>Perfiles de usuarias registradas</descripcion>
+      <columnas>
+        <columna nombre="id" tipo="UUID" pk="true" ref="auth.users.id"/>
+        <columna nombre="nombre_completo" tipo="TEXT"/>
+        <columna nombre="nombre_usuario" tipo="TEXT" unique="true"/>
+        <columna nombre="email" tipo="TEXT"/>
+        <columna nombre="telefono" tipo="TEXT"/>
+        <columna nombre="rol" tipo="TEXT" default="usuaria" check="usuaria, asesora, admin"/>
+        <columna nombre="avatar_url" tipo="TEXT" nullable="true"/>
+        <columna nombre="created_at" tipo="TIMESTAMPTZ" default="now()"/>
+      </columnas>
+      <rls>
+        <politica nombre="perfiles_select" for="SELECT" to="authenticated" using="true"/>
+        <politica nombre="perfiles_update" for="UPDATE" to="authenticated" using="true" with_check="true"/>
+      </rls>
+    </tabla>
+
+    <tabla nombre="solicitudes">
+      <descripcion>Solicitudes de asesoría</descripcion>
+      <columnas>
+        <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
+        <columna nombre="nombre_completo" tipo="TEXT" nullable="true"/>
+        <columna nombre="cedula" tipo="TEXT" nullable="true"/>
+        <columna nombre="telefono" tipo="TEXT"/>
+        <columna nombre="correo" tipo="TEXT" nullable="true"/>
+        <columna nombre="parroquia" tipo="TEXT"/>
+        <columna nombre="descripcion" tipo="TEXT"/>
+        <columna nombre="es_anonimo" tipo="BOOLEAN" default="false"/>
+        <columna nombre="tipo_asesoria" tipo="TEXT" check="juridica, psicologica, social, general"/>
+        <columna nombre="estado" tipo="TEXT" default="pendiente" check="pendiente, en proceso, finalizado, cancelado"/>
+        <columna nombre="asignada_por" tipo="UUID" ref="perfiles.id" nullable="true"/>
+        <columna nombre="asignada_a" tipo="UUID" ref="perfiles.id" nullable="true"/>
+        <columna nombre="creado_en" tipo="TIMESTAMPTZ" default="now()"/>
+      </columnas>
+    </tabla>
+
+    <tabla nombre="notas_solicitud">
+      <descripcion>Notas internas de seguimiento por solicitud</descripcion>
+      <columnas>
+        <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
+        <columna nombre="solicitud_id" tipo="UUID" ref="solicitudes.id" on_delete="cascade"/>
+        <columna nombre="contenido" tipo="TEXT"/>
+        <columna nombre="creado_en" tipo="TIMESTAMPTZ" default="now()"/>
+      </columnas>
+    </tabla>
+
+    <tabla nombre="publicaciones">
+      <descripcion>Publicaciones del CMS (Semanario y Noticiero)</descripcion>
+      <columnas>
+        <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
+        <columna nombre="titulo" tipo="TEXT"/>
+        <columna nombre="resumen" tipo="TEXT"/>
+        <columna nombre="contenido" tipo="TEXT"/>
+        <columna nombre="tipo" tipo="TEXT" check="semanario, noticiero"/>
+        <columna nombre="imagen_url" tipo="TEXT" nullable="true"/>
+        <columna nombre="pdf_url" tipo="TEXT" nullable="true"/>
+        <columna nombre="imagenes" tipo="JSONB" default="[]"/>
+        <columna nombre="pdfs" tipo="JSONB" default="[]"/>
+        <columna nombre="publicado" tipo="BOOLEAN" default="false"/>
+        <columna nombre="fecha_publicacion" tipo="DATE" nullable="true"/>
+        <columna nombre="creado_en" tipo="TIMESTAMPTZ" default="now()"/>
+        <columna nombre="updated_at" tipo="TIMESTAMPTZ" default="now()"/>
+      </columnas>
+    </tabla>
+  </base_de_datos>
+
+  <supabase_storage>
+    <bucket nombre="publicacion-imagenes" descripcion="Imágenes subidas desde el CMS"/>
+    <bucket nombre="publicacion-pdfs" descripcion="PDFs subidos desde el CMS"/>
+  </supabase_storage>
+
+  <funcionalidades_crosscutting>
+    <funcionalidad nombre="Autenticación">
+      <descripcion>Sistema completo de autenticación vía Supabase Auth</descripcion>
+      <items>
+        <item>Registro con email, contraseña y perfil</item>
+        <item>Login con usuario o email (resolución vía tabla perfiles)</item>
+        <item>Recuperación de contraseña por email</item>
+        <item>Cambio de contraseña post-reset</item>
+        <item>Verificación de email con template personalizado</item>
+        <item>Sesión persistente en localStorage</item>
+        <item>Roles: admin, asesora, usuaria</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Panel de Administración">
+      <descripcion>Panel con 3 tabs para gestión completa</descripcion>
+      <items>
+        <item>Acceso restringido por rol (admin/asesora)</item>
+        <item>Dashboard con KPIs de solicitudes</item>
+        <item>Gestión de asesorías: ver, filtrar, cambiar estado, asignar</item>
+        <item>Notas internas por solicitud</item>
+        <item>Creación manual de asesorías con tipo</item>
+        <item>CMS completo con CRUD, paginación, búsqueda</item>
+        <item>Subida de imágenes y PDFs a Storage</item>
+        <item>Soporte multi-archivo por publicación</item>
+        <item>Gestión de roles de usuarias (solo admin)</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="CMS de Publicaciones">
+      <descripcion>Sistema de gestión de contenido para Semanario y Noticiero</descripcion>
+      <items>
+        <item>Editor de texto enriquecido con toolbar</item>
+        <item>Paginación server-side (15 por página en admin, 9 en público)</item>
+        <item>Búsqueda con ilike server-side</item>
+        <item>Múltiples imágenes (JSONB array) con galería</item>
+        <item>Múltiples PDFs (JSONB array) descargables</item>
+        <item>Publicar/ocultar individual o masivo</item>
+        <item>Auto-save drafts en localStorage</item>
+        <item>Keyboard shortcuts</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Navegación y UX">
+      <descripcion>Sistema de navegación y experiencia de usuario consistente</descripcion>
+      <items>
+        <item>Navbar sticky unificado en todas las páginas</item>
+        <item>Footer idéntico con logo, enlaces, redes sociales, créditos</item>
+        <item>Modo oscuro toggle con persistencia</item>
+        <item>Scroll-to-top flotante con gradiente (aparece a 300px)</item>
+        <item>Smooth scroll en toda la página</item>
+        <item>Scroll reveal animations con IntersectionObserver</item>
+        <item>Navbar dinámico según sesión (login/logout/panel)</item>
+        <item>Dropdown "Servicios" con Semanario, Noticiero, Eventos</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Formulario de Asesoría">
+      <descripcion>Formulario público de solicitud de asesoría legal/psicológica/social</descripcion>
+      <items>
+        <item>Modo anónimo que oculta datos personales</item>
+        <item>Validación de teléfono venezolano</item>
+        <item>Parroquias del municipio Lagunillas</item>
+        <item>Inserción directa a Supabase</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Páginas Públicas">
+      <descripcion>Páginas informativas del sitio web</descripcion>
+      <items>
+        <item>Index con carrusel, impacto, servicios, CTA</item>
+        <item>Sobre Nosotras con historia institucional real y línea de tiempo</item>
+        <item>Programas con 3 áreas de atención</item>
+        <item>Fundamentos Legales con leyes, tratados y ordenanzas</item>
+        <item>Semanario y Noticiero con paginación "Cargar más"</item>
+        <item>Detalle de publicación con galería y PDFs</item>
+      </items>
+    </funcionalidad>
+  </funcionalidades_crosscutting>
+
+  <pendiente>
+    <item>Ejecutar alter_publicaciones.sql en Supabase Dashboard</item>
+    <item>Ejecutar alter_solicitudes.sql (crear columna tipo_asesoria en solicitudes) — archivo no creado aún</item>
+    <item>Subir HEAD.svg y LOGO IMMUJEL.png a Supabase Storage</item>
+    <item>Probar CMS con múltiples imágenes y PDFs</item>
+    <item>Probar cambio de roles desde Admin → Usuarias</item>
+  </pendiente>
+</proyecto>
