@@ -104,7 +104,7 @@
         <descripcion>Manejador de sesión global - navbar dinámico</descripcion>
         <funcionalidades>
           <item>Verificación de sesión vía supabase.auth.getUser()</item>
-          <item>Inyecta enlace "Panel" en navbar para admin/asesora</item>
+          <item>Inyecta enlace "Admin" profesional en navbar para admin/asesora (gradiente purple→indigo, icono corona, punto verde pulsante)</item>
           <item>Inyecta sección auth-section (login/register o username + logout)</item>
           <item>Manejo de cierre de sesión</item>
         </funcionalidades>
@@ -142,6 +142,48 @@
         </funcionalidades>
       </archivo>
 
+      <archivo nombre="run_all_migrations.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Migración consolidada: RLS policies, columnas JSONB, storage</descripcion>
+        <funcionalidades>
+          <item>RLS policies para perfiles, solicitudes, notas_solicitud, publicaciones</item>
+          <item>Corrección de columnas JSONB (imagenes/pdfs) si están como TEXT</item>
+          <item>Migración de URLs sueltas a arrays JSONB</item>
+          <item>Storage policies para anon SELECT y auth INSERT/DELETE</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="disable_rls_fix.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Deshabilita RLS en todas las tablas para solucionar bloqueos</descripcion>
+        <funcionalidades>
+          <item>ALTER TABLE DISABLE ROW LEVEL SECURITY en publicaciones, solicitudes, notas_solicitud, perfiles</item>
+          <item>DROP POLICY de todas las políticas existentes</item>
+          <item>Corrección de columnas JSONB</item>
+          <item>Migración de URLs a arrays JSONB</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="sync_profiles.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Sincroniza auth.users → perfiles para usuarios sin perfil</descripcion>
+        <funcionalidades>
+          <item>SELECT de usuarios en auth.users sin perfil en perfiles</item>
+          <item>INSERT de perfiles faltantes con rol='usuaria'</item>
+          <item>Verificación post-sync</item>
+        </funcionalidades>
+      </archivo>
+
+      <archivo nombre="alter_storage_rls.sql">
+        <tipo>SQL</tipo>
+        <descripcion>Políticas RLS para storage.objects</descripcion>
+        <funcionalidades>
+          <item>storage_select_anon: SELECT para anon en buckets publicacion-imagenes, publicacion-pdfs</item>
+          <item>storage_insert_auth: INSERT para authenticated</item>
+          <item>storage_delete_auth: DELETE para authenticated</item>
+        </funcionalidades>
+      </archivo>
+
       <archivo nombre="README.md">
         <tipo>Markdown</tipo>
         <descripcion>Documentación del proyecto con enlaces a GitHub y GitHub Pages</descripcion>
@@ -151,7 +193,7 @@
     <directorio nombre="Admin/">
       <archivo nombre="Admin.html">
         <tipo>HTML</tipo>
-        <descripcion>Panel de administración con 3 tabs</descripcion>
+        <descripcion>Panel de administración con 3 tabs, modo oscuro, switchTab global</descripcion>
         <funcionalidades>
           <item>Tab "Asesorías": tabla de solicitudes con KPIs, filtros, paginación</item>
           <item>Tab "CMS": CRUD de publicaciones con editor enriquecido, subida de archivos</item>
@@ -162,6 +204,10 @@
           <item>Búsqueda con debounce y filtro por rol</item>
           <item>Selectores de estado (pendiente, en proceso, finalizado, cancelado)</item>
           <item>Asignación de asesora a solicitud</item>
+          <item>Modo oscuro toggle con persistencia en localStorage</item>
+          <item>switchTab() vía onclick directo (eliminada dependencia de DOMContentLoaded)</item>
+          <item>Meta tags anti-cache + ?v= en scripts</item>
+          <item>Estructura HTML corregida: divs balanceados (146/146)</item>
         </funcionalidades>
       </archivo>
 
@@ -175,7 +221,8 @@
           <item>Actualización de estado (updateEstado)</item>
           <item>Asignación de asesora con registro de asignada_por</item>
           <item>Nueva asesoría manual: insert en solicitudes con tipo_asesoria</item>
-          <item>loadUsuarios(): carga perfiles, cache en allUsersCache</item>
+          <item>loadUsuarios(): carga perfiles con caché allUsersCache</item>
+          <item>loadUsuarios() llamada en inicialización (línea 569) para poblar caché</item>
           <item>filterUsers(): filtro en cliente por texto y rol</item>
           <item>renderUsuarios(): tabla con badge de rol y dropdown de cambio</item>
           <item>Cambio de rol con confirmación y toast</item>
@@ -186,7 +233,7 @@
 
       <archivo nombre="Admin_cms.js">
         <tipo>JavaScript</tipo>
-        <descripcion>CMS de publicaciones con paginación, búsqueda, subida de archivos (~762 líneas)</descripcion>
+        <descripcion>CMS de publicaciones con paginación, búsqueda, subida de archivos (~790 líneas)</descripcion>
         <funcionalidades>
           <item>showToast global (expuesto en window para Admin.js)</item>
           <item>Paginación server-side con .range() (15 por página)</item>
@@ -198,6 +245,8 @@
           <item>Subida de imágenes a bucket publicacion-imagenes (máx 5MB)</item>
           <item>Subida de PDFs a bucket publicacion-pdfs (máx 20MB)</item>
           <item>Soporte multi-archivo: arrays JSONB imagenes[] y pdfs[]</item>
+          <item>JSON.parse corregido para arrays JSONB ya deserializados</item>
+          <item>console.error en loadPublications para debugging</item>
           <item>Vista previa de imagen en vivo</item>
           <item>Bulk actions: publicar/ocultar/eliminar múltiples</item>
           <item>Keyboard shortcuts: Escape=Cancelar, Ctrl+S=Guardar</item>
@@ -210,7 +259,7 @@
 
       <archivo nombre="Admin_styles.css">
         <tipo>CSS</tipo>
-        <descripcion>Estilos del panel admin (~584 líneas)</descripcion>
+        <descripcion>Estilos del panel admin (~587 líneas)</descripcion>
         <funcionalidades>
           <item>Modal slide-in desde la derecha</item>
           <item>Floating labels en formularios</item>
@@ -221,7 +270,7 @@
           <item>Stats cards grid responsive</item>
           <item>Tabla responsive → cards en móvil</item>
           <item>Paginación con botones</item>
-          <item>Modo oscuro admin</item>
+          <item>Modo oscuro admin (header, border-purple, modo oscuro header.sticky)</item>
         </funcionalidades>
       </archivo>
     </directorio>
@@ -467,14 +516,13 @@
         <columna nombre="avatar_url" tipo="TEXT" nullable="true"/>
         <columna nombre="created_at" tipo="TIMESTAMPTZ" default="now()"/>
       </columnas>
-      <rls>
-        <politica nombre="perfiles_select" for="SELECT" to="authenticated" using="true"/>
-        <politica nombre="perfiles_update" for="UPDATE" to="authenticated" using="true" with_check="true"/>
+      <rls estado="DESHABILITADO">
+        <politica>RLS deshabilitado en todas las tablas (disable_rls_fix.sql) para garantizar funcionamiento del panel admin</politica>
       </rls>
     </tabla>
 
     <tabla nombre="solicitudes">
-      <descripcion>Solicitudes de asesoría</descripcion>
+      <descripcion>Solicitudes de asesoría (RLS deshabilitado)</descripcion>
       <columnas>
         <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
         <columna nombre="nombre_completo" tipo="TEXT" nullable="true"/>
@@ -493,7 +541,7 @@
     </tabla>
 
     <tabla nombre="notas_solicitud">
-      <descripcion>Notas internas de seguimiento por solicitud</descripcion>
+      <descripcion>Notas internas de seguimiento por solicitud (RLS deshabilitado)</descripcion>
       <columnas>
         <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
         <columna nombre="solicitud_id" tipo="UUID" ref="solicitudes.id" on_delete="cascade"/>
@@ -503,7 +551,7 @@
     </tabla>
 
     <tabla nombre="publicaciones">
-      <descripcion>Publicaciones del CMS (Semanario y Noticiero)</descripcion>
+      <descripcion>Publicaciones del CMS (Semanario y Noticiero) (RLS deshabilitado)</descripcion>
       <columnas>
         <columna nombre="id" tipo="UUID" pk="true" default="gen_random_uuid()"/>
         <columna nombre="titulo" tipo="TEXT"/>
@@ -553,6 +601,9 @@
         <item>Subida de imágenes y PDFs a Storage</item>
         <item>Soporte multi-archivo por publicación</item>
         <item>Gestión de roles de usuarias (solo admin)</item>
+        <item>Modo oscuro con persistencia localStorage</item>
+        <item>switchTab() por onclick directo (sin dependencia de DOMContentLoaded)</item>
+        <item>Estructura HTML con divs balanceados (146/146)</item>
       </items>
     </funcionalidad>
 
@@ -575,11 +626,12 @@
       <items>
         <item>Navbar sticky unificado en todas las páginas</item>
         <item>Footer idéntico con logo, enlaces, redes sociales, créditos</item>
-        <item>Modo oscuro toggle con persistencia</item>
+        <item>Modo oscuro toggle con persistencia localStorage en todas las páginas (incluyendo Admin)</item>
         <item>Scroll-to-top flotante con gradiente (aparece a 300px)</item>
         <item>Smooth scroll en toda la página</item>
         <item>Scroll reveal animations con IntersectionObserver</item>
-        <item>Navbar dinámico según sesión (login/logout/panel)</item>
+        <item>Navbar dinámico según sesión (login/logout/panel Admin)</item>
+        <item>Botón "Admin" profesional con gradiente, corona y punto verde pulsante</item>
         <item>Dropdown "Servicios" con Semanario, Noticiero, Eventos</item>
       </items>
     </funcionalidad>
@@ -608,10 +660,10 @@
   </funcionalidades_crosscutting>
 
   <pendiente>
-    <item>Ejecutar alter_publicaciones.sql en Supabase Dashboard</item>
-    <item>Ejecutar alter_solicitudes.sql (crear columna tipo_asesoria en solicitudes) — archivo no creado aún</item>
     <item>Subir HEAD.svg y LOGO IMMUJEL.png a Supabase Storage</item>
     <item>Probar CMS con múltiples imágenes y PDFs</item>
+    <item>Ejecutar sync_profiles.sql para crear perfiles de usuarios existentes sin perfil</item>
+    <item>Probar creación manual de asesoría desde Admin</item>
     <item>Probar cambio de roles desde Admin → Usuarias</item>
   </pendiente>
 </proyecto>
