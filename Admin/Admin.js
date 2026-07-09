@@ -600,7 +600,7 @@ window.switchTab = async function(tab) {
   document.getElementById(`tab-${tab}`)?.classList.remove('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
 
   document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-  document.getElementById(`content-${tab}`)?.classList.remove('hidden');
+  document.getElementById(`section-${tab}`)?.classList.remove('hidden');
 
   if (tab === 'asesorias') {
     await loadAsesoras();
