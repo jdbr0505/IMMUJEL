@@ -1,24 +1,6 @@
 ﻿// Admin_cms.js – CMS de publicaciones con paginación, búsqueda y subida de archivos
 
-// ===== TOAST (global, fuera de DOMContentLoaded para Admin.js) =====
-(function() {
-  function createToastContainer() {
-    let c = document.getElementById('toast-container');
-    if (!c) { c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); }
-    return c;
-  }
-  window.showToast = function showToast(msg, type, duration) {
-    if (!type) type = 'success';
-    if (!duration) duration = 4000;
-    const c = createToastContainer();
-    const t = document.createElement('div');
-    t.className = 'toast toast-' + type;
-    const icons = {success:'fa-check-circle',error:'fa-exclamation-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
-    t.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + ' toast-icon"></i><span>' + msg + '</span>';
-    c.appendChild(t);
-    setTimeout(() => { t.classList.add('toast-leaving'); setTimeout(() => t.remove(), 300); }, duration);
-  };
-})();
+// showToast definido en Admin.js (compatible con Admin_cms.js)
 
 document.addEventListener('DOMContentLoaded', () => {
   const supabase = window.supabase;
@@ -407,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmsLoading) cmsLoading.classList.remove('hidden');
     if (cmsEmpty) cmsEmpty.classList.add('hidden');
     try {
-      console.log('CMS: fetching publicaciones page', currentPage);
+      // console.log('CMS: fetching publicaciones page', currentPage);
       var query = supabase.from('publicaciones').select('*', { count: 'exact' });
       if (currentTipo) query = query.eq('tipo', currentTipo);
       if (currentSearch) query = query.or('titulo.ilike.%' + currentSearch + '%,resumen.ilike.%' + currentSearch + '%');
@@ -417,30 +399,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .order('fecha_publicacion', { ascending: false, nullsFirst: false })
         .order('creado_en', { ascending: false })
         .range(from, to);
-      console.log('CMS: query result:', result);
       if (cmsLoading) cmsLoading.classList.add('hidden');
       if (result.error) throw result.error;
       allPublications = result.data || [];
       totalCount = result.count || 0;
-      console.log('CMS: loaded', allPublications.length, 'publications, total:', totalCount);
-      // Debug pre-render
-      console.log('CMS: cmsTbody element:', cmsTbody);
-      console.log('CMS: section-cms classes:', document.getElementById('section-cms')?.className);
-      console.log('CMS: cms-loading classes:', document.getElementById('cms-loading')?.className);
       renderTable(allPublications);
-      // Debug post-render
-      console.log('CMS: tbody child count:', cmsTbody ? cmsTbody.children.length : 'null');
-      if (cmsTbody) {
-        console.log('CMS: tbody HTML length:', cmsTbody.innerHTML.length);
-        if (cmsTbody.children.length > 0) {
-          console.log('CMS: first row HTML:', cmsTbody.children[0].innerHTML.substring(0, 100));
-        } else {
-          // Force a test row to verify DOM manipulation works
-          console.log('CMS: tbody empty, inserting test row');
-          cmsTbody.innerHTML = '<tr><td colspan="7" class="text-center p-4 bg-red-100">TEST ROW - si ves esto, innerHTML funciona</td></tr>';
-          console.log('CMS: after test insert, child count:', cmsTbody.children.length);
-        }
-      }
       updatePagination();
       if (cmsClearSearch) {
         if (currentSearch || currentTipo) cmsClearSearch.classList.remove('hidden');
@@ -715,6 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else { result = await supabase.from('publicaciones').insert(payload); }
       if (result.error) { showToast('Error al guardar: ' + result.error.message, 'error'); if (sb) { sb.disabled = false; sb.innerHTML = obh; } return; }
       showToast(eid ? 'Publicación actualizada' : 'Publicación creada', 'success');
+      // La notificación se envía automáticamente mediante el trigger PostgreSQL trg_notify_publicacion
       clearDraft();
       if (cmsModal) cmsModal.classList.add('hidden');
       if (sb) { sb.disabled = false; sb.innerHTML = obh; }

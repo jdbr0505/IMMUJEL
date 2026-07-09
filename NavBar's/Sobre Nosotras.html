@@ -15,6 +15,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../Login/Login_supabase.js"></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
 </head>
 <body class="antialiased">
 
@@ -55,11 +60,7 @@
                                     <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
                                 </a>
                             </li>
-                            <li role="none">
-                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
-                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
-                                </a>
-                            </li>
+                            
                             <li role="none">
                                 <a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
                                     <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
@@ -99,15 +100,13 @@
 
     <!-- ========== HERO SECTION ========== -->
     <section class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-pink-900 to-blue-900"></div>
-        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 30% 40%, rgba(255,51,153,0.5) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(3,98,207,0.4) 0%, transparent 50%);"></div>
-        <div class="absolute top-10 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div class="absolute bottom-10 right-10 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 3s;"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(135deg, #F66EFD 0%, #A506AD 40%, #6B0470 100%);"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 25% 35%, rgba(252,191,255,0.5) 0%, transparent 50%), radial-gradient(circle at 75% 65%, rgba(165,6,173,0.3) 0%, transparent 50%);"></div>
         <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-pink-300 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-heart mr-2"></i>CONÓCENOS</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Sobre <span class="text-transparent bg-clip-text bg-gradient-to-r from-white-400 to-purple-300">Nosotras</span></h1>
-                <p class="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Conoce nuestra historia, misión y el compromiso que nos impulsa a servir a las mujeres de Lagunillas.</p>
+                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-heart mr-2"></i>CONÓCENOS</span>
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Sobre Nosotras</h1>
+                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Conoce nuestra historia, misi&oacute;n y el compromiso que nos impulsa a servir a las mujeres de Lagunillas.</p>
             </div>
         </div>
     </section>
@@ -156,46 +155,63 @@
                     <div class="w-16 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-3"></div>
                 </div>
 
-                <!-- Timeline visual -->
-                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mb-10">
-                    <div class="bg-purple-100 rounded-xl p-5 text-center w-full md:w-48 relative">
-                        <div class="text-2xl font-black text-purple-700">2009</div>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mb-12">
+                    <!-- 2009 -->
+                    <div class="rounded-xl p-5 text-center w-full md:w-48 relative border-2" style="border-color:#A506AD;background:#faf5ff;">
+                        <div class="text-2xl font-black" style="color:#A506AD;">2009</div>
                         <p class="text-xs text-gray-600 mt-1">Ordenanza de Creación<br>Gaceta Municipal N° 833</p>
-                        <div class="hidden md:block absolute top-1/2 -right-3 w-6 h-6 bg-purple-600 rounded-full border-4 border-white shadow"></div>
+                        <div class="hidden md:block absolute top-1/2 -right-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:#A506AD;"></div>
                     </div>
                     <div class="hidden md:flex items-center">
-                        <div class="w-16 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600"></div>
-                        <i class="fas fa-arrow-right text-blue-600 -ml-3"></i>
+                        <div class="w-16 h-0.5" style="background:linear-gradient(90deg,#A506AD,#0362CF);"></div>
+                        <i class="fas fa-arrow-right -ml-3" style="color:#0362CF;"></i>
                     </div>
                     <div class="md:hidden flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-purple-600 text-xl"></i>
+                        <i class="fas fa-arrow-down text-xl" style="color:#A506AD;"></i>
                     </div>
-                    <div class="bg-blue-100 rounded-xl p-5 text-center w-full md:w-48 relative">
-                        <div class="text-2xl font-black text-blue-700">2023</div>
+                    <!-- 2023 -->
+                    <div class="rounded-xl p-5 text-center w-full md:w-48 relative border-2" style="border-color:#0362CF;background:#eff6ff;">
+                        <div class="text-2xl font-black" style="color:#0362CF;">2023</div>
                         <p class="text-xs text-gray-600 mt-1">Inicio de actividades<br>Resolución N° 2023-043</p>
-                        <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 bg-blue-600 rounded-full border-4 border-white shadow"></div>
+                        <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:#0362CF;"></div>
                     </div>
                     <div class="hidden md:flex items-center">
-                        <div class="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"></div>
-                        <i class="fas fa-arrow-right text-purple-600 -ml-3"></i>
+                        <div class="w-16 h-0.5" style="background:linear-gradient(90deg,#0362CF,#A506AD);"></div>
+                        <i class="fas fa-arrow-right -ml-3" style="color:#A506AD;"></i>
                     </div>
                     <div class="md:hidden flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-purple-600 text-xl"></i>
+                        <i class="fas fa-arrow-down text-xl" style="color:#A506AD;"></i>
                     </div>
-                    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-5 text-center w-full md:w-48 shadow-lg">
+                    <!-- Maria Claret 2023-2024 -->
+                    <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,#A506AD,#7c04b5);">
+                        <div class="text-2xl font-black text-white">2023</div>
+                        <p class="text-xs text-purple-300 mt-1">Maria Claret Velásquez. Primera presidenta.</p>
+                        <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:#7c04b5;"></div>
+                    </div>
+                    <div class="hidden md:flex items-center">
+                        <div class="w-16 h-0.5" style="background:linear-gradient(90deg,#7c04b5,#0362CF);"></div>
+                        <i class="fas fa-arrow-right -ml-3" style="color:#0362CF;"></i>
+                    </div>
+                    <div class="md:hidden flex items-center justify-center">
+                        <i class="fas fa-arrow-down text-xl" style="color:#A506AD;"></i>
+                    </div>
+                    <!-- 2024 Yohanna -->
+                    <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,#0362CF,#A506AD);">
                         <div class="text-2xl font-black text-white">2024</div>
-                        <p class="text-xs text-purple-200 mt-1">Lcda. Yohanna Boscan asume la presidencia</p>
+                        <p class="text-xs text-blue-200 mt-1">Lcda. Yohanna Boscan asume la presidencia</p>
+                        <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:#A506AD;"></div>
                     </div>
                     <div class="hidden md:flex items-center">
-                        <div class="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"></div>
-                        <i class="fas fa-arrow-right text-purple-600 -ml-3"></i>
+                        <div class="w-16 h-0.5" style="background:linear-gradient(90deg,#A506AD,#02162E);"></div>
+                        <i class="fas fa-arrow-right -ml-3" style="color:#02162E;"></i>
                     </div>
                     <div class="md:hidden flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-purple-600 text-xl"></i>
+                        <i class="fas fa-arrow-down text-xl" style="color:#A506AD;"></i>
                     </div>
-                    <div class="bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl p-5 text-center w-full md:w-48 shadow-lg">
+                    <!-- Presente -->
+                    <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,#02162E,#0362CF);">
                         <div class="text-2xl font-black text-white">Presente</div>
-                        <p class="text-xs text-blue-200 mt-1">Atención integral a la mujer lagunillense</p>
+                        <p class="text-xs text-blue-300 mt-1">Atención integral a la mujer lagunillense</p>
                     </div>
                 </div>
 
@@ -206,6 +222,9 @@
                             <p>Sin embargo, no es hasta el <strong>11 de julio de 2023</strong> cuando, por iniciativa del Alcalde del Municipio Lagunillas, <strong>José Mosquera Adarme</strong> y en cumplimiento de las políticas públicas de protección a la mujer, formalmente se da inicio a las actividades del instituto, tal y como consta en la <strong>Resolución N° 2023-043</strong> de la misma fecha.</p>
                             <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-r-lg">
                                 <p class="text-sm text-gray-700"><i class="fas fa-quote-left text-purple-400 mr-1"></i> El gobierno municipal tenía una deuda con la mujer lagunillense... hoy IMMUJEL es una realidad al servicio de nuestra gente.</p>
+                            </div>
+                            <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-r-lg">
+                                <p class="text-sm text-gray-700"><i class="fas fa-user-tie text-purple-500 mr-1"></i> En el período <strong>2023–2024</strong>, asume como primera presidenta del instituto la <strong>Lcda. Maria Claret Velásquez</strong>, sentando las bases institucionales de IMMUJEL.</p>
                             </div>
                             <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
                                 <p class="text-sm text-gray-700"><i class="fas fa-user-shield text-blue-500 mr-1"></i> Para el período <strong>2024</strong>, asume la presidencia del instituto la <strong>Lcda. Yohanna Boscan</strong>, liderando la consolidación de IMMUJEL como ente rector de las políticas públicas municipales para la protección integral de la mujer lagunillense.</p>
@@ -279,31 +298,31 @@
                     <p class="text-gray-500 mt-3 max-w-xl mx-auto">El código de ética tiene por objeto regular los principios rectores de los deberes y conductas que deben observar los servidores públicos en el ejercicio de sus funciones.</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4 border-green-500">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-hand-holding-heart text-green-600 text-2xl"></i>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:#A506AD;">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#f3e8ff;">
+                            <i class="fas fa-hand-holding-heart text-2xl" style="color:#A506AD;"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Gratuidad</h3>
                         <p class="text-gray-500 text-sm mt-2">Todos los servicios del instituto son completamente gratuitos como garantía de acceso a la justicia y la protección para todas las mujeres sin distinción.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4 border-purple-500">
-                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shield-alt text-purple-600 text-2xl"></i>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:#A506AD;">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#f3e8ff;">
+                            <i class="fas fa-shield-alt text-2xl" style="color:#A506AD;"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Honestidad</h3>
                         <p class="text-gray-500 text-sm mt-2">Actuamos con transparencia, integridad y rectitud en cada una de nuestras actuaciones, velando siempre por el interés superior de la mujer.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4 border-blue-500">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-scale-balanced text-blue-600 text-2xl"></i>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:#A506AD;">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#f3e8ff;">
+                            <i class="fas fa-scale-balanced text-2xl" style="color:#A506AD;"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Equidad</h3>
                         <p class="text-gray-500 text-sm mt-2">Promovemos la igualdad real y efectiva, reconociendo las diferencias y necesidades específicas de cada mujer para garantizar sus derechos.</p>
                     </div>
                 </div>
-                <div class="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-100">
+                <div class="mt-8 rounded-xl p-6" style="background:linear-gradient(135deg,#f3e8ff,#e8f4ff);border:1px solid #d8b4fe;">
                     <div class="flex items-start gap-4">
-                        <i class="fas fa-book-open text-purple-600 mt-1"></i>
+                        <i class="fas fa-book-open mt-1" style="color:#A506AD;"></i>
                         <div>
                             <p class="text-sm font-semibold text-gray-700">Código de Ética</p>
                             <p class="text-sm text-gray-500 mt-1">Estos valores éticos rigen el ejercicio de la función pública en IMMUJEL, previniendo los hechos que atenten, amenacen o lesionen la ética pública y la moral administrativa, en beneficio de las mujeres del municipio Lagunillas del Estado Zulia.</p>
@@ -427,16 +446,16 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
                     <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">500+</div>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-1">2800+</div>
                         <p class="text-purple-200 text-sm">Mujeres Atendidas</p>
                     </div>
                     <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">2023</div>
-                        <p class="text-purple-200 text-sm">Inicio de Actividades</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-1">85+</div>
+                        <p class="text-purple-200 text-sm">Talleres Realizados</p>
                     </div>
                     <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">3</div>
-                        <p class="text-purple-200 text-sm">Áreas de Atención</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-1">150+</div>
+                        <p class="text-purple-200 text-sm">Defensoras en el Municipio</p>
                     </div>
                     <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
                         <div class="text-3xl md:text-4xl font-black text-white mb-1">100%</div>
@@ -482,92 +501,13 @@
         </div>
     </footer>
 
-    <script>
-        (function() {
-            // Menú móvil
-            const menuBtn = document.getElementById('menu-btn');
-            const menu = document.getElementById('menu');
-            if (menuBtn && menu) {
-                menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
-            }
-
-            // ---------- DROPDOWN SERVICIOS (clase activa) ----------
-            const serviciosBtn = document.getElementById('servicios-btn');
-            const serviciosDropdown = document.getElementById('servicios-dropdown');
-            const serviciosArrow = document.getElementById('servicios-arrow');
-
-            if (serviciosBtn && serviciosDropdown) {
-                serviciosBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-                    
-                    if (isOpen) {
-                        cerrarDropdown();
-                    } else {
-                        abrirDropdown();
-                    }
-                });
-
-                // Cierra al hacer clic fuera del dropdown
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        cerrarDropdown();
-                    }
-                });
-
-                function abrirDropdown() {
-                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'true');
-                    serviciosArrow.classList.add('rotate-180');
-                }
-
-                function cerrarDropdown() {
-                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'false');
-                    serviciosArrow.classList.remove('rotate-180');
-                }
-            }
-
-            // Tema oscuro
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            body.classList.remove('dark-theme');
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') body.classList.add('dark-theme');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark-theme');
-                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-                });
-            }
-        })();
-    </script>
     <script src="../auth.js"></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('scrollToTop');
-            if (!btn) return;
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        btn.classList.toggle('visible', window.scrollY > 300);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            btn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
     <script src="../animations.js"></script>
+    <script src="../js/ui.js" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 </html>

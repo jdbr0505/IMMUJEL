@@ -1,0 +1,26 @@
+{
+  "name": "IMMUJEL — Instituto Municipal de la Mujer de Lagunillas",
+  "short_name": "IMMUJEL",
+  "description": "Instituto Municipal de la Mujer de Lagunillas. Atención integral, asesoría jurídica, psicológica y social para la mujer lagunillense.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0FF",
+  "theme_color": "#A506AD",
+  "orientation": "portrait-primary",
+  "lang": "es-VE",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/Images/LOGO IMMUJEL.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Images/LOGO IMMUJEL.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

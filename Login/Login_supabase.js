@@ -1,4 +1,4 @@
 // Login_supabase.js
 const supabaseUrl = 'https://vhgfyqodiieblhfwbama.supabase.co';
-const supabaseAnonKey = 'sb_publishable_UeGzzEedQ6XNCQCxzANvKw_JgYYV1QS';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ2Z5cW9kaWllYmxoZndiYW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTI4NDEsImV4cCI6MjA5MDkyODg0MX0.rG6waTumXqBTn8GxnuljYre0qUn4ZcAijx2egcGGgB0';
 window.supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);

@@ -9,10 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../Login/Login_supabase.js"></script>
 </head>
 <body class="antialiased">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
             <div class="flex items-center space-x-4">
@@ -35,7 +41,7 @@
                         </button>
                         <ul id="servicios-dropdown" class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none" role="menu">
                             <li role="none"><a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías</a></li>
-                            <li role="none"><a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos</a></li>
+                            
                             <li role="none"><a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional</a></li>
                             <li role="none"><a href="./noticiero.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem"><i class="fas fa-bullhorn w-5 mr-2 text-blue-500"></i> Noticiero</a></li>
                         </ul>
@@ -66,6 +72,14 @@
             <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-3"><i class="fas fa-newspaper text-purple-600 mr-2"></i> Semanario Institucional</h1>
             <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mb-4"></div>
             <p class="text-gray-600 text-lg">Mantente informada sobre nuestras gestiones y logros semanales.</p>
+        </div>
+
+        <!-- Buscador -->
+        <div class="max-w-md mx-auto mb-8">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-search"></i></span>
+                <input type="text" id="semanario-search" class="w-full pl-11 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="Buscar ediciones..." autocomplete="off">
+            </div>
         </div>
 
         <div id="semanario-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal"></div>
@@ -115,19 +129,26 @@
     <script src="../auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const supabase = window.supabase;
-            if (!supabase) return;
             const grid = document.getElementById('semanario-grid');
             const loading = document.getElementById('semanario-loading');
             const empty = document.getElementById('semanario-empty');
             const loadMoreDiv = document.getElementById('semanario-load-more');
             const loadMoreBtn = document.getElementById('semanario-load-more-btn');
+            const searchInput = document.getElementById('semanario-search');
             let page = 0;
             const pageSize = 9;
             let loadingMore = false;
             let hasMore = true;
+            let searchTerm = '';
 
-            async function loadEditions(append) {
+            function showEmpty() {
+                loading.classList.add('hidden');
+                empty.classList.remove('hidden');
+                if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
+                hasMore = false;
+            }
+
+            async function loadEditions(append, searchTerm) {
                 if (!append) {
                     page = 0;
                     hasMore = true;
@@ -136,31 +157,46 @@
                     empty.classList.add('hidden');
                     if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
                 }
+
+                const sb = window.supabase;
+                if (!sb) { showEmpty(); return; }
+
                 const from = page * pageSize;
                 const to = from + pageSize - 1;
-                const { data, error, count } = await supabase
+                let data, error, count;
+                try {
+                  let query = sb
                     .from('publicaciones')
                     .select('id, titulo, resumen, imagen_url, imagenes, fecha_publicacion', { count: 'exact' })
                     .eq('tipo', 'semanario')
-                    .eq('publicado', true)
+                    .eq('publicado', true);
+                  if (searchTerm) {
+                    query = query.or('titulo.ilike.%${searchTerm}%,resumen.ilike.%${searchTerm}%');
+                  }
+                  const result = await query
                     .order('fecha_publicacion', { ascending: false, nullsFirst: false })
                     .order('creado_en', { ascending: false })
                     .range(from, to);
+                  data = result.data;
+                  error = result.error;
+                  count = result.count;
+                } catch (e) {
+                  loading.classList.add('hidden');
+                  if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
+                  grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error de conexión. Verifica tu internet.</div>';
+                  return;
+                }
 
                 loading.classList.add('hidden');
                 if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
 
-                if (error || !data || data.length === 0) {
-                    if (!append) empty.classList.remove('hidden');
-                    if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
-                    hasMore = false;
-                    return;
-                }
+                if (error) { showEmpty(); return; }
+                if (!data || data.length === 0) { showEmpty(); return; }
 
                 empty.classList.add('hidden');
                 const html = data.map(p => {
                     let firstImg = '';
-                    try { var imgs = JSON.parse(p.imagenes); if (imgs && imgs.length > 0) firstImg = imgs[0]; } catch(e) {}
+                    try { var imgs = typeof p.imagenes === 'string' ? JSON.parse(p.imagenes) : p.imagenes; if (imgs && imgs.length > 0) firstImg = imgs[0]; } catch(e) {}
                     if (!firstImg) firstImg = p.imagen_url || '';
                     return `<a href="./publicacion.html?id=${p.id}" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition group cursor-pointer ${append ? 'reveal-scale' : ''}">
                         ${firstImg ? `<img src="${firstImg}" alt="${p.titulo}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">` : `<div class="h-48 bg-gradient-to-br from-purple-200 to-blue-200 flex items-center justify-center group-hover:from-purple-300 group-hover:to-blue-300 transition-all"><i class="fas fa-newspaper text-4xl text-purple-500 group-hover:scale-110 transition-transform"></i></div>`}
@@ -174,7 +210,7 @@
                             </div>
                         </div>
                     </a>
-                `).join('');
+                `}).join('');
                 if (append) grid.insertAdjacentHTML('beforeend', html);
                 else grid.innerHTML = html;
 
@@ -189,87 +225,35 @@
                     loadingMore = true;
                     loadMoreBtn.disabled = true;
                     loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Cargando...';
-                    await loadEditions(true);
+                    await loadEditions(true, searchTerm);
                     loadMoreBtn.disabled = false;
                     loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down mr-2"></i> Cargar más ediciones';
                     loadingMore = false;
                 });
             }
 
-            loadEditions(false);
+            if (searchInput) {
+                let searchTimer;
+                searchInput.addEventListener('input', () => {
+                  clearTimeout(searchTimer);
+                  searchTimer = setTimeout(() => {
+                    searchTerm = searchInput.value.trim();
+                    loadEditions(false, searchTerm);
+                  }, 350);
+                });
+            }
+
+            loadEditions(false, searchTerm);
         });
 
-        // Menú móvil, dropdown y tema
-        (function() {
-            const menuBtn = document.getElementById('menu-btn');
-            const menu = document.getElementById('menu');
-            if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
 
-            const serviciosBtn = document.getElementById('servicios-btn');
-            const serviciosDropdown = document.getElementById('servicios-dropdown');
-            const serviciosArrow = document.getElementById('servicios-arrow');
-            if (serviciosBtn && serviciosDropdown) {
-                serviciosBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-                    if (isOpen) {
-                        serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                        serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                        serviciosBtn.setAttribute('aria-expanded', 'false');
-                        serviciosArrow.classList.remove('rotate-180');
-                    } else {
-                        serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                        serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                        serviciosBtn.setAttribute('aria-expanded', 'true');
-                        serviciosArrow.classList.add('rotate-180');
-                    }
-                });
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                        serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                        serviciosBtn.setAttribute('aria-expanded', 'false');
-                        serviciosArrow.classList.remove('rotate-180');
-                    }
-                });
-            }
-
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            body.classList.remove('dark-theme');
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') body.classList.add('dark-theme');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark-theme');
-                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-                });
-            }
-        })();
     </script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('scrollToTop');
-            if (!btn) return;
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        btn.classList.toggle('visible', window.scrollY > 300);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            btn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
     <script src="../animations.js"></script>
+    <script src="../js/ui.js" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 </html>

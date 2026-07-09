@@ -15,8 +15,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="Login_supabase.js"></script>
      <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
 </head>
-<body class="font-sans antialiased flex items-center justify-center min-h-screen p-4">
+<body class="font-sans antialiased flex items-center justify-center min-h-screen p-4" id="main-content">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <!-- Elementos decorativos flotantes -->
     <div class="decorative-element deco-1"><i class="fa-solid fa-handshake-angle"></i></div>
@@ -116,6 +122,7 @@
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Restablecer contraseña</h3>
                 <p class="text-gray-600 mb-4">Ingresa tu correo electrónico y te enviaremos un enlace para crear una nueva contraseña.</p>
                 <input type="email" id="reset-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4" placeholder="tuemail@ejemplo.com">
+                <div id="reset-message" class="hidden text-sm mb-4 text-center"></div>
                 <div class="flex gap-3">
                     <button id="close-reset-modal" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition">Cancelar</button>
                     <button id="send-reset-link" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition">Enviar enlace</button>
@@ -158,6 +165,7 @@
             btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         })();
     </script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 
 </html>

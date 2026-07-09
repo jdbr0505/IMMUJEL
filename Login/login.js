@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetEmail = document.getElementById('reset-email');
   const closeResetModal = document.getElementById('close-reset-modal');
   const sendResetLink = document.getElementById('send-reset-link');
+  const resetMessage = document.getElementById('reset-message');
 
   if (togglePassword) {
     togglePassword.addEventListener('click', () => {
@@ -35,9 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
   sendResetLink.addEventListener('click', async () => {
     const email = resetEmail.value.trim();
     if (!email) {
-      alert('Por favor ingresa tu correo electrónico.');
+      if (resetMessage) {
+        resetMessage.textContent = 'Por favor ingresa tu correo electrónico.';
+        resetMessage.className = 'text-sm mb-4 text-center text-red-500';
+        resetMessage.classList.remove('hidden');
+      }
       return;
     }
+    if (resetMessage) resetMessage.classList.add('hidden');
     sendResetLink.disabled = true;
     sendResetLink.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando...';
     try {
@@ -45,10 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
         redirectTo: window.location.origin + '/Login/update-password.html'
       });
       if (error) throw error;
-      alert('Revisa tu correo para restablecer la contraseña.');
-      resetModal.classList.add('hidden');
+      if (resetMessage) {
+        resetMessage.textContent = 'Revisa tu correo para restablecer la contraseña.';
+        resetMessage.className = 'text-sm mb-4 text-center text-green-600';
+        resetMessage.classList.remove('hidden');
+      }
+      setTimeout(() => resetModal.classList.add('hidden'), 3000);
     } catch (error) {
-      alert('Error: ' + error.message);
+      if (resetMessage) {
+        resetMessage.textContent = 'Error: ' + error.message;
+        resetMessage.className = 'text-sm mb-4 text-center text-red-500';
+        resetMessage.classList.remove('hidden');
+      }
     } finally {
       sendResetLink.disabled = false;
       sendResetLink.innerHTML = 'Enviar enlace';

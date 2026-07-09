@@ -1,4 +1,4 @@
-/* ===== IDENTIDAD VISUAL IMMUJEL (Manual de Identidad 2025-2026) ===== */
+/* ===== ESTILOS HECHOS EN  BASE A LA IDENTIDAD VISUAL DE IMMUJEL  ===== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;700&display=swap');
 
 :root {
@@ -80,13 +80,21 @@ html, body {
 }
 
 /* Tipografía Montserrat para títulos */
-h1, h2, h3, h4, .font-montserrat, .font-bold, .font-black, .font-semibold {
+h1, h2, h3, h4, h5, h6, .font-montserrat {
     font-family: 'Montserrat', 'Arial Nova', sans-serif;
 }
 
 /* ===== BARRA DE NAVEGACIÓN / FOOTER CON EFECTO VIDRIO ===== */
-.bg-white, .bg-white\/90, .bg-white\/80, .bg-white\/50 {
+body.dark-theme .bg-white,
+body.dark-theme .bg-white\/90,
+body.dark-theme .bg-white\/80,
+body.dark-theme .bg-white\/50 {
     background-color: var(--card-bg) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+header, footer {
+    background-color: var(--card-bg);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
@@ -291,19 +299,19 @@ body.dark-theme .section-brand-blue {
 .border-violet-campaign { border-color: #9614D0; }
 
 /* ===== ENLACES ACTIVOS ===== */
-.text-purple-700 { color: var(--purple-primary) !important; }
-.border-purple-700 { border-color: var(--purple-primary) !important; }
-.hover\:text-purple-600:hover, .hover\:text-purple-700:hover { color: var(--purple-primary) !important; }
+.text-purple-700 { color: var(--purple-primary); }
+.border-purple-700 { border-color: var(--purple-primary); }
+.hover\:text-purple-600:hover, .hover\:text-purple-700:hover { color: var(--purple-primary); }
 
 /* ===== BOTONES CON GRADIENTE OFICIAL ===== */
-.bg-gradient-to-r {
-    background-image: linear-gradient(to right, var(--purple-primary), var(--blue-primary)) !important;
+.btn-gradient-main {
+    background-image: linear-gradient(to right, var(--purple-primary), var(--blue-primary));
     position: relative;
     overflow: hidden;
     z-index: 1;
 }
 
-.bg-gradient-to-r::before {
+.btn-gradient-to-r::before {
     content: '';
     position: absolute;
     top: 0;
@@ -315,11 +323,11 @@ body.dark-theme .section-brand-blue {
     z-index: -1;
 }
 
-.bg-gradient-to-r:hover::before {
+.btn-gradient-to-r:hover::before {
     left: 100%;
 }
 
-.bg-gradient-to-r:hover {
+.btn-gradient-to-r:hover {
     background-image: linear-gradient(to right, #6B0590, #0140A0) !important;
     transform: translateY(-1px);
     box-shadow: 0 8px 25px rgba(165, 6, 173, 0.3);
@@ -465,16 +473,13 @@ body.dark-theme .btn-outline-brand:hover {
 }
 
 /* ===== TARJETAS Y SOMBRAS ===== */
-.shadow-lg, .shadow-xl {
+.card-shadow {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
 }
 .border-purple-100 {
     border-color: rgba(165, 6, 173, 0.2);
 }
-.bg-gradient-to-br {
-    background: linear-gradient(135deg, rgba(165,6,173,0.05), var(--card-bg));
-}
-body.dark-theme .bg-gradient-to-br {
+body.dark-theme .bg-gradient-to-br\:dark {
     background: linear-gradient(135deg, rgba(196,116,232,0.1), var(--card-bg));
 }
 
@@ -937,7 +942,7 @@ body.dark-theme .shadow-md {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
 }
 
-body.dark-theme .bg-gradient-to-r {
+body.dark-theme .btn-gradient-to-r {
     box-shadow: 0 4px 15px rgba(165, 6, 173, 0.2);
 }
 
@@ -1431,10 +1436,45 @@ body.dark-theme #servicios-dropdown a:hover {
     }
 }
 
+/* ===== MÓVIL: DESACTIVAR ANIMACIONES PESADAS ===== */
+@media (max-width: 767px) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-pulse, .animate-bounce, .animate-spin, .animate-ping {
+    animation: none !important;
+  }
+  [class*="blur-"], .backdrop-blur-md, .backdrop-blur-sm, .backdrop-blur-lg {
+    backdrop-filter: none !important;
+  }
+  .mix-blend-multiply, .mix-blend-overlay, .mix-blend-screen {
+    mix-blend-mode: normal !important;
+  }
+  .group-hover\:scale-105, .group-hover\:scale-110, .hover\:scale-105, .hover\:scale-110 {
+    transform: none !important;
+  }
+  .transition-all, .transition-transform, .transition {
+    transition: none !important;
+  }
+}
+
 /* ===== IMPRESIÓN ===== */
 @media print {
     .toast,
     .theme-switch {
         display: none !important;
     }
+}
+
+.skip-link { position: absolute; top: -100%; left: 0; background: var(--purple-primary); color: #fff; padding: 0.5rem 1rem; z-index: 10000; font-weight: 600; border-radius: 0 0 0.5rem 0; transition: top 0.2s; }
+.skip-link:focus { top: 0; }
+
+#auth-section { min-width: 180px; }
+#panel-link { min-width: 95px; }
+#auth-section:empty::after { content: attr(data-placeholder); visibility: hidden; display: inline-block; font-size: 0.9rem; padding: 0.25rem 0.5rem; }
+@media (max-width: 1023px) {
+  #auth-section { min-width: 0; }
+  #panel-link { min-width: 0; }
 }

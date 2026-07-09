@@ -15,6 +15,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../Login/Login_supabase.js"></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
 </head>
 <body class="antialiased">
 
@@ -48,18 +53,13 @@
                         </button>
                         <ul id="servicios-dropdown" 
                             class="absolute left-0 mt-2 w-56 bg-white/90 backdrop-blur-md rounded-xl shadow-xl ring-1 ring-purple-100 py-2 z-20 transition-all duration-200 origin-top-left scale-95 opacity-0 pointer-events-none"
-                            role="menu" aria-labelledby="servicios-btn"
-                            aria-labelledby="servicios-btn">
+                            role="menu" aria-labelledby="servicios-btn">
                             <li role="none">
                                 <a href="../Forms/form.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
                                     <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
                                 </a>
                             </li>
-                            <li role="none">
-                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
-                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
-                                </a>
-                            </li>
+                            
                             <li role="none">
                                 <a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
                                     <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
@@ -99,15 +99,13 @@
 
     <!-- ========== HERO SECTION ========== -->
     <section class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900"></div>
-        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 30%, rgba(255,51,153,0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(165,6,173,0.3) 0%, transparent 50%);"></div>
-        <div class="absolute top-0 left-0 w-64 h-64 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(135deg, #A506AD 0%, #0362CF 100%);"></div>
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3) 0%, transparent 50%);"></div>
         <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-pink-300 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-chalkboard-user mr-2"></i>NUESTRA OFERTA</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Nuestros <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-300">Programas</span></h1>
-                <p class="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Programas de formación diseñados para fortalecer la autoestima, el liderazgo y la autonomía económica de las mujeres. Incluyen talleres de emprendimiento, habilidades digitales y desarrollo personal.</p>
+                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-chalkboard-user mr-2"></i>NUESTRA OFERTA</span>
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Nuestros Programas</h1>
+                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Programas de formación diseñados para fortalecer la autoestima, el liderazgo y la autonomía económica de las mujeres. Incluyen talleres de emprendimiento, habilidades digitales y desarrollo personal.</p>
             </div>
         </div>
     </section>
@@ -224,92 +222,13 @@
         </div>
     </footer>
 
-    <script>
-        (function() {
-            // Menú móvil
-            const menuBtn = document.getElementById('menu-btn');
-            const menu = document.getElementById('menu');
-            if (menuBtn && menu) {
-                menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
-            }
-
-            // ---------- DROPDOWN SERVICIOS (clase activa) ----------
-            const serviciosBtn = document.getElementById('servicios-btn');
-            const serviciosDropdown = document.getElementById('servicios-dropdown');
-            const serviciosArrow = document.getElementById('servicios-arrow');
-
-            if (serviciosBtn && serviciosDropdown) {
-                serviciosBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-                    
-                    if (isOpen) {
-                        cerrarDropdown();
-                    } else {
-                        abrirDropdown();
-                    }
-                });
-
-                // Cierra al hacer clic fuera del dropdown
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        cerrarDropdown();
-                    }
-                });
-
-                function abrirDropdown() {
-                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'true');
-                    serviciosArrow.classList.add('rotate-180');
-                }
-
-                function cerrarDropdown() {
-                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'false');
-                    serviciosArrow.classList.remove('rotate-180');
-                }
-            }
-
-            // Tema oscuro
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            body.classList.remove('dark-theme');
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') body.classList.add('dark-theme');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark-theme');
-                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-                });
-            }
-        })();
-    </script>
     <script src="../auth.js"></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('scrollToTop');
-            if (!btn) return;
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        btn.classList.toggle('visible', window.scrollY > 300);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            btn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
     <script src="../animations.js"></script>
+    <script src="../js/ui.js" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 </html>

@@ -11,9 +11,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="Login_supabase.js"></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
 </head>
 
-<body class="font-sans antialiased flex items-center justify-center min-h-screen p-4">
+<body class="font-sans antialiased flex items-center justify-center min-h-screen p-4" id="main-content">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <div class="decorative-element deco-1"><i class="fa-solid fa-handshake-angle"></i></div>
     <div class="decorative-element deco-2"><i class="fas fa-heart"></i></div>
@@ -135,7 +141,7 @@
         </div>
 
         <div class="text-center mt-6">
-            <a href="../index.html" class="text-gray-600 hover:text-pink-600 text-sm inline-flex items-center">
+            <a href="../index.html" class="text-gray-600 hover:text-purple-600 text-sm inline-flex items-center">
                 <i class="fas fa-arrow-left mr-2"></i> Volver al inicio
             </a>
         </div>
@@ -175,5 +181,6 @@
             btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         })();
     </script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 </html>

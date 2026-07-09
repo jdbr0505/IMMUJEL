@@ -11,9 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Estilos globales (identidad visual) -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <link rel="icon" href="./Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="./Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="./manifest.json">
 </head>
-<body class="antialiased">
+<body class="antialiased" id="main-content">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
      <!-- ========== HEADER / NAVBAR  ========== -->
      <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
@@ -23,7 +29,7 @@
                 <a href="./index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
                     <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
                 </a>
-                <!-- Contenedor del botón Panel (se llena con auth.js) -->
+                <!-- Contenedor del botón Panel que se llena con auth.js -->
                 <div id="panel-link"></div>
             </div>
 
@@ -56,11 +62,7 @@
                                     <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
                                 </a>
                             </li>
-                            <li role="none">
-                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
-                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
-                                </a>
-                            </li>
+                            
                             <li role="none">
                                 <a href="./NavBar's/semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
                                     <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
@@ -100,7 +102,7 @@
         </div>
     </header>
 
-    <!-- ========== CARRUSEL INSTITUCIONAL (PALETA OFICIAL) ========== -->
+    <!-- ========== CARRUSEL INSTITUCIONAL  ========== -->
     <div class="relative w-full mt-6 reveal">
         <!-- Contenedor con gradiente lavanda → blanco -->
         <div class="bg-gradient-to-b from-[#FCBFFF]/30 via-white to-white py-10 md:py-14 border-t-4 border-[#A506AD]/20 border-b-4 border-[#A506AD]/20">
@@ -112,55 +114,55 @@
                     <div id="slides" class="flex transition-transform duration-700 ease-in-out">
                         <!-- Slide 1 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/First Slade.png" alt="Conoce IMMUJEL"
+                            <img src="./Images/First Slade.webp" alt="Conoce IMMUJEL"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 2 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Second Slade.png" alt="Nuestra Historia"
+                            <img src="./Images/Second Slade.webp" alt="Nuestra Historia"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 3 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Third Slade.png" alt="Nuestra Labor"
+                            <img src="./Images/Third Slade.webp" alt="Nuestra Labor"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 4 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Fourth Slade.png" alt="Red de Defensoría"
+                            <img src="./Images/Fourth Slade.webp" alt="Red de Defensoría"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 5 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Fifth Slade.png" alt="Apoyo Comunitario"
+                            <img src="./Images/Fifth Slade.webp" alt="Apoyo Comunitario"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 6 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Sixth Slade.png" alt="Construyendo Futuro"
+                            <img src="./Images/Sixth Slade.webp" alt="Construyendo Futuro"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 7 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Seventh Slade.png" alt="Atención a la Comunidad"
+                            <img src="./Images/Seventh Slade.webp" alt="Atención a la Comunidad"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                         <!-- Slide 8 -->
                         <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Eighth Slade.png" alt="Estamos para Escuchar"
+                            <img src="./Images/Eighth Slade.webp" alt="Estamos para Escuchar"
                                 class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
                                 loading="lazy">
                         </div>
                     </div>
 
-                    <!-- Flechas de navegación con colores de la marca -->
+                    <!-- Flechas de navegación -->
                     <button id="prev" aria-label="Anterior"
                             class="absolute left-4 top-1/2 -translate-y-1/2 bg-[#A506AD]/80 hover:bg-[#F66EFD] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition z-10 flex items-center justify-center">
                         <i class="fas fa-chevron-left"></i>
@@ -176,6 +178,7 @@
             </div>
         </div>
     </div>
+
     <!-- ========== BIENVENIDA Y MISIÓN ========== -->
     <section class="container mx-auto px-4 py-12 text-center max-w-4xl">
         <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">Bienvenida a <span class="text-purple-700">IMMUJEL</span></h1>
@@ -222,29 +225,21 @@
                 </a>
             </div>
             <p class="text-sm text-gray-500 mt-6 flex items-center justify-center gap-2">
-                <i class="far fa-clock text-[#A506AD]"></i> Horario de atención: Lunes a viernes de 7:00 AM a 3:00 PM
+                <i class="far fa-clock text-[#A506AD]"></i> Horario de atención: Lunes a viernes de 8:00 AM a 3:00 PM
             </p>
         </div>
     </div>
 </section>
 
-    <!-- ========== PRÓXIMOS EVENTOS Y SEMANARIO ========== -->
+    <!-- ========== EVENTOS Y SEMANARIO ========== -->
     <section class="container mx-auto px-4 py-12 reveal">
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Actividades y Comunicación</h2>
-        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg reveal-scale">
-                <div class="h-48 bg-purple-200 flex items-center justify-center text-gray-500"><i class="fas fa-calendar-alt text-4xl text-purple-500"></i></div>
-                <div class="p-5">
-                    <h3 class="text-xl font-bold mb-2">Eventos y Talleres</h3>
-                    <p class="text-gray-600 mb-4">Próximamente: Taller de defensa personal, charlas sobre derechos y más.</p>
-                    <a href="#" class="text-purple-600 font-semibold hover:underline">Ver calendario →</a>
-                </div>
-            </div>
+        <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             <div class="bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg reveal-scale">
                 <div class="h-48 bg-blue-200 flex items-center justify-center text-gray-500"><i class="fas fa-newspaper text-4xl text-blue-500"></i></div>
                 <div class="p-5">
                     <h3 class="text-xl font-bold mb-2">Semanario Institucional</h3>
-                    <p class="text-gray-600 mb-4">Mantente informada sobre nuestras gestiones y logros semanales.</p>
+                    <p class="text-gray-600 mb-4">Mantente informada sobre nuestras gestiones, actividades, logros y eventos semanales.</p>
                     <a href="./NavBar's/semanario.html" class="text-purple-600 font-semibold hover:underline">Ver ediciones →</a>
                 </div>
             </div>
@@ -272,19 +267,19 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
                 <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
                     <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="200">0</span><span class="text-pink-300">+</span>
+                        <span class="counter" data-target="2800">0</span><span class="text-pink-300">+</span>
                     </div>
                     <p class="text-purple-200 text-sm">Mujeres Atendidas</p>
                 </div>
                 <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
                     <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="20">0</span><span class="text-pink-300">+</span>
+                        <span class="counter" data-target="85">0</span><span class="text-pink-300">+</span>
                     </div>
                     <p class="text-purple-200 text-sm">Talleres Realizados</p>
                 </div>
                 <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
                     <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="50">0</span><span class="text-pink-300">+</span>
+                        <span class="counter" data-target="150">0</span><span class="text-pink-300">+</span>
                     </div>
                     <p class="text-purple-200 text-sm">Defensoras en el Municipio</p>
                 </div>
@@ -339,57 +334,11 @@
     </footer>
 
     <script>
-
-        // Funciones de navegación, carrusel y menú móvil
-        (function() {
-            // ---------- MENÚ MÓVIL Y DROPDOWN ----------
-            const menuBtn = document.getElementById('menu-btn');
-            const menu = document.getElementById('menu');
-            if (menuBtn && menu) {
-                menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
-            }
-
-           // ---------- DROPDOWN SERVICIOS (clase activa) ----------
-            const serviciosBtn = document.getElementById('servicios-btn');
-            const serviciosDropdown = document.getElementById('servicios-dropdown');
-            const serviciosArrow = document.getElementById('servicios-arrow');
-
-            if (serviciosBtn && serviciosDropdown) {
-                serviciosBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-                    
-                    if (isOpen) {
-                        cerrarDropdown();
-                    } else {
-                        abrirDropdown();
-                    }
-                });
-
-                // Cierra al hacer clic fuera del dropdown
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        cerrarDropdown();
-                    }
-                });
-
-                function abrirDropdown() {
-                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'true');
-                    serviciosArrow.classList.add('rotate-180');
-                }
-
-                function cerrarDropdown() {
-                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'false');
-                    serviciosArrow.classList.remove('rotate-180');
-                }
-            }
     // ---------- CARRUSEL INSTITUCIONAL ----------
+    (function() {
         const slidesContainer = document.getElementById('slides');
         const indicatorsContainer = document.getElementById('indicators');
+        if (!slidesContainer || !indicatorsContainer) return;
         const totalSlides = slidesContainer.children.length;
         let currentIndex = 0;
 
@@ -419,20 +368,7 @@
         document.getElementById('prev')?.addEventListener('click', () => showSlide(currentIndex - 1));
         document.getElementById('next')?.addEventListener('click', () => showSlide(currentIndex + 1));
         if (totalSlides > 0) setInterval(() => showSlide(currentIndex + 1), 6000);
-
-            // ---------- TEMA OSCURO ----------
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            body.classList.remove('dark-theme');
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') body.classList.add('dark-theme');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark-theme');
-                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-                });
-            }
-        })();
+    })();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./Login/Login_supabase.js"></script>
@@ -475,25 +411,8 @@
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('scrollToTop');
-            if (!btn) return;
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        btn.classList.toggle('visible', window.scrollY > 300);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            btn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
     <script src="./animations.js"></script>
+    <script src="js/ui.js" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{})})}</script>
 </body>
 </html>

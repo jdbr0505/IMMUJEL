@@ -15,6 +15,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../Login/Login_supabase.js"></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IMMUJEL">
+    <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
+    <link rel="manifest" href="../manifest.json">
 </head>
 <body class="antialiased">
 
@@ -59,11 +64,7 @@
                                     <i class="fas fa-gavel w-5 mr-2 text-purple-500"></i> Asesorías
                                 </a>
                             </li>
-                            <li role="none">
-                                <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
-                                    <i class="fas fa-calendar-alt w-5 mr-2 text-blue-500"></i> Eventos
-                                </a>
-                            </li>
+                            
                             <li role="none">
                                 <a href="./semanario.html" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition rounded-lg mx-2" role="menuitem">
                                     <i class="fas fa-newspaper w-5 mr-2 text-purple-500"></i> Semanario Institucional
@@ -101,14 +102,13 @@
 
     <!-- ========== HERO SECTION ========== -->
     <section class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900"></div>
-        <div class="absolute inset-0 opacity-25" style="background-image: radial-gradient(circle at 40% 50%, rgba(3,98,207,0.4) 0%, transparent 50%), radial-gradient(circle at 60% 50%, rgba(165,6,173,0.3) 0%, transparent 50%);"></div>
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(135deg, #02162E 0%, #0362CF 50%, #004299 100%);"></div>
+        <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 30% 40%, rgba(3,98,207,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(65,144,235,0.3) 0%, transparent 50%);"></div>
         <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-blue-300 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-gavel mr-2"></i>MARCO LEGAL</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Fundamentos <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-300">Legales</span></h1>
-                <p class="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Las leyes y normativas que respaldan nuestra labor en defensa de los derechos de las mujeres en el Municipio Lagunillas.</p>
+                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-gavel mr-2"></i>MARCO LEGAL</span>
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Fundamentos Legales</h1>
+                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Las leyes y normativas que respaldan nuestra labor en defensa de los derechos de las mujeres en el Municipio Lagunillas.</p>
             </div>
         </div>
     </section>
@@ -118,86 +118,77 @@
 
         <div class="relative z-10">
 
-            <!-- Leyes Nacionales -->
-            <section class="mb-16 reveal">
-                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-gavel text-purple-600"></i> Leyes Nacionales</h2>
+            <section class="mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-gavel text-purple-600"></i> Leyes Nacionales</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Tarjeta 1 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-purple-600 transition hover:shadow-lg reveal">
-                        <i class="fas fa-female text-purple-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Ley Orgánica sobre el Derecho de las Mujeres a una Vida Libre de Violencia</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-female" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Ley Orgánica sobre el Derecho de las Mujeres a una Vida Libre de Violencia</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 40.548 (2014). Reforma de 2021.</p>
                         <p class="text-gray-600 text-sm mb-4">Define 21 tipos de violencia de género y establece medidas de protección integral.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
-                    <!-- Tarjeta 2 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-600 transition hover:shadow-lg reveal">
-                        <i class="fas fa-child text-blue-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">LOPNNA</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-child" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">LOPNNA</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 6.185 Extraordinario (2015).</p>
                         <p class="text-gray-600 text-sm mb-4">Protege los derechos de niñas y adolescentes, incluyendo protección contra abuso sexual y explotación.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
-                    <!-- Tarjeta 3 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-purple-600 transition hover:shadow-lg reveal">
-                        <i class="fas fa-balance-scale text-purple-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Código Penal</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-balance-scale" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Código Penal</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 5.768 Extraordinario (2005).</p>
                         <p class="text-gray-600 text-sm mb-4">Tipifica delitos como violencia física, acoso, violación, femicidio y otros.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
-                    <!-- Tarjeta 4 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-pink-500 transition hover:shadow-lg reveal">
-                        <i class="fas fa-venus-mars text-pink-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Ley de Igualdad de Oportunidades para la Mujer</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-venus-mars" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Ley de Igualdad de Oportunidades para la Mujer</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 5.398 (1999).</p>
                         <p class="text-gray-600 text-sm mb-4">Promueve la igualdad en el ámbito laboral, educativo y político.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
-                    <!-- Tarjeta 5 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-600 transition hover:shadow-lg reveal">
-                        <i class="fas fa-home text-blue-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Ley de Protección a las Familias, Maternidad y Paternidad</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-home" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Ley de Protección a las Familias, Maternidad y Paternidad</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 38.773 (2007).</p>
                         <p class="text-gray-600 text-sm mb-4">Establece derechos laborales para madres y padres, protección del embarazo.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
-                    <!-- Tarjeta 6 -->
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-purple-600 transition hover:shadow-lg reveal">
-                        <i class="fas fa-users text-purple-600 text-3xl mb-3"></i>
-                        <h3 class="text-xl font-bold mb-2">Ley Orgánica de los Consejos Comunales</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <i class="fas fa-users" style="color:#A506AD;font-size:1.75rem;margin-bottom:0.75rem;"></i>
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Ley Orgánica de los Consejos Comunales</h3>
                         <p class="text-gray-500 text-sm mb-3">Gaceta Oficial N° 39.335 (2009).</p>
                         <p class="text-gray-600 text-sm mb-4">Incluye los Comités de Mujer e Igualdad de Género como instancias de participación.</p>
-                        <a href="#" class="text-purple-600 font-medium hover:underline inline-flex items-center text-sm">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                        <a href="#" class="font-medium inline-flex items-center text-sm" style="color:#A506AD;">Ver documento <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
                     </div>
                 </div>
             </section>
 
-            <!-- Tratados Internacionales -->
-            <section class="mb-16 reveal">
-                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-globe-americas text-purple-600"></i> Instrumentos Internacionales</h2>
+            <section class="mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-globe-americas text-purple-600"></i> Instrumentos Internacionales</h2>
                 <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl shadow-md p-6 transition hover:shadow-lg reveal">
-                        <h3 class="text-xl font-bold mb-2">Convención sobre la Eliminación de Todas las Formas de Discriminación contra la Mujer (CEDAW)</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Convención sobre la Eliminación de Todas las Formas de Discriminación contra la Mujer (CEDAW)</h3>
                         <p class="text-gray-500 text-sm mb-3">ONU, 1979. Ratificada por Venezuela en 1983.</p>
-                        <p class="text-gray-600">Define la discriminación contra la mujer y obliga a los Estados a adoptar medidas para eliminarla.</p>
+                        <p class="text-gray-600 text-sm">Define la discriminación contra la mujer y obliga a los Estados a adoptar medidas para eliminarla.</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 transition hover:shadow-lg reveal">
-                        <h3 class="text-xl font-bold mb-2">Convención Interamericana para Prevenir, Sancionar y Erradicar la Violencia contra la Mujer (Belém do Pará)</h3>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">Convención Interamericana para Prevenir, Sancionar y Erradicar la Violencia contra la Mujer (Belém do Pará)</h3>
                         <p class="text-gray-500 text-sm mb-3">OEA, 1994. Ratificada por Venezuela en 1995.</p>
-                        <p class="text-gray-600">Primer tratado vinculante que reconoce el derecho de las mujeres a una vida libre de violencia.</p>
+                        <p class="text-gray-600 text-sm">Primer tratado vinculante que reconoce el derecho de las mujeres a una vida libre de violencia.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Ordenanzas Municipales -->
-            <section class="reveal">
-                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-city text-purple-600"></i> Ordenanzas Municipales</h2>
-                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-600 transition hover:shadow-lg reveal">
-                    <h3 class="text-xl font-bold mb-2">Ordenanza de Creación del Instituto Municipal de la Mujer de Lagunillas (IMMUJEL)</h3>
+            <section>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 flex items-center gap-2"><i class="fas fa-city text-purple-600"></i> Ordenanzas Municipales</h2>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" style="border-left-color:#A506AD;">
+                    <h3 class="text-lg font-bold mb-2 text-gray-800">Ordenanza de Creación del Instituto Municipal de la Mujer de Lagunillas (IMMUJEL)</h3>
                     <p class="text-gray-500 text-sm mb-4">Gaceta Municipal N° Extraordinario, 2023.</p>
-                    <p class="text-gray-600 mb-4">Establece la creación, objetivos, estructura y funciones del IMMUJEL como ente descentralizado.</p>
-                    <a href="#" class="inline-block bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-full transition shadow-md">Descargar Ordenanza (PDF)</a>
+                    <p class="text-gray-600 text-sm mb-4">Establece la creación, objetivos, estructura y funciones del IMMUJEL como ente descentralizado.</p>
+                    <a href="#" class="inline-block font-medium py-2 px-4 rounded-full text-sm" style="background:linear-gradient(135deg,#A506AD,#0362CF);color:white;">Descargar Ordenanza (PDF)</a>
                 </div>
             </section>
         </div>
@@ -238,93 +229,13 @@
     </footer>
 
     <!-- ========== SCRIPTS (menú, tema, dropdown) ========== -->
-    <script>
-        (function() {
-
-            // Menú móvil
-            const menuBtn = document.getElementById('menu-btn');
-            const menu = document.getElementById('menu');
-            if (menuBtn && menu) {
-                menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
-            }
-
-            // ---------- DROPDOWN SERVICIOS (clase activa) ----------
-            const serviciosBtn = document.getElementById('servicios-btn');
-            const serviciosDropdown = document.getElementById('servicios-dropdown');
-            const serviciosArrow = document.getElementById('servicios-arrow');
-
-            if (serviciosBtn && serviciosDropdown) {
-                serviciosBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-                    
-                    if (isOpen) {
-                        cerrarDropdown();
-                    } else {
-                        abrirDropdown();
-                    }
-                });
-
-                // Cierra al hacer clic fuera del dropdown
-                document.addEventListener('click', (e) => {
-                    if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                        cerrarDropdown();
-                    }
-                });
-
-                function abrirDropdown() {
-                    serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'true');
-                    serviciosArrow.classList.add('rotate-180');
-                }
-
-                function cerrarDropdown() {
-                    serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                    serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    serviciosBtn.setAttribute('aria-expanded', 'false');
-                    serviciosArrow.classList.remove('rotate-180');
-                }
-            }
-
-            // Tema oscuro
-            const body = document.body;
-            const themeToggle = document.getElementById('theme-toggle');
-            body.classList.remove('dark-theme');
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') body.classList.add('dark-theme');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    body.classList.toggle('dark-theme');
-                    localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-                });
-            }
-        })();
-    </script>
     <script src="../auth.js"></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('scrollToTop');
-            if (!btn) return;
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        btn.classList.toggle('visible', window.scrollY > 300);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-            btn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        })();
-    </script>
     <script src="../animations.js"></script>
+    <script src="../js/ui.js" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('../sw.js').catch(()=>{})})}</script>
 </body>
 </html>

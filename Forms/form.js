@@ -1,4 +1,4 @@
-// form.js – Lógica de envío del formulario de asesoría (tablas en español)
+// form.js – Lógica de envío del formulario de asesoría + validación en tiempo real
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('report-form');
     const incognitoCheck = document.getElementById('incognito');
@@ -12,6 +12,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const successDiv = document.getElementById('success-message');
     const submitBtn = document.getElementById('submit-btn');
 
+    // ===== VALIDACIÓN EN TIEMPO REAL =====
+      name: v => v.trim().length >= 3 || !v,
+      'id-number': v => !v || /^[VEJPGvejpg]-?\d{5,10}$/.test(v.trim()),
+      email: v => !v || /^\S+@\S+\.\S+$/.test(v),
+      phone: v => /^[0-9+\-\s]{7,15}$/.test(v),
+      parroquia: v => !v || v !== ''
+    };
+
+    const errors = {
+      name: 'Mínimo 3 caracteres',
+      'id-number': 'Formato: V-12345678',
+      email: 'Correo inválido',
+      phone: 'Teléfono inválido (ej: 0412-1234567)'
+    };
+
+    nameInput.addEventListener('input', () => validField(nameInput, 'name'));
+    idInput.addEventListener('input', () => validField(idInput, 'id-number'));
+    emailInput.addEventListener('input', () => validField(emailInput, 'email'));
+    phoneInput.addEventListener('input', () => validField(phoneInput, 'phone'));
+
+    function validField(input, field) {
+      const container = input.closest('div');
+      let fb = container.querySelector('.field-feedback');
+      if (!fb) { fb = document.createElement('span'); fb.className = 'field-feedback text-xs mt-1 block'; container.appendChild(fb); }
+      const ok = validators[field](input.value);
+      input.classList.toggle('border-red-400', !ok && input.value);
+      input.classList.toggle('border-green-400', ok && input.value);
+      fb.textContent = ok || !input.value ? '' : errors[field];
+      fb.style.color = '#ef4444';
+    }
+
+    incognitoCheck.addEventListener('change', () => {
+      const personal = document.getElementById('full-personal-info');
+      personal.style.display = incognitoCheck.checked ? 'none' : 'block';
+    });
+
+    // ===== ENVÍO =====
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorDiv.classList.add('hidden');
@@ -22,14 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = descriptionTextarea.value.trim();
 
         if (!phone) {
-            errorDiv.textContent = 'El número de teléfono es obligatorio.';
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> El número de teléfono es obligatorio.';
             errorDiv.classList.remove('hidden');
             phoneInput.focus();
             return;
         }
-        const phoneRegex = /^[0-9+\-\s]{7,15}$/;
-        if (!phoneRegex.test(phone)) {
-            errorDiv.textContent = 'Ingresa un número de teléfono válido (ej: 0412-1234567).';
+        if (!/^[0-9+\-\s]{7,15}$/.test(phone)) {
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Ingresa un número de teléfono válido (ej: 0412-1234567).';
             errorDiv.classList.remove('hidden');
             phoneInput.focus();
             return;
@@ -43,20 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
             email = emailInput.value.trim();
             parroquia = parroquiaSelect.value;
 
-            if (!full_name) {
-                errorDiv.textContent = 'El nombre completo es obligatorio.';
+            if (!full_name || full_name.length < 3) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> El nombre completo es obligatorio (mínimo 3 caracteres).';
                 errorDiv.classList.remove('hidden');
                 nameInput.focus();
                 return;
             }
             if (!parroquia) {
-                errorDiv.textContent = 'Selecciona tu parroquia.';
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Selecciona tu parroquia.';
                 errorDiv.classList.remove('hidden');
                 parroquiaSelect.focus();
                 return;
             }
             if (email && !/^\S+@\S+\.\S+$/.test(email)) {
-                errorDiv.textContent = 'Ingresa un correo electrónico válido.';
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Ingresa un correo electrónico válido.';
                 errorDiv.classList.remove('hidden');
                 emailInput.focus();
                 return;
@@ -92,22 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
             successDiv.classList.remove('hidden');
             form.reset();
             document.getElementById('full-personal-info').style.display = 'block';
-            phoneInput.required = true;
-            document.getElementById('phone-required-indicator')?.classList.add('hidden');
+            [nameInput, idInput, emailInput, phoneInput].forEach(i => { i.classList.remove('border-green-400', 'border-red-400'); });
 
-            // Scroll suave al mensaje
             successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch (error) {
             console.error(error);
-            let mensaje = 'Ocurrió un error al enviar tu solicitud.';
+            let mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Ocurrió un error al enviar tu solicitud.';
             if (error.message?.includes('duplicate')) {
-                mensaje = 'Ya existe una solicitud con estos datos.';
-            } else if (error.message?.includes('network')) {
-                mensaje = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
+                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Ya existe una solicitud con estos datos.';
+            } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
+                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Error de conexión. Verifica tu internet e intenta de nuevo.';
             } else if (error.message) {
-                mensaje = error.message;
+                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> ' + error.message;
             }
-            errorDiv.textContent = mensaje;
+            errorDiv.innerHTML = mensaje;
             errorDiv.classList.remove('hidden');
             errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } finally {

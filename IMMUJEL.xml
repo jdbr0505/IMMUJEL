@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proyecto>
+  <meta>
+    <nombre>IMMUJEL - Instituto Municipal de la Mujer de Lagunillas</nombre>
+    <descripcion>Sitio web institucional del Instituto Municipal de la Mujer del Municipio Lagunillas del Estado Zulia, Venezuela. Plataforma informativa y administrativa para la gestión de asesorías, publicación de contenido institucional y administración de roles.</descripcion>
+    <url>https://immujel.vercel.app</url>
+    <repositorio>https://github.com/jdbr0505/IMMUJEL</repositorio>
+    <backend>Supabase (PostgreSQL, Auth, Storage, Edge Functions)</backend>
+    <frontend>HTML plano + CSS + JavaScript (Tailwind CDN, Font Awesome, Google Fonts)</frontend>
+    <despliegue>Vercel</despliegue>
+    <pwa>Manifest.json + Service Worker con precache, Cache First/Network First, push notifications</pwa>
+    <supabase_url>https://vhgfyqodiieblhfwbama.supabase.co</supabase_url>
+  </meta>
+
+  <sistema_diseno>
+    <colores_oficiales>
+      <color hex="#A506AD" nombre="Púrpura Institucional" uso="Botones, encabezados, enlaces, fondos principales"/>
+      <color hex="#F66EFD" nombre="Magenta" uso="Acentos vibrantes, gradientes, badges"/>
+      <color hex="#FCBFFF" nombre="Lavanda" uso="Fondos suaves, glows, bordes"/>
+      <color hex="#0362CF" nombre="Azul Corporativo" uso="Botones secundarios, enlaces, tablas"/>
+      <color hex="#4190EB" nombre="Azul Cielo" uso="Fondos de sección, hover states"/>
+      <color hex="#BAD7F8" nombre="Azul Pálido" uso="Fondos alternos, glows sutiles"/>
+      <color hex="#02162E" nombre="Azul Profundo" uso="Modo oscuro, fondos hero, texto oscuro"/>
+      <color hex="#FFFFFF" nombre="Blanco" uso="Fondos de tarjetas, texto sobre oscuro"/>
+    </colores_oficiales>
+    <paletas_temporales>
+      <paleta nombre="Día Naranja" uso="25 de cada mes">
+        <color hex="#FF4D19"/><color hex="#FF734B"/><color hex="#FF7A00"/><color hex="#341206"/>
+      </paleta>
+      <paleta nombre="Octubre Rosa" uso="Prevención cáncer de mama">
+        <color hex="#FFBCD4"/><color hex="#FF70B2"/><color hex="#ED3991"/><color hex="#F81B96"/>
+      </paleta>
+      <paleta nombre="16 Días de Activismo" uso="Violencia de género">
+        <color hex="#E8B5FF"/><color hex="#DF99FF"/><color hex="#C474E8"/><color hex="#9614D0"/><color hex="#56007D"/>
+      </paleta>
+    </paletas_temporales>
+    <tipografia>
+      <fuente nombre="Montserrat" uso="Titulares (UltraGruesa), Subtítulos (Negrita), Cuerpo (Media)"/>
+      <fuente nombre="Arial Nova" uso="Cuerpos extensos"/>
+    </tipografia>
+    <logotipo>
+      <archivo src="Images/HEAD.svg" uso="Favicon, marca de agua"/>
+      <archivo src="Images/LOGO IMMUJEL.png" uso="Navbar, footer, encabezados"/>
+    </logotipo>
+  </sistema_diseno>
+
+  <estructura_archivos>
+    <raiz>
+      <archivo nombre="index.html"><tipo>HTML</tipo><descripcion>Landing page con carrusel, servicios, impacto, CTA</descripcion></archivo>
+      <archivo nombre="404.html"><tipo>HTML</tipo><descripcion>Página 404 personalizada con enlaces institucionales</descripcion></archivo>
+      <archivo nombre="styles.css"><tipo>CSS</tipo><descripcion>Estilos globales: modo oscuro, skip-link, glassmorphism, animaciones, marcas de agua</descripcion></archivo>
+      <archivo nombre="animations.js"><tipo>JavaScript</tipo><descripcion>Scroll reveal con IntersectionObserver</descripcion></archivo>
+      <archivo nombre="auth.js"><tipo>JavaScript</tipo><descripcion>Sesión global, navbar dinámico, push subscription con campana</descripcion></archivo>
+      <archivo nombre="sw.js"><tipo>JavaScript</tipo><descripcion>Service Worker: precache, Cache First (estáticos), Network First (API Supabase), push/notificationclick</descripcion></archivo>
+      <archivo nombre="manifest.json"><tipo>JSON</tipo><descripcion>Manifest PWA: display standalone, icons 192/512, theme-color #A506AD</descripcion></archivo>
+      <archivo nombre="email-confirmacion.html"><tipo>HTML</tipo><descripcion>Template de correo de confirmación con SVG inline</descripcion></archivo>
+    </raiz>
+
+    <directorio nombre="Admin/">
+      <archivo nombre="Admin.html"><tipo>HTML</tipo><descripcion>Panel con 3 tabs (Asesorías, CMS, Usuarias), modales con focus management y aria</descripcion></archivo>
+      <archivo nombre="Admin.js"><tipo>JavaScript</tipo><descripcion>Lógica de asesorías y usuarias: KPIs, filtros, paginación, cambio de rol</descripcion></archivo>
+      <archivo nombre="Admin_cms.js"><tipo>JavaScript</tipo><descripcion>CMS: CRUD de publicaciones, editor enriquecido, subida de archivos a Storage, paginación, búsqueda, auto-save</descripcion></archivo>
+      <archivo nombre="Admin_styles.css"><tipo>CSS</tipo><descripcion>Estilos admin: modal slide-in, toolbar, tabla responsive, modo oscuro</descripcion></archivo>
+    </directorio>
+
+    <directorio nombre="Forms/">
+      <archivo nombre="form.html"><tipo>HTML</tipo><descripcion>Formulario público de asesoría con modo anónimo</descripcion></archivo>
+      <archivo nombre="form.js"><tipo>JavaScript</tipo><descripcion>Validación en tiempo real: bordes rojos/verdes, feedback inline, debounce, formatos cédula/email/teléfono</descripcion></archivo>
+      <archivo nombre="form_styles.css"><tipo>CSS</tipo><descripcion>Estilos de formulario con colores brand</descripcion></archivo>
+    </directorio>
+
+    <directorio nombre="Images/">
+      <archivo nombre="LOGO IMMUJEL.png" tipo="PNG" descripcion="Logotipo completo"/>
+      <archivo nombre="HEAD.svg" tipo="SVG" descripcion="Símbolo Venus + Mural (favicon)"/>
+      <archivo nombre="First Slade.png" tipo="PNG" descripcion="Slide 1"/>
+      <archivo nombre="Second Slade.png" tipo="PNG" descripcion="Slide 2"/>
+      <archivo nombre="Third Slade.png" tipo="PNG" descripcion="Slide 3"/>
+      <archivo nombre="Fourth Slade.png" tipo="PNG" descripcion="Slide 4"/>
+      <archivo nombre="Fifth Slade.png" tipo="PNG" descripcion="Slide 5"/>
+      <archivo nombre="Sixth Slade.png" tipo="PNG" descripcion="Slide 6"/>
+      <archivo nombre="Seventh Slade.png" tipo="PNG" descripcion="Slide 7"/>
+      <archivo nombre="Eighth Slade.png" tipo="PNG" descripcion="Slide 8"/>
+    </directorio>
+
+    <directorio nombre="Login/">
+      <archivo nombre="Login_supabase.js"><tipo>JavaScript</tipo><descripcion>Inicialización cliente Supabase con anon key</descripcion></archivo>
+      <archivo nombre="login.html"><tipo>HTML</tipo><descripcion>Inicio de sesión con resolución usuario→email</descripcion></archivo>
+      <archivo nombre="login.js"><tipo>JavaScript</tipo><descripcion>Lógica de login, recuperación de contraseña</descripcion></archivo>
+      <archivo nombre="login_styles.css"><tipo>CSS</tipo><descripcion>Estilos de login con fondo brand</descripcion></archivo>
+      <archivo nombre="signup.html"><tipo>HTML</tipo><descripcion>Registro de usuarias</descripcion></archivo>
+      <archivo nombre="signup.js"><tipo>JavaScript</tipo><descripcion>Lógica de registro con validación</descripcion></archivo>
+      <archivo nombre="signup.css"><tipo>CSS</tipo><descripcion>Estilos de registro</descripcion></archivo>
+      <archivo nombre="update-password.html"><tipo>HTML</tipo><descripcion>Cambio de contraseña post-reset</descripcion></archivo>
+      <archivo nombre="update-password.js"><tipo>JavaScript</tipo><descripcion>Lógica de actualización con indicador de fortaleza</descripcion></archivo>
+      <archivo nombre="update-password.css"><tipo>CSS</tipo><descripcion>Estilos de cambio de contraseña</descripcion></archivo>
+      <archivo nombre="email-confirmacion.html"><tipo>HTML</tipo><descripcion>Template de correo de confirmación</descripcion></archivo>
+    </directorio>
+
+    <directorio nombre="NavBar's/">
+      <archivo nombre="Sobre Nosotras.html"><tipo>HTML</tipo><descripcion>Historia, misión, visión, valores, línea de tiempo, áreas de atención</descripcion></archivo>
+      <archivo nombre="Programas.html"><tipo>HTML</tipo><descripcion>Programas: Empoderamiento, Prevención VBG, Atención Integral</descripcion></archivo>
+      <archivo nombre="FL.html"><tipo>HTML</tipo><descripcion>Fundamentos Legales con leyes, tratados y ordenanzas</descripcion></archivo>
+      <archivo nombre="semanario.html"><tipo>HTML</tipo><descripcion>Listado público con buscador (debounce 350ms, ilike), paginación "Cargar más", error boundary</descripcion></archivo>
+      <archivo nombre="noticiero.html"><tipo>HTML</tipo><descripcion>Listado público con buscador, paginación, error boundary</descripcion></archivo>
+      <archivo nombre="publicacion.html"><tipo>HTML</tipo><descripcion>Detalle de publicación con galería, PDFs, error boundary</descripcion></archivo>
+    </directorio>
+
+    <directorio nombre="Supabase SQL/">
+      <archivo nombre="setup_push_subscriptions.sql"><tipo>SQL</tipo><descripcion>Tabla push_subscriptions con RLS para Web Push</descripcion></archivo>
+      <archivo nombre="setup_notificaciones.sql"><tipo>SQL</tipo><descripcion>Triggers que llaman a Edge Function via pg_net</descripcion></archivo>
+      <archivo nombre="fix_triggers_v2.sql"><tipo>SQL</tipo><descripcion>Triggers corregidos con URL directa (sin vault settings)</descripcion></archivo>
+      <archivo nombre="disable_rls_fix.sql"><tipo>SQL</tipo><descripcion>Deshabilita RLS para funcionamiento del panel admin</descripcion></archivo>
+      <archivo nombre="run_all_migrations.sql"><tipo>SQL</tipo><descripcion>Migración consolidada de columnas JSONB, RLS, storage</descripcion></archivo>
+      <archivo nombre="auto_create_profile.sql"><tipo>SQL</tipo><descripcion>Trigger para crear perfil al registrarse</descripcion></archivo>
+      <archivo nombre="sync_profiles.sql"><tipo>SQL</tipo><descripcion>Sincroniza auth.users → perfiles</descripcion></archivo>
+      <archivo nombre="alter_storage_rls.sql"><tipo>SQL</tipo><descripcion>Políticas RLS para storage.objects</descripcion></archivo>
+    </directorio>
+
+    <directorio nombre="supabase/functions/send-notification/">
+      <archivo nombre="index.ts"><tipo>TypeScript</tipo><descripcion>Edge Function: envía SMTP (vía Gmail) + Web Push (VAPID) al publicar contenido</descripcion></archivo>
+    </directorio>
+  </estructura_archivos>
+
+  <base_de_datos>
+    <esquema>public</esquema>
+    <tabla nombre="perfiles"><descripcion>Perfiles de usuarias</descripcion><rls>DESHABILITADO</rls></tabla>
+    <tabla nombre="solicitudes"><descripcion>Solicitudes de asesoría</descripcion><rls>DESHABILITADO</rls></tabla>
+    <tabla nombre="notas_solicitud"><descripcion>Notas internas de seguimiento</descripcion><rls>DESHABILITADO</rls></tabla>
+    <tabla nombre="publicaciones"><descripcion>Publicaciones del CMS (Semanario y Noticiero)</descripcion><rls>DESHABILITADO</rls></tabla>
+    <tabla nombre="push_subscriptions"><descripcion>Suscripciones Web Push</descripcion><rls>HABILITADO (cada usuario solo ve/edita sus propias)</rls></tabla>
+  </base_de_datos>
+
+  <supabase_storage>
+    <bucket nombre="publicacion-imagenes" descripcion="Imágenes del CMS"/>
+    <bucket nombre="publicacion-pdfs" descripcion="PDFs del CMS"/>
+  </supabase_storage>
+
+  <funcionalidades_crosscutting>
+    <funcionalidad nombre="PWA">
+      <items>
+        <item>Manifest.json con display standalone, icons 192/512, theme-color #A506AD</item>
+        <item>Service Worker con precache de HTMLs y assets críticos</item>
+        <item>Estrategia Cache First para archivos estáticos, Network First para API Supabase</item>
+        <item>Meta tags PWA en todas las páginas (theme-color, apple-mobile-web-app-capable, apple-touch-icon)</item>
+        <item>404.html personalizada con diseño IMMUJEL</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Notificaciones Push + SMTP">
+      <items>
+        <item>Web Push: tabla push_subscriptions con RLS, VAPID keys, botón campana en navbar</item>
+        <item>Service Worker handlers: push (showNotification) y notificationclick (abrir URL)</item>
+        <item>Edge Function send-notification: envía SMTP vía Gmail + Web Push vía FCM en paralelo</item>
+        <item>Trigger PostgreSQL trg_notify_publication/trg_notify_publication_insert llama a Edge Function al publicar</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Accesibilidad">
+      <items>
+        <item>Skip link en todas las páginas con CSS .skip-link y id="main-content"</item>
+        <item>Modales Admin con role="dialog", aria-modal="true", auto-focus, cierre con Escape, return focus</item>
+        <item>Focus visible en todos los elementos interactivos</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Validación en Tiempo Real">
+      <items>
+        <item>form.js: bordes rojos/verdes, feedback inline .field-feedback con debounce</item>
+        <item>Validadores por campo: nombre (≥3 caracteres), cédula (V/E-12345), email (regex), teléfono (7-15 dígitos)</item>
+        <item>Mensajes de error específicos para cada tipo de campo</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Buscador">
+      <items>
+        <item>Input de búsqueda en semanario.html y noticiero.html con debounce 350ms</item>
+        <item>Filtra por titulo y resumen con ilike server-side</item>
+        <item>Mantiene paginación "Cargar más" con searchTerm persistente</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Modo Oscuro">
+      <items>
+        <item>Toggle persistente en localStorage en todas las páginas (incluyendo Admin)</item>
+        <item>CSS con variables dark-theme, !important en bg-white con backdrop-filter</item>
+        <item>Animaciones deshabilitadas en móvil (prefers-reduced-motion)</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Error Boundaries">
+      <items>
+        <item>Try/catch en consultas Supabase de publicacion.html, noticiero.html, semanario.html</item>
+        <item>Mensajes amigables: "Error de conexión. Verifica tu internet."</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Autenticación y Roles">
+      <items>
+        <item>Login con resolución usuario→email vía tabla perfiles</item>
+        <item>Registro con creación automática de perfil y rol 'usuaria'</item>
+        <item>Roles: admin, asesora, usuaria</item>
+        <item>Navbar dinámico con enlace Admin (gradiente purple→indigo, corona, punto verde pulsante)</item>
+        <item>Recuperación de contraseña con token por email</item>
+        <item>Template de email de confirmación personalizado</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Panel de Administración">
+      <items>
+        <item>3 tabs: Asesorías (KPIs, filtros, paginación, notas), CMS (CRUD, editor, subida archivos), Usuarias (roles)</item>
+        <item>Modales con focus management, aria, cierre con Escape</item>
+        <item>Auto-save drafts en localStorage</item>
+        <item>Bulk actions: publicar/ocultar/eliminar múltiples publicaciones</item>
+        <item>switchTab() por onclick directo (sin DOMContentLoaded)</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Modificaciones Recientes">
+      <items>
+        <item>Eventos eliminados de dropdowns y tarjeta en index.html reemplazada por Semanario</item>
+        <item>Sobre Nosotras: Maria Claret Velásquez agregada como primera presidenta</item>
+        <item>FL.html: tarjetas de leyes unificadas con estilo IMMUJEL</item>
+        <item>Header de semanario.html corregido con misma estructura que noticiero.html</item>
+        <item>Login_supabase.js anon key actualizada</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Páginas Públicas">
+      <items>
+        <item>Index: carrusel de 8 slides, sección bienvenida, tarjetas de servicios, líneas de atención, impacto (contadores), footer</item>
+        <item>Sobre Nosotras: historia real, línea de tiempo, misión/visión, valores, áreas de atención, cifras</item>
+        <item>Programas: hero gradiente, 3 tarjetas, CTA contacto</item>
+        <item>FL: hero gradiente, 6 leyes, 2 tratados, ordenanza municipal, descarga</item>
+        <item>Semanario/Noticiero: grid con paginación, buscador, error boundary</item>
+        <item>Publicación: galería con snap-scroll y dots, badge tipo, contenido HTML, PDFs</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Navegación y UX">
+      <items>
+        <item>Navbar sticky unificado con dropdown Servicios</item>
+        <item>Footer completo con logo, enlaces, redes, créditos</item>
+        <item>Scroll-to-top flotante, smooth scroll, scroll reveal animations</item>
+        <item>Modo oscuro en todas las páginas</item>
+        <item>Animaciones deshabilitadas en móvil</item>
+      </items>
+    </funcionalidad>
+  </funcionalidades_crosscutting>
+</proyecto>

@@ -1,4 +1,20 @@
 // admin.js – Panel de administración de asesorías
+
+if (typeof window.showToast === 'undefined') {
+  window.showToast = function(message, type) {
+    var container = document.getElementById('toast-container');
+    if (!container) { container = document.createElement('div'); container.id = 'toast-container'; container.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:100;display:flex;flex-direction:column;gap:8px;'; document.body.appendChild(container); }
+    var t = document.createElement('div');
+    var bg = type === 'error' ? 'linear-gradient(135deg,#EF4444,#DC2626)' : type === 'warning' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : 'linear-gradient(135deg,#10B981,#059669)';
+    var icon = type === 'error' ? 'fa-times-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-check-circle';
+    t.className = 'toast toast-' + (type || 'success');
+    t.style.background = bg;
+    t.innerHTML = '<i class="fas ' + icon + '"></i><span>' + message + '</span>';
+    container.appendChild(t);
+    setTimeout(function() { t.classList.add('toast-leaving'); setTimeout(function() { t.remove(); }, 300); }, 4000);
+  };
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const supabase = window.supabase;
   if (!supabase) return;
@@ -166,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .single();
 
     if (error || !report) {
-      alert('No se pudo cargar el detalle.');
+      window.showToast('No se pudo cargar el detalle.', 'error');
       return;
     }
 
@@ -229,12 +245,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.querySelector('button, input, select, textarea, a')?.focus();
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+    }
+    // Guardar elemento que abrió el modal para devolver foco al cerrar
+    window._lastFocused = document.activeElement;
   };
 
+  function closeModal() {
+    if (modal) modal.classList.add('hidden');
+    if (window._lastFocused) setTimeout(() => window._lastFocused.focus(), 100);
+  }
+
   const closeModalBtn = document.getElementById('close-modal');
-  if (closeModalBtn) closeModalBtn.addEventListener('click', () => { if (modal) modal.classList.add('hidden'); });
-  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeModal(); });
 
   const addNoteBtn = document.getElementById('add-note-btn');
   if (addNoteBtn) {
@@ -246,10 +275,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         contenido
       });
       if (error) {
-        alert('Error al agregar nota: ' + error.message);
+        window.showToast('Error al agregar nota: ' + error.message, 'error');
         return;
       }
       if (newNote) newNote.value = '';
+      window.showToast('Nota agregada correctamente.', 'success');
       await openModal(currentReportId);
     });
   }
@@ -262,10 +292,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function updateEstado(estado) {
     const { error } = await supabase.from('solicitudes').update({ estado }).eq('id', currentReportId);
     if (error) {
-      alert('Error al actualizar: ' + error.message);
+      window.showToast('Error al actualizar: ' + error.message, 'error');
       return;
     }
     if (modal) modal.classList.add('hidden');
+    window.showToast('Estado actualizado a "' + estado + '".', 'success');
     await loadReports({});
   }
 
@@ -336,7 +367,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const anonimo = getChk('na-anonimo');
 
       if (!nombre || !telefono || !parroquia) {
-        alert('Completa los campos obligatorios.');
+        window.showToast('Completa los campos obligatorios.', 'warning');
         return;
       }
 
@@ -363,11 +394,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.innerHTML = '<i class="fas fa-save mr-1"></i> Crear asesoría';
 
       if (error) {
-        alert('Error al crear: ' + error.message);
+        window.showToast('Error al crear: ' + error.message, 'error');
         return;
       }
 
       naModal.classList.add('hidden');
+      window.showToast('Asesoría creada correctamente.', 'success');
       await loadReports({});
     });
   }
@@ -466,13 +498,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const { error } = await supabase.from('perfiles').update({ rol: newRol }).eq('id', userId);
         if (error) {
-          alert('Error al cambiar rol: ' + error.message);
+          window.showToast('Error al cambiar rol: ' + error.message, 'error');
           this.value = current;
           return;
         }
 
         this.dataset.current = newRol;
-        window.showToast?.('success', `Rol de "${userName}" cambiado a "${newRol}"`);
+        window.showToast(`Rol de "${userName}" cambiado a "${newRol}"`, 'success');
         allUsersCache = [];
         await loadUsuarios();
       });
