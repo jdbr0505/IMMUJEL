@@ -228,16 +228,34 @@
         <item>Navbar dinámico con enlace Admin (gradiente purple→indigo, corona, punto verde pulsante)</item>
         <item>Recuperación de contraseña con token por email</item>
         <item>Template de email de confirmación personalizado</item>
+        <item>Modal de confirmación al cerrar sesión con backdrop blur, animación scaleIn, focus management, Escape</item>
       </items>
     </funcionalidad>
 
     <funcionalidad nombre="Panel de Administración">
       <items>
         <item>3 tabs: Asesorías, CMS, Usuarias con switchTab() global (corregido ID section-*)</item>
-        <item>Stats cards con border-t-4 de color (asesorías + CMS + usuarias con top border)</item>
+        <item>Stats cards con border-t-4 de color (asesorías + CMS + usuarias unificadas)</item>
         <item>Modales con focus management, aria, cierre con Escape</item>
         <item>Auto-save drafts en localStorage</item>
         <item>Bulk actions: publicar/ocultar/eliminar múltiples publicaciones</item>
+      </items>
+    </funcionalidad>
+
+    <funcionalidad nombre="Rendimiento y Optimización">
+      <items>
+        <item>Service Worker v2 con estrategias Cache First (assets), Network First (API/navegación), offline.html</item>
+        <item>Manifest.json: shortcuts (Semanario, Noticiero, Asesorías), categories, id, scope</item>
+        <item>Registro SW profesional con detección de actualización y recarga automática</item>
+        <item>Meta tags iOS: apple-mobile-web-app-status-bar-style, apple-touch-startup-image</item>
+        <item>Preconnect a 6 CDNs (Tailwind, Font Awesome, Google Fonts, jsDelivr, Supabase)</item>
+        <item>Font Awesome diferido con media="print" y onload</item>
+        <item>lazy loading en imágenes de carrusel y footer</item>
+        <item>Scripts no críticos con defer (animations.js, ui.js, sw-register.js)</item>
+        <item>Scripts críticos (Login_supabase.js, auth.js) al final del body sin defer</item>
+        <item>Tailwind CDN sin crossorigin (bloqueaba carga), styles.css primero en head</item>
+        <item>Headers Vercel: imágenes inmutable por 1 año, HTML/JS/CSS must-revalidate</item>
+        <item>Imágenes .webp en lugar de .png (Slades convertidos)</item>
       </items>
     </funcionalidad>
 
@@ -260,6 +278,7 @@
         <item>Scroll-to-top flotante, smooth scroll, scroll reveal animations</item>
         <item>Modo oscuro en todas las páginas (Admin incluido)</item>
         <item>Skip link accesible, focus management, aria en modales</item>
+        <item>Modal de cierre de sesión con backdrop blur y animación</item>
         <item>Animaciones deshabilitadas en móvil</item>
       </items>
     </funcionalidad>
