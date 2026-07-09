@@ -107,8 +107,8 @@
         });
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
-          await supabase.auth.signOut();
-          window.location.href = basePath + 'index.html';
+          if (!document.getElementById('logout-modal')) createLogoutModal();
+          document.getElementById('logout-modal').classList.remove('hidden');
         });
       }
     } else {
@@ -132,3 +132,42 @@
     }
   }
 })();
+
+function createLogoutModal() {
+  const modal = document.createElement('div');
+  modal.id = 'logout-modal';
+  modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Confirmar cierre de sesión');
+  modal.innerHTML = `
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center animate-scale-in" style="animation: scaleIn 0.25s ease-out;">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center">
+        <i class="fas fa-sign-out-alt text-2xl text-purple-600"></i>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Cerrar sesión</h2>
+      <p class="text-gray-500 mb-6">¿Estás segura de que deseas salir de tu cuenta?</p>
+      <div class="flex gap-3 justify-center">
+        <button id="logout-cancel" class="px-6 py-2.5 border border-gray-300 text-gray-600 rounded-xl hover:bg-gray-50 font-medium transition text-sm">Cancelar</button>
+        <button id="logout-confirm" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 font-medium transition shadow-md text-sm">
+          <i class="fas fa-check mr-1"></i> Cerrar sesión
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  document.getElementById('logout-cancel').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('logout-confirm').addEventListener('click', async () => {
+    const supabase = window.supabase;
+    if (supabase) await supabase.auth.signOut();
+    modal.classList.add('hidden');
+    const pathDepth = (window.location.pathname.match(/\//g) || []).length;
+    window.location.href = (pathDepth > 1 ? '../' : './') + 'index.html';
+  });
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+  document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { modal.classList.add('hidden'); document.removeEventListener('keydown', esc); } });
+
+  const firstBtn = document.getElementById('logout-cancel');
+  if (firstBtn) setTimeout(() => firstBtn.focus(), 100);
+}
