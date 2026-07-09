@@ -584,19 +584,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
   });
 
-  // Cargar asesorías al cambiar al tab de asesorías
-  document.getElementById('tab-asesorias')?.addEventListener('click', async () => {
-    await loadAsesoras();
-    await loadReports({});
-  });
-
-  // Cargar usuarios solo si es admin al cambiar al tab
-  document.getElementById('tab-usuarios')?.addEventListener('click', async () => {
-    if (isAdmin) await loadUsuarios('', '');
-  });
-
-  // Carga inicial de asesoras para el dropdown
+  // Carga inicial
   await loadAsesoras();
   await loadReports({});
   if (isAdmin) await loadUsuarios('', '');
 });
+
+// Función global para cambiar de tab (llamada por onclick en HTML)
+window.switchTab = async function(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('bg-purple-600', 'text-white');
+    btn.classList.add('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+  });
+  document.getElementById(`tab-${tab}`)?.classList.add('bg-purple-600', 'text-white');
+  document.getElementById(`tab-${tab}`)?.classList.remove('text-gray-600', 'hover:text-purple-700', 'hover:bg-purple-50');
+
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+  document.getElementById(`content-${tab}`)?.classList.remove('hidden');
+
+  if (tab === 'asesorias') {
+    await loadAsesoras();
+    await loadReports({});
+  } else if (tab === 'usuarios' && isAdmin) {
+    await loadUsuarios('', '');
+  }
+};
