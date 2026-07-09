@@ -2,10 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://vhgfyqodiieblhfwbama.supabase.co">
+    <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Semanario Institucional | IMMUJEL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
@@ -17,7 +24,7 @@
     <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="../manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../Login/Login_supabase.js"></script>
+    <script src="../Login/Login_supabase.js" defer></script>
 </head>
 <body class="antialiased">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
@@ -98,7 +105,7 @@
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
                 <div>
-                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3" loading="lazy">
                     <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
@@ -128,7 +135,7 @@
         </div>
     </footer>
 
-    <script src="../auth.js"></script>
+    <script src="../auth.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('semanario-grid');
@@ -254,8 +261,8 @@
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script src="../animations.js"></script>
+    <script src="../animations.js" defer></script>
     <script src="../js/ui.js" defer></script>
-    <script src="../js/sw-register.js"></script>
+    <script src="../js/sw-register.js" defer></script>
 </body>
 </html>

@@ -2,18 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://vhgfyqodiieblhfwbama.supabase.co">
+    <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotras | IMMUJEL</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" crossorigin="anonymous"></script>
     <!-- Fuentes oficiales: Montserrat y Arial Nova -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
     <!-- Estilos personalizados (basados en la identidad visual IMMUJEL) -->
     <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../Login/Login_supabase.js"></script>
+    <script src="../Login/Login_supabase.js" defer></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
     <meta name="theme-color" content="#A506AD">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -258,7 +265,7 @@
                                 <p class="text-xs text-gray-500">11 de julio de 2023 — Inicio formal de actividades</p>
                             </div>
                             <div class="relative rounded-xl overflow-hidden h-36">
-                                <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Sede IMMUJEL" class="w-full h-full object-cover">
+                                <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Sede IMMUJEL" class="w-full h-full object-cover" loading="lazy">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                 <p class="absolute bottom-2 left-3 text-white text-xs font-medium"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, Ciudad Ojeda</p>
                             </div>
@@ -344,7 +351,7 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Psicológica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Psicológica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
                                 <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2">
                                     <i class="fas fa-brain text-white text-xl"></i>
@@ -361,7 +368,7 @@
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Jurídica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Jurídica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
                                 <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2">
                                     <i class="fas fa-gavel text-white text-xl"></i>
@@ -378,7 +385,7 @@
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Social" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Social" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
                                 <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2">
                                     <i class="fas fa-handshake text-white text-xl"></i>
@@ -406,25 +413,25 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1540573467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Taller de empoderamiento</p>
                         </div>
                     </div>
                     <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Jornada de asesoría legal</p>
                         </div>
                     </div>
                     <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1573497623493-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Equipo IMMUJEL</p>
                         </div>
                     </div>
                     <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Charla comunitaria</p>
                         </div>
@@ -473,7 +480,7 @@
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
                 <div>
-                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3" loading="lazy">
                     <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
@@ -503,13 +510,13 @@
         </div>
     </footer>
 
-    <script src="../auth.js"></script>
+    <script src="../auth.js" defer></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
-    <script src="../animations.js"></script>
+    <script src="../animations.js" defer></script>
     <script src="../js/ui.js" defer></script>
-    <script src="../js/sw-register.js"></script>
+    <script src="../js/sw-register.js" defer></script>
 </body>
 </html>

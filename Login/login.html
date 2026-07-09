@@ -2,18 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://vhgfyqodiieblhfwbama.supabase.co">
+    <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión | IMMUJEL</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
     <!-- Estilos globales y específicos -->
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="login_styles.css">
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="Login_supabase.js"></script>
+    <script src="Login_supabase.js" defer></script>
      <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
     <meta name="theme-color" content="#A506AD">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -50,7 +57,7 @@
     <div class="w-full max-w-md login-card-wrapper">
         <div class="flex justify-center mb-6">
             <a href="../index.html">
-                <img src="../Images/HEAD.svg" alt="IMMUJEL" class="h-24 w-auto drop-shadow-md">
+                <img src="../Images/HEAD.svg" alt="IMMUJEL" class="h-24 w-auto drop-shadow-md" loading="lazy">
             </a>
         </div>
 
@@ -150,7 +157,7 @@
             }
         })();
     </script>
-    <script src="../auth.js"></script>
+    <script src="../auth.js" defer></script>
     <!-- Scroll to top -->
     <button id="scrollToTop" class="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-white opacity-0 invisible transition-all duration-300"
         style="background:linear-gradient(135deg,#A506AD,#0362CF)"
@@ -167,7 +174,7 @@
             btn.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
         })();
     </script>
-    <script src="../js/sw-register.js"></script>
+    <script src="../js/sw-register.js" defer></script>
 </body>
 
 </html>
