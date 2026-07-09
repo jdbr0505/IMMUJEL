@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/Images/HEAD.svg" type="image/svg+xml">
     <meta name="theme-color" content="#A506AD">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image" href="/Images/LOGO IMMUJEL.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="IMMUJEL">
     <link rel="apple-touch-icon" href="/Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="/manifest.json">
-    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{})})}</script>
+    <script src="./js/sw-register.js"></script>
 </head>
 <body class="antialiased min-h-screen flex items-center justify-center" id="main-content" style="background:linear-gradient(135deg,#f5f0ff,#f0f5ff);">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>

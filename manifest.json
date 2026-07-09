@@ -9,6 +9,10 @@
   "orientation": "portrait-primary",
   "lang": "es-VE",
   "scope": "/",
+  "id": "/",
+  "categories": ["education", "government", "social"],
+  "screenshots": [],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/Images/LOGO IMMUJEL.png",
@@ -21,6 +25,35 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/Images/LOGO IMMUJEL.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Semanario",
+      "short_name": "Semanario",
+      "description": "Semanario Institucional IMMUJEL",
+      "url": "/NavBar's/semanario.html",
+      "icons": [{ "src": "/Images/LOGO IMMUJEL.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Noticiero",
+      "short_name": "Noticiero",
+      "description": "Noticias IMMUJEL",
+      "url": "/NavBar's/noticiero.html",
+      "icons": [{ "src": "/Images/LOGO IMMUJEL.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Asesorías",
+      "short_name": "Asesorías",
+      "description": "Solicitar asesoría",
+      "url": "/Forms/form.html",
+      "icons": [{ "src": "/Images/LOGO IMMUJEL.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

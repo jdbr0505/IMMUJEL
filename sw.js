@@ -1,7 +1,11 @@
-const CACHE = 'immujel-v1';
+const CACHE = 'immujel-v2';
+const STATIC_CACHE = 'immujel-static-v2';
+
 const PRECACHE = [
   '/',
   '/index.html',
+  '/404.html',
+  '/offline.html',
   '/styles.css',
   '/manifest.json',
   '/Images/LOGO IMMUJEL.png',
@@ -10,38 +14,64 @@ const PRECACHE = [
   '/animations.js',
   '/js/ui.js',
   '/Login/Login_supabase.js',
-  '/NavBar/semanario.html',
-  '/NavBar/noticiero.html',
-  '/NavBar/publicacion.html',
-  '/NavBar/Programas.html',
-  '/NavBar/Sobre%20Nosotras.html',
-  '/NavBar/FL.html',
+  "NavBar's/semanario.html",
+  "NavBar's/noticiero.html",
+  "NavBar's/publicacion.html",
+  "NavBar's/Programas.html",
+  "NavBar's/Sobre Nosotras.html",
+  "NavBar's/FL.html",
   '/Forms/form.html',
   '/Login/login.html',
-  '/Login/signup.html'
+  '/Login/signup.html',
+  '/Login/update-password.html'
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)));
-  self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE).then(c => {
+      return c.addAll(PRECACHE.map(url => {
+        return new Request(url, { cache: 'no-cache' });
+      })).catch(err => {
+        console.warn('Precache falló para algunos recursos:', err);
+      });
+    }).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(k => k !== CACHE && k !== STATIC_CACHE).map(k => caches.delete(k))
+      );
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/functions/')) {
-    e.respondWith(networkFirst(e.request));
-    return;
+
+  if (url.origin !== location.origin) return;
+
+  const path = url.pathname;
+
+  // API Supabase → Network First
+  if (path.startsWith('/rest/') || path.startsWith('/functions/')) {
+    return e.respondWith(networkFirst(e.request));
   }
-  if (url.origin === location.origin) {
-    e.respondWith(cacheFirst(e.request));
+
+  // Navegación (páginas HTML) → Network First con fallback a cache
+  if (e.request.mode === 'navigate') {
+    return e.respondWith(networkFirst(e.request, '/404.html'));
   }
+
+  // Estáticos (CSS, JS, imágenes, fuentes) → Cache First
+  if (/\.(css|js|json|png|webp|jpg|svg|ico|woff2?|ttf|eot)$/i.test(path)) {
+    return e.respondWith(cacheFirst(e.request));
+  }
+
+  // Otros (HTML no navegación, etc) → Network First
+  e.respondWith(networkFirst(e.request));
 });
 
 async function cacheFirst(req) {
@@ -49,37 +79,52 @@ async function cacheFirst(req) {
   if (cached) return cached;
   try {
     const res = await fetch(req);
-    if (res.ok) { const cache = await caches.open(CACHE); cache.put(req, res.clone()); }
+    if (res.ok && res.type === 'basic') {
+      const cache = await caches.open(STATIC_CACHE);
+      cache.put(req, res.clone());
+    }
     return res;
   } catch {
     return new Response('Offline', { status: 503 });
   }
 }
 
-async function networkFirst(req) {
+async function networkFirst(req, fallbackUrl) {
   try {
     const res = await fetch(req);
-    if (res.ok) { const cache = await caches.open(CACHE); cache.put(req, res.clone()); }
+    if (res.ok && res.type === 'basic') {
+      const cache = await caches.open(CACHE);
+      cache.put(req, res.clone());
+    }
     return res;
   } catch {
     const cached = await caches.match(req);
-    return cached || new Response(JSON.stringify({ error: 'Offline' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+    if (cached) return cached;
+    if (fallbackUrl) {
+      const fallback = await caches.match(fallbackUrl);
+      if (fallback) return fallback;
+    }
+    if (req.headers.get('accept')?.includes('application/json')) {
+      return new Response(JSON.stringify({ error: 'Offline' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+    }
+    return new Response('Offline', { status: 503 });
   }
 }
 
-// ===== WEB PUSH =====
 self.addEventListener('push', e => {
   let data = { titulo: 'IMMUJEL', cuerpo: 'Nueva publicación disponible', url: '/' };
   try {
-    if (e.data) data = JSON.parse(e.data.text());
+    if (e.data) data = e.data.json();
   } catch {}
   e.waitUntil(
-    self.registration.showNotification(data.titulo, {
-      body: data.cuerpo,
+    self.registration.showNotification(data.title || data.titulo, {
+      body: data.body || data.cuerpo,
       icon: '/Images/LOGO IMMUJEL.png',
       badge: '/Images/HEAD.svg',
+      image: '/Images/LOGO IMMUJEL.png',
       data: { url: data.url },
       vibrate: [200, 100, 200],
+      requireInteraction: true,
       actions: [
         { action: 'open', title: 'Abrir' },
         { action: 'close', title: 'Cerrar' }
@@ -92,5 +137,11 @@ self.addEventListener('notificationclick', e => {
   e.notification.close();
   if (e.action === 'close') return;
   const url = e.notification.data?.url || '/';
-  e.waitUntil(clients.openWindow(url));
+  e.waitUntil(
+    clients.matchAll({ type: 'window' }).then(clients => {
+      const client = clients.find(c => c.url.includes(url));
+      if (client) return client.focus();
+      return clients.openWindow(url);
+    })
+  );
 });
