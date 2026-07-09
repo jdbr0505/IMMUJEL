@@ -54,6 +54,15 @@
       <archivo nombre="sw.js"><tipo>JavaScript</tipo><descripcion>Service Worker: precache, Cache First (estáticos), Network First (API Supabase), push/notificationclick</descripcion></archivo>
       <archivo nombre="manifest.json"><tipo>JSON</tipo><descripcion>Manifest PWA: display standalone, icons 192/512, theme-color #A506AD</descripcion></archivo>
       <archivo nombre="email-confirmacion.html"><tipo>HTML</tipo><descripcion>Template de correo de confirmación con SVG inline</descripcion></archivo>
+      <archivo nombre="offline.html"><tipo>HTML</tipo><descripcion>Página personalizada offline para el SW fallback</descripcion></archivo>
+      <archivo nombre="sitemap.xml"><tipo>XML</tipo><descripcion>Sitemap SEO con todas las URLs del sitio</descripcion></archivo>
+      <archivo nombre="vercel.json"><tipo>JSON</tipo><descripcion>Configuración Vercel: headers, cleanUrls, rutas SW</descripcion></archivo>
+      <directorio nombre="Supabase SQL/"><descripcion>Migraciones SQL: push subscriptions, triggers, fix_triggers_v2</descripcion></directorio>
+      <directorio nombre="supabase/functions/send-notification/"><descripcion>Edge Function: SMTP + VAPID Web Push</descripcion></directorio>
+      <directorio nombre="js/">
+        <archivo nombre="ui.js"><tipo>JavaScript</tipo><descripcion>Utilidades de UI: theme toggle, scroll-to-top, menú móvil</descripcion></archivo>
+        <archivo nombre="sw-register.js"><tipo>JavaScript</tipo><descripcion>Registro de Service Worker con detección de actualización</descripcion></archivo>
+      </directorio>
     </raiz>
 
     <directorio nombre="Admin/">
@@ -179,6 +188,23 @@
       </items>
     </funcionalidad>
 
+    <funcionalidad nombre="Rendimiento y Optimización">
+      <items>
+        <item>Service Worker v2 con estrategias Cache First (assets), Network First (API/navegación), offline.html</item>
+        <item>Manifest.json: shortcuts (Semanario, Noticiero, Asesorías), categories, id, scope</item>
+        <item>Registro SW profesional con detección de actualización y recarga automática</item>
+        <item>Meta tags iOS: apple-mobile-web-app-status-bar-style, apple-touch-startup-image</item>
+        <item>Preconnect a 6 CDNs (Tailwind, Font Awesome, Google Fonts, jsDelivr, Supabase)</item>
+        <item>Font Awesome diferido con media="print" y onload</item>
+        <item>lazy loading en imágenes de carrusel y footer</item>
+        <item>Scripts no críticos con defer (animations.js, ui.js, sw-register.js)</item>
+        <item>Scripts críticos (Login_supabase.js, auth.js) al final del body sin defer</item>
+        <item>Tailwind CDN sin crossorigin (bloqueaba carga), styles.css primero en head</item>
+        <item>Headers Vercel: imágenes inmutable por 1 año, HTML/JS/CSS must-revalidate</item>
+        <item>Imágenes .webp en lugar de .png (Slades convertidos)</item>
+      </items>
+    </funcionalidad>
+
     <funcionalidad nombre="Modo Oscuro">
       <items>
         <item>Toggle persistente en localStorage en todas las páginas (incluyendo Admin)</item>
@@ -207,41 +233,33 @@
 
     <funcionalidad nombre="Panel de Administración">
       <items>
-        <item>3 tabs: Asesorías (KPIs, filtros, paginación, notas), CMS (CRUD, editor, subida archivos), Usuarias (roles)</item>
+        <item>3 tabs: Asesorías, CMS, Usuarias con switchTab() global (corregido ID section-*)</item>
+        <item>Stats cards con border-t-4 de color (asesorías + CMS + usuarias con top border)</item>
         <item>Modales con focus management, aria, cierre con Escape</item>
         <item>Auto-save drafts en localStorage</item>
         <item>Bulk actions: publicar/ocultar/eliminar múltiples publicaciones</item>
-        <item>switchTab() por onclick directo (sin DOMContentLoaded)</item>
-      </items>
-    </funcionalidad>
-
-    <funcionalidad nombre="Modificaciones Recientes">
-      <items>
-        <item>Eventos eliminados de dropdowns y tarjeta en index.html reemplazada por Semanario</item>
-        <item>Sobre Nosotras: Maria Claret Velásquez agregada como primera presidenta</item>
-        <item>FL.html: tarjetas de leyes unificadas con estilo IMMUJEL</item>
-        <item>Header de semanario.html corregido con misma estructura que noticiero.html</item>
-        <item>Login_supabase.js anon key actualizada</item>
       </items>
     </funcionalidad>
 
     <funcionalidad nombre="Páginas Públicas">
       <items>
-        <item>Index: carrusel de 8 slides, sección bienvenida, tarjetas de servicios, líneas de atención, impacto (contadores), footer</item>
-        <item>Sobre Nosotras: historia real, línea de tiempo, misión/visión, valores, áreas de atención, cifras</item>
+        <item>Index: carrusel de 8 slides, bienvenida, tarjetas de servicios, líneas de atención, impacto, footer</item>
+        <item>Sobre Nosotras: historia real, línea de tiempo, misión/visión, valores, áreas, cifras</item>
         <item>Programas: hero gradiente, 3 tarjetas, CTA contacto</item>
-        <item>FL: hero gradiente, 6 leyes, 2 tratados, ordenanza municipal, descarga</item>
-        <item>Semanario/Noticiero: grid con paginación, buscador, error boundary</item>
-        <item>Publicación: galería con snap-scroll y dots, badge tipo, contenido HTML, PDFs</item>
+        <item>FL: hero gradiente, 6 leyes, 2 tratados, ordenanza municipal</item>
+        <item>Semanario/Noticiero: grid con paginación, buscador debounce 350ms, error boundary</item>
+        <item>Publicación: galería snap-scroll con dots, badge tipo, contenido HTML, PDFs</item>
+        <item>404.html y offline.html personalizados con diseño IMMUJEL</item>
       </items>
     </funcionalidad>
 
     <funcionalidad nombre="Navegación y UX">
       <items>
-        <item>Navbar sticky unificado con dropdown Servicios</item>
-        <item>Footer completo con logo, enlaces, redes, créditos</item>
+        <item>Navbar sticky unificado con dropdown Servicios en todas las páginas</item>
+        <item>Footer completo con logo, enlaces institucionales, redes sociales, créditos</item>
         <item>Scroll-to-top flotante, smooth scroll, scroll reveal animations</item>
-        <item>Modo oscuro en todas las páginas</item>
+        <item>Modo oscuro en todas las páginas (Admin incluido)</item>
+        <item>Skip link accesible, focus management, aria en modales</item>
         <item>Animaciones deshabilitadas en móvil</item>
       </items>
     </funcionalidad>
