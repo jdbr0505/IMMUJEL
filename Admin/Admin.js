@@ -69,18 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const kpiEnProceso = document.getElementById('kpi-enproceso');
   const kpiFinalizado = document.getElementById('kpi-finalizado');
 
-  function updateKPI(data) {
-    const total = data.length;
-    const pendientes = data.filter(r => r.estado === 'pendiente').length;
-    const enProceso = data.filter(r => r.estado === 'en proceso').length;
-    const finalizados = data.filter(r => r.estado === 'finalizado').length;
-    const cancelados = data.filter(r => r.estado === 'cancelado').length;
-    if (kpiTotal) kpiTotal.textContent = total;
-    if (kpiPendiente) kpiPendiente.textContent = pendientes;
-    if (kpiEnProceso) kpiEnProceso.textContent = enProceso;
-    if (kpiFinalizado) kpiFinalizado.textContent = finalizados;
-  }
-
   // Cargar lista de asesoras para asignación
   async function loadAsesoras() {
     const { data, error } = await supabase

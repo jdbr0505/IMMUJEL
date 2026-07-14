@@ -112,21 +112,28 @@ async function networkFirst(req, fallbackUrl) {
 }
 
 self.addEventListener('push', e => {
-  let data = { titulo: 'IMMUJEL', cuerpo: 'Nueva publicación disponible', url: '/' };
+  let data = { titulo: 'Nueva publicación', cuerpo: 'IMMUJEL tiene contenido nuevo para ti.', url: '/' };
   try {
     if (e.data) data = e.data.json();
   } catch {}
+
+  const origin = self.location.origin;
+  const icon   = `${origin}/Images/LOGO%20IMMUJEL.png`;
+  const badge  = `${origin}/Images/HEAD.svg`;
+  const title  = data.titulo ? `IMMUJEL · ${data.titulo}` : 'IMMUJEL';
+
   e.waitUntil(
-    self.registration.showNotification(data.title || data.titulo, {
+    self.registration.showNotification(title, {
       body: data.body || data.cuerpo,
-      icon: '/Images/LOGO IMMUJEL.png',
-      badge: '/Images/HEAD.svg',
-      image: '/Images/LOGO IMMUJEL.png',
-      data: { url: data.url },
+      icon,
+      badge,
+      image: icon,
+      data: { url: data.url || '/' },
       vibrate: [200, 100, 200],
-      requireInteraction: true,
+      requireInteraction: false,
+      tag: 'immujel-publicacion',
       actions: [
-        { action: 'open', title: 'Abrir' },
+        { action: 'open',  title: '📖 Ver publicación' },
         { action: 'close', title: 'Cerrar' }
       ]
     })

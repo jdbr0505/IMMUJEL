@@ -30,26 +30,60 @@ function json(body, status) {
 function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
 
 function buildEmailHtml(id, titulo, resumen, label, fecha) {
-  const logo = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
-  return [
-    '<table cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background-color:rgba(255,255,255,0.92);border-top:4px solid #A506AD;border-radius:12px;overflow:hidden;box-shadow:0 15px 30px rgba(165,6,173,0.08);">',
-    '<tr><td style="padding:30px 20px;text-align:center;">',
-    `<img src="${logo}" alt="IMMUJEL" style="height:70px;margin-bottom:10px;">`,
-    `<h1 style="color:#A506AD;margin:10px 0 0;font-size:22px;font-weight:600;">${label}</h1>`,
-    "</td></tr>",
-    '<tr><td style="padding:30px 25px;">',
-    `<h2 style="color:#A506AD;margin:0 0 10px;font-size:20px;">${titulo}</h2>`,
-    resumen ? `<p style="color:#444;font-size:15px;line-height:1.6;margin:0 0 15px;">${resumen}</p>` : "",
-    `<p style="color:#999;font-size:13px;margin:0 0 20px;">${fecha}</p>`,
-    `<a href="${SITE_URL}/NavBar's/publicacion.html?id=${id}"`,
-    ' style="display:inline-block;background:linear-gradient(135deg,#A506AD,#0362CF);color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">',
-    "Leer m&aacute;s</a>",
-    "</td></tr>",
-    '<tr><td style="background:#f5f5f5;padding:15px 25px;text-align:center;font-size:12px;color:#888;">',
-    "IMMUJEL &mdash; Instituto Municipal de la Mujer de Lagunillas",
-    "</td></tr>",
-    "</table>",
-  ].join("\r\n");
+  const logo       = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
+  const head       = `${SITE_URL}/Images/HEAD.svg`;
+  const url        = `${SITE_URL}/NavBar's/publicacion.html?id=${id}`;
+  const isSemanario = label === "Semanario Institucional";
+  const badgeBg    = isSemanario ? "#0362CF,#4190EB" : "#A506AD,#F66EFD";
+  const typeIcon   = isSemanario ? "&#128240;" : "&#128226;";
+
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${label} &#8211; IMMUJEL</title></head>
+<body style="margin:0;padding:24px;background-color:#F0F5FF;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;">
+<table align="center" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:20px;">
+<div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(165,6,173,0.12),0 4px 20px rgba(3,98,207,0.08);">
+
+<div style="background:linear-gradient(135deg,#A506AD 0%,#0362CF 60%,#02162E 100%);padding:40px 20px 35px;text-align:center;">
+<img src="${head}" alt="" style="display:block;width:140px;height:auto;margin:0 auto 10px;opacity:0.1;">
+<img src="${logo}" alt="IMMUJEL" style="display:block;max-width:140px;height:auto;margin:-80px auto 0;position:relative;">
+</div>
+
+<div style="height:4px;background:linear-gradient(90deg,#F66EFD,#A506AD,#0362CF);"></div>
+
+<div style="padding:44px 36px 36px;text-align:center;">
+<div style="display:inline-block;background:linear-gradient(135deg,${badgeBg});color:#ffffff;padding:6px 18px;border-radius:50px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;">${typeIcon} ${label}</div>
+<h1 style="font-size:24px;font-weight:800;color:#02162E;margin:0 0 12px;letter-spacing:-0.3px;line-height:1.3;">${titulo}</h1>
+<div style="width:50px;height:4px;background:linear-gradient(90deg,#A506AD,#0362CF);border-radius:2px;margin:0 auto 20px;"></div>
+${resumen ? `<p style="font-size:15px;line-height:1.7;color:#4B5563;margin:0 0 24px;">${resumen}</p>` : ""}
+<p style="font-size:13px;color:#9CA3AF;margin:0 0 28px;">Publicado el ${fecha}</p>
+<a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#A506AD,#0362CF);color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 38px;border-radius:50px;box-shadow:0 6px 20px rgba(165,6,173,0.3);">Leer publicaci&#xF3;n completa</a>
+</div>
+
+<div style="background:#FAFAFE;padding:20px 36px;border-top:1px solid rgba(165,6,173,0.06);">
+<table width="100%" cellpadding="0" cellspacing="0"><tr>
+<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;"><strong style="color:#A506AD;display:block;font-size:13px;margin-bottom:2px;">Gratuidad</strong>Todos nuestros servicios son gratuitos</td>
+<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;border-left:1px solid rgba(165,6,173,0.08);border-right:1px solid rgba(165,6,173,0.08);"><strong style="color:#0362CF;display:block;font-size:13px;margin-bottom:2px;">Confidencialidad</strong>Atenci&#xF3;n completamente privada</td>
+<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;"><strong style="color:#A506AD;display:block;font-size:13px;margin-bottom:2px;">Equidad</strong>Con perspectiva de g&#xE9;nero</td>
+</tr></table>
+</div>
+
+<div style="background-color:#F5F0FF;padding:28px 24px;text-align:center;font-size:12px;color:#9CA3AF;border-top:1px solid rgba(165,6,173,0.08);">
+<img src="${head}" alt="" style="max-width:80px;height:auto;margin-bottom:12px;opacity:0.25;">
+<p style="margin:4px 0;color:#6B7280;font-weight:600;">Instituto Municipal de la Mujer de Lagunillas</p>
+<p style="margin:4px 0;">Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia</p>
+<div style="margin:14px 0;">
+<a href="https://www.instagram.com/immujellags_/" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">Instagram</a>
+<span style="color:#D1D5DB;">|</span>
+<a href="https://api.whatsapp.com/send?phone=584246540241" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">WhatsApp</a>
+<span style="color:#D1D5DB;">|</span>
+<a href="https://www.facebook.com/profile.php?id=100094636431215" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">Facebook</a>
+</div>
+<p style="margin:8px 0 0;font-size:11px;color:#B0B7C3;">Recibiste este correo porque est&#xE1;s registrada en IMMUJEL.</p>
+<p style="margin:4px 0 0;font-size:11px;color:#B0B7C3;">&#xA9; 2026 IMMUJEL &middot; Todos los derechos reservados</p>
+</div>
+
+</div>
+</td></tr></table>
+</body></html>`;
 }
 
 function makeMime(to, subject, html) {

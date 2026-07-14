@@ -81,5 +81,4 @@
         });
     }
 
-    // Service Worker eliminado (sw.js no existe en el proyecto)
 })();

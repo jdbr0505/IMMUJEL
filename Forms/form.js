@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submit-btn');
 
     // ===== VALIDACIÓN EN TIEMPO REAL =====
+    const validators = {
       name: v => v.trim().length >= 3 || !v,
       'id-number': v => !v || /^[VEJPGvejpg]-?\d{5,10}$/.test(v.trim()),
       email: v => !v || /^\S+@\S+\.\S+$/.test(v),

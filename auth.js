@@ -79,12 +79,42 @@
       }
 
       if (sessionBtn) {
+        let notifActive = false;
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+          try {
+            const swReg = await navigator.serviceWorker.ready;
+            notifActive = !!(await swReg.pushManager.getSubscription());
+          } catch {}
+        }
+
+        function updateNotifBtn(active) {
+          const btn = document.getElementById('notif-btn');
+          if (!btn) return;
+          if (active) {
+            btn.className = 'relative inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-2 px-3 rounded-full transition-all text-xs shadow-md hover:from-purple-700 hover:to-blue-700';
+            btn.title = 'Notificaciones activas · Clic para desactivar';
+            btn.innerHTML = '<i class="fas fa-bell"></i><span class="hidden sm:inline ml-0.5">Activas</span><span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white"></span>';
+          } else {
+            btn.className = 'inline-flex items-center gap-1.5 border border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold py-2 px-3 rounded-full transition-all text-xs';
+            btn.title = 'Activar notificaciones push';
+            btn.innerHTML = '<i class="fas fa-bell-slash"></i><span class="hidden sm:inline ml-0.5">Notificar</span>';
+          }
+        }
+
         sessionBtn.innerHTML = `
           <div class="flex items-center space-x-3">
-            <span class="text-sm font-medium text-gray-700"><i class="fas fa-user mr-1"></i>${nombreUsuario}</span>
-            <button id="notif-btn" class="border border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold py-2 px-3 rounded-full transition text-xs" title="Activar notificaciones"><i class="fas fa-bell"></i></button>
-            <button id="logout-btn" class="border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">Cerrar sesión</button>
+            <span class="text-sm font-medium text-gray-700 flex items-center gap-1">
+              <i class="fas fa-user-circle text-purple-500"></i>${nombreUsuario}
+            </span>
+            <button id="notif-btn" class="inline-flex items-center gap-1.5 border border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold py-2 px-3 rounded-full transition-all text-xs">
+              <i class="fas fa-bell-slash"></i>
+            </button>
+            <button id="logout-btn" class="flex items-center gap-1.5 border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">
+              <i class="fas fa-sign-out-alt"></i><span class="hidden sm:inline">Cerrar sesión</span>
+            </button>
           </div>`;
+
+        updateNotifBtn(notifActive);
 
         document.getElementById('notif-btn').addEventListener('click', async function() {
           if ('Notification' in window && Notification.permission !== 'granted') {
@@ -96,13 +126,12 @@
             const existing = await reg.pushManager.getSubscription();
             if (existing) {
               await unsubscribeAll();
-              this.innerHTML = '<i class="fas fa-bell"></i>';
-              this.title = 'Activar notificaciones';
+              notifActive = false;
             } else {
-              await subscribePushSubscription(user.id, reg);
-              this.innerHTML = '<i class="fas fa-bell"></i>';
-              this.title = 'Notificaciones activadas';
+              await subscribePush(user.id, reg);
+              notifActive = true;
             }
+            updateNotifBtn(notifActive);
           }
         });
 
