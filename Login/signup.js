@@ -1,5 +1,6 @@
 // signup.js – Registro con teléfono, manejo de errores y campo opcional
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.supabaseReady;
   const form = document.getElementById('signup-form');
   const fullnameInput = document.getElementById('fullname');
   const emailInput = document.getElementById('email');

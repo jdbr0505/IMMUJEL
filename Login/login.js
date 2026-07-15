@@ -1,5 +1,6 @@
 // login.js – Inicio de sesión con usuario o correo
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.supabaseReady;
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');

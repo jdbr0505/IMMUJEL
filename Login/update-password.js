@@ -23,15 +23,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // Esperar a que el cliente Supabase esté listo
+    const supabase = await window.supabaseReady;
+
     // Establecer la sesión con el token (necesario para poder actualizar)
     try {
-        const { error } = await window.supabase.auth.setSession({
+        const { error } = await supabase.auth.setSession({
             access_token: accessToken,
-            refresh_token: '' // no tenemos refresh, pero Supabase lo manejará
+            refresh_token: ''
         });
         if (error) throw error;
     } catch (err) {
-        console.warn('Error al establecer sesión:', err);
         errorDiv.textContent = 'Enlace inválido o expirado.';
         errorDiv.classList.remove('hidden');
         submitBtn.disabled = true;
@@ -90,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         submitBtn.textContent = 'Actualizando...';
 
         try {
-            const { error } = await window.supabase.auth.updateUser({
+            const { error } = await supabase.auth.updateUser({
                 password: newPassword
             });
             if (error) throw error;

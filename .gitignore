@@ -1,0 +1,6 @@
+# PDFs descargados localmente para setup de Supabase Storage (ya están en el bucket)
+scripts/pdfs/
+
+# Entornos locales
+.env
+.env.local

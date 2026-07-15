@@ -1,4 +1,8 @@
 -- Reemplazar funciones de trigger para usar valores directos (sin vault)
+-- NOTA: reemplaza <SUPABASE_ANON_KEY> con el anon key actual del proyecto
+-- (Supabase Dashboard → Settings → API → anon public)
+-- Vuelve a ejecutar este script en el SQL Editor cada vez que rotes el JWT secret.
+
 CREATE OR REPLACE FUNCTION public.notify_new_publication()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -10,7 +14,7 @@ BEGIN
       url := 'https://vhgfyqodiieblhfwbama.supabase.co/functions/v1/send-notification',
       headers := jsonb_build_object(
         'Content-Type', 'application/json',
-        'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ2Z5cW9kaWVibGhmYndiYW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NDA0ODIsImV4cCI6MjA1OTQxNjQ4Mn0.ZZP5WsYLXDEhzQK4wVwYx-UZYs9GfXQUIM9KWyUrNYY'
+        'Authorization', 'Bearer <SUPABASE_ANON_KEY>'
       ),
       body := jsonb_build_object(
         'record', jsonb_build_object(
@@ -39,7 +43,7 @@ BEGIN
       url := 'https://vhgfyqodiieblhfwbama.supabase.co/functions/v1/send-notification',
       headers := jsonb_build_object(
         'Content-Type', 'application/json',
-        'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ2Z5cW9kaWlibGhmYndiYW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MDA0ODIsImV4cCI6MjA1OTQxNjQ4Mn0.ZZP5WsYLXDEhzQK4wVwYx-UZYs9GfXQUIM9KWyUrNYY'
+        'Authorization', 'Bearer <SUPABASE_ANON_KEY>'
       ),
       body := jsonb_build_object(
         'record', jsonb_build_object(

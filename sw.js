@@ -1,5 +1,5 @@
-const CACHE = 'immujel-v2';
-const STATIC_CACHE = 'immujel-static-v2';
+const CACHE = 'immujel-v3';
+const STATIC_CACHE = 'immujel-static-v3';
 
 const PRECACHE = [
   '/',
@@ -48,12 +48,19 @@ self.addEventListener('activate', e => {
   );
 });
 
+self.addEventListener('message', e => {
+  if (e.data?.action === 'skipWaiting') self.skipWaiting();
+});
+
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
   if (url.origin !== location.origin) return;
 
   const path = url.pathname;
+
+  // Funciones serverless → nunca cachear
+  if (path.startsWith('/api/')) return;
 
   // API Supabase → Network First
   if (path.startsWith('/rest/') || path.startsWith('/functions/')) {
@@ -70,7 +77,7 @@ self.addEventListener('fetch', e => {
     return e.respondWith(cacheFirst(e.request));
   }
 
-  // Otros (HTML no navegación, etc) → Network First
+  // Otros → Network First
   e.respondWith(networkFirst(e.request));
 });
 
