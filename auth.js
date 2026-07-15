@@ -1,7 +1,6 @@
 // auth.js – Control de sesión, panel izquierdo, navbar dinámico y push subscriptions
 (async function() {
-  const supabase = window.supabase;
-  if (!supabase) return;
+  const supabase = await window.supabaseReady;
 
   const loginPaths = ['/Login/login.html', '/Login/signup.html', '/Login/update-password.html'];
   if (loginPaths.some(p => window.location.pathname.includes(p))) return;

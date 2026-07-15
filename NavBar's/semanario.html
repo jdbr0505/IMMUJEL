@@ -165,8 +165,7 @@
                     if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
                 }
 
-                const sb = window.supabase;
-                if (!sb) { showEmpty(); return; }
+                const sb = await window.supabaseReady;
 
                 const from = page * pageSize;
                 const to = from + pageSize - 1;

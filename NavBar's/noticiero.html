@@ -134,9 +134,8 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const supabase = window.supabase;
-            if (!supabase) return;
+        document.addEventListener('DOMContentLoaded', async () => {
+            const supabase = await window.supabaseReady;
             const grid = document.getElementById('noticiero-grid');
             const loading = document.getElementById('noticiero-loading');
             const empty = document.getElementById('noticiero-empty');

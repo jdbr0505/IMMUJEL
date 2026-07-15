@@ -16,8 +16,7 @@ if (typeof window.showToast === 'undefined') {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const supabase = window.supabase;
-  if (!supabase) return;
+  const supabase = await window.supabaseReady;
 
   // 1. Verificar sesión y rol
   const { data: { user }, error: userError } = await supabase.auth.getUser();

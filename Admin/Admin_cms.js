@@ -2,9 +2,8 @@
 
 // showToast definido en Admin.js (compatible con Admin_cms.js)
 
-document.addEventListener('DOMContentLoaded', () => {
-  const supabase = window.supabase;
-  if (!supabase) return;
+document.addEventListener('DOMContentLoaded', async () => {
+  const supabase = await window.supabaseReady;
   if (!document.getElementById('section-cms')) return;
 
   // ===== CONFIRMATION DIALOG =====
