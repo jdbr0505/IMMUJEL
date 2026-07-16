@@ -4,3 +4,6 @@ scripts/pdfs/
 # Entornos locales
 .env
 .env.local
+
+.vercel
+.env*
