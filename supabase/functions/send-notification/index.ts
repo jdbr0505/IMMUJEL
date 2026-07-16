@@ -29,6 +29,155 @@ function json(body, status) {
 
 function b64(s) { return btoa(unescape(encodeURIComponent(s))); }
 
+// ---- Web Push (RFC 8291 aes128gcm + RFC 8292 VAPID) -----------------------
+// La API legacy "fcm.googleapis.com/fcm/send" fue apagada por Google en 2024
+// y de todas formas exigía un payload cifrado que antes nunca se generaba.
+// Estas funciones implementan el protocolo Web Push real con Web Crypto,
+// enviando cada mensaje directamente al `endpoint` propio de cada suscripción.
+
+function base64UrlToBytes(b64url) {
+  const padded = b64url + "=".repeat((4 - (b64url.length % 4)) % 4);
+  const raw = atob(padded.replace(/-/g, "+").replace(/_/g, "/"));
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return bytes;
+}
+
+function bytesToBase64Url(bytes) {
+  let str = "";
+  for (let i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+  return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function concatBytes(arrays) {
+  const total = arrays.reduce((sum, a) => sum + a.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const a of arrays) { out.set(a, offset); offset += a.length; }
+  return out;
+}
+
+async function hmacSha256(key, data) {
+  const cryptoKey = await crypto.subtle.importKey("raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC", cryptoKey, data));
+}
+
+async function hkdfExpand16Bytes(prk, info, length) {
+  return (await hmacSha256(prk, concatBytes([info, new Uint8Array([1])]))).slice(0, length);
+}
+
+// Cifra el payload según RFC 8291 usando las claves p256dh/auth del suscriptor.
+async function encryptWebPushPayload(payloadBytes, p256dhB64, authB64) {
+  const clientPublicKeyBytes = base64UrlToBytes(p256dhB64);
+  const authSecret = base64UrlToBytes(authB64);
+
+  const clientPublicKey = await crypto.subtle.importKey(
+    "raw", clientPublicKeyBytes, { name: "ECDH", namedCurve: "P-256" }, false, []
+  );
+
+  const serverKeyPair = await crypto.subtle.generateKey(
+    { name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"]
+  );
+  const serverPublicKeyBytes = new Uint8Array(await crypto.subtle.exportKey("raw", serverKeyPair.publicKey));
+
+  const sharedSecret = new Uint8Array(
+    await crypto.subtle.deriveBits({ name: "ECDH", public: clientPublicKey }, serverKeyPair.privateKey, 256)
+  );
+
+  const authInfo = concatBytes([
+    new TextEncoder().encode("WebPush: info"),
+    new Uint8Array([0]),
+    clientPublicKeyBytes,
+    serverPublicKeyBytes,
+  ]);
+
+  const prkKey = await hmacSha256(authSecret, sharedSecret);
+  const ikm = await hkdfExpand16Bytes(prkKey, authInfo, 32);
+
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const prk = await hmacSha256(salt, ikm);
+
+  const cek = await hkdfExpand16Bytes(prk, new TextEncoder().encode("Content-Encoding: aes128gcm\0"), 16);
+  const nonce = await hkdfExpand16Bytes(prk, new TextEncoder().encode("Content-Encoding: nonce\0"), 12);
+
+  const paddedPlaintext = concatBytes([payloadBytes, new Uint8Array([2])]); // delimitador de último registro
+
+  const cekKey = await crypto.subtle.importKey("raw", cek, { name: "AES-GCM" }, false, ["encrypt"]);
+  const ciphertext = new Uint8Array(
+    await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce, tagLength: 128 }, cekKey, paddedPlaintext)
+  );
+
+  const rsBytes = new Uint8Array(4);
+  new DataView(rsBytes.buffer).setUint32(0, 4096, false);
+  const header = concatBytes([salt, rsBytes, new Uint8Array([serverPublicKeyBytes.length]), serverPublicKeyBytes]);
+
+  return concatBytes([header, ciphertext]);
+}
+
+// Firma un JWT VAPID (RFC 8292) para autenticar el envío ante el push service.
+async function buildVapidAuthHeader(endpoint, vapidPublicKeyB64, vapidPrivateKeyB64, subject) {
+  const { origin } = new URL(endpoint);
+  const encoder = new TextEncoder();
+
+  const headerB64 = bytesToBase64Url(encoder.encode(JSON.stringify({ typ: "JWT", alg: "ES256" })));
+  const payloadB64 = bytesToBase64Url(encoder.encode(JSON.stringify({
+    aud: origin,
+    exp: Math.floor(Date.now() / 1000) + 12 * 60 * 60,
+    sub: subject,
+  })));
+  const unsigned = `${headerB64}.${payloadB64}`;
+
+  const privateKeyBytes = base64UrlToBytes(vapidPrivateKeyB64);
+  const publicKeyBytes = base64UrlToBytes(vapidPublicKeyB64);
+
+  const signingKey = await crypto.subtle.importKey(
+    "jwk",
+    {
+      kty: "EC",
+      crv: "P-256",
+      d: bytesToBase64Url(privateKeyBytes),
+      x: bytesToBase64Url(publicKeyBytes.slice(1, 33)),
+      y: bytesToBase64Url(publicKeyBytes.slice(33, 65)),
+      ext: true,
+    },
+    { name: "ECDSA", namedCurve: "P-256" },
+    false,
+    ["sign"]
+  );
+
+  const signature = new Uint8Array(
+    await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, signingKey, encoder.encode(unsigned))
+  );
+
+  return `vapid t=${unsigned}.${bytesToBase64Url(signature)}, k=${vapidPublicKeyB64}`;
+}
+
+async function sendWebPush(sub, payloadObj) {
+  const payloadBytes = new TextEncoder().encode(JSON.stringify(payloadObj));
+  const body = await encryptWebPushPayload(payloadBytes, sub.p256dh, sub.auth);
+  const authHeader = await buildVapidAuthHeader(sub.endpoint, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, `mailto:${SMTP_USER}`);
+
+  return fetch(sub.endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/octet-stream",
+      "Content-Encoding": "aes128gcm",
+      "TTL": "86400",
+      "Authorization": authHeader,
+    },
+    body,
+  });
+}
+
+async function deleteExpiredSubscription(endpoint) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(endpoint)}`, {
+      method: "DELETE",
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    });
+  } catch {}
+}
+
 function buildEmailHtml(id, titulo, resumen, label, fecha) {
   const logo       = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
   const head       = `${SITE_URL}/Images/HEAD.svg`;
@@ -183,28 +332,25 @@ Deno.serve(async (req) => {
     } catch (smtpErr) { results.smtp_error = smtpErr.message; }
 
     if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-      results.push_debug = { subs_fetched: 0, subs_sent: 0 };
+      results.push_debug = { subs_fetched: 0, subs_sent: 0, subs_expired: 0 };
       const subs = await fetchPushSubscriptions();
       results.push_debug.subs_fetched = subs.length;
+      const payload = { titulo: label, cuerpo: titulo, url: `${SITE_URL}/NavBar's/publicacion.html?id=${id}` };
       for (const sub of subs) {
         try {
-          const p256dh = Uint8Array.from(atob(sub.p256dh), c => c.charCodeAt(0));
-          const auth = Uint8Array.from(atob(sub.auth), c => c.charCodeAt(0));
-          const payload = JSON.stringify({ titulo: label, cuerpo: titulo, url: `${SITE_URL}/NavBar's/publicacion.html?id=${id}` });
-          const res = await fetch("https://fcm.googleapis.com/fcm/send", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `key=${VAPID_PUBLIC_KEY}`,
-            },
-            body: JSON.stringify({
-              to: sub.endpoint,
-              data: { titulo: label, cuerpo: titulo, url: `${SITE_URL}/NavBar's/publicacion.html?id=${id}` },
-              notification: { title: label, body: titulo, icon: "/Images/LOGO IMMUJEL.png" },
-            }),
-          });
-          if (res.ok) { results.push++; results.push_debug.subs_sent++; }
-        } catch {}
+          const res = await sendWebPush(sub, payload);
+          if (res.ok) {
+            results.push++;
+            results.push_debug.subs_sent++;
+          } else if (res.status === 404 || res.status === 410) {
+            await deleteExpiredSubscription(sub.endpoint);
+            results.push_debug.subs_expired++;
+          } else {
+            results.push_debug.last_error = `${res.status} ${await res.text()}`;
+          }
+        } catch (e) {
+          results.push_debug.last_error = e.message;
+        }
       }
     }
 
