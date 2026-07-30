@@ -277,8 +277,10 @@ async function fetchPushSubscriptions() {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return json({}, 200);
   try {
-    const { record } = await req.json();
+    const { record, old_record } = await req.json();
     if (!record?.publicado) return json({ ok: false });
+    // Evitar duplicados: solo notificar cuando publicado pasa de false→true (no en ediciones de artículos ya publicados)
+    if (old_record?.publicado === true) return json({ ok: false, reason: "already_published" });
 
     const { id, titulo, resumen, tipo, fecha_publicacion } = record;
     const label = tipo === "semanario" ? "Semanario Institucional" : "Noticiero";
