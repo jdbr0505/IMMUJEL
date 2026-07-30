@@ -179,58 +179,93 @@ async function deleteExpiredSubscription(endpoint) {
 }
 
 function buildEmailHtml(id, titulo, resumen, label, fecha) {
-  const logo       = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
-  const head       = `${SITE_URL}/Images/HEAD.svg`;
-  const url        = `${SITE_URL}/NavBar's/publicacion.html?id=${id}`;
-  const isSemanario = label === "Semanario Institucional";
-  const badgeBg    = isSemanario ? "#0362CF,#4190EB" : "#A506AD,#F66EFD";
-  const typeIcon   = isSemanario ? "&#128240;" : "&#128226;";
+  const logo      = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
+  const head      = `${SITE_URL}/Images/HEAD.svg`;
+  const url       = `${SITE_URL}/NavBar's/publicacion.html?id=${id}`;
+  const typeIcon  = label === "Semanario Institucional" ? "&#128240;" : "&#128226;";
 
-  return `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${label} &#8211; IMMUJEL</title></head>
-<body style="margin:0;padding:24px;background-color:#F0F5FF;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;">
-<table align="center" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:20px;">
-<div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(165,6,173,0.12),0 4px 20px rgba(3,98,207,0.08);">
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${label} &#8211; IMMUJEL</title></head>
+<body style="margin:0;padding:0;background-color:#F0F5FF;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0F5FF;">
+<tr><td align="center" style="padding:32px 16px 48px;">
+<table role="presentation" width="100%" style="max-width:600px;" cellpadding="0" cellspacing="0">
 
-<div style="background:linear-gradient(135deg,#A506AD 0%,#0362CF 60%,#02162E 100%);padding:40px 20px 35px;text-align:center;">
-<img src="${head}" alt="" style="display:block;width:140px;height:auto;margin:0 auto 10px;opacity:0.1;">
-<img src="${logo}" alt="IMMUJEL" style="display:block;max-width:140px;height:auto;margin:-80px auto 0;position:relative;">
-</div>
+<!-- Logo sobre la tarjeta (igual que en login/registro) -->
+<tr><td align="center" style="padding-bottom:20px;">
+<img src="${logo}" alt="IMMUJEL" width="108" style="display:block;width:108px;height:auto;">
+</td></tr>
 
-<div style="height:4px;background:linear-gradient(90deg,#F66EFD,#A506AD,#0362CF);"></div>
+<!-- Tarjeta principal -->
+<tr><td style="background:#ffffff;border-radius:28px;overflow:hidden;box-shadow:0 8px 40px rgba(165,6,173,0.13),0 2px 16px rgba(3,98,207,0.07);">
 
-<div style="padding:44px 36px 36px;text-align:center;">
-<div style="display:inline-block;background:linear-gradient(135deg,${badgeBg});color:#ffffff;padding:6px 18px;border-radius:50px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;">${typeIcon} ${label}</div>
-<h1 style="font-size:24px;font-weight:800;color:#02162E;margin:0 0 12px;letter-spacing:-0.3px;line-height:1.3;">${titulo}</h1>
-<div style="width:50px;height:4px;background:linear-gradient(90deg,#A506AD,#0362CF);border-radius:2px;margin:0 auto 20px;"></div>
-${resumen ? `<p style="font-size:15px;line-height:1.7;color:#4B5563;margin:0 0 24px;">${resumen}</p>` : ""}
+<!-- Header gradiente institucional con badge -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td style="background:linear-gradient(135deg,#A506AD 0%,#0362CF 65%,#02162E 100%);padding:36px 32px 28px;text-align:center;">
+<table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
+<td style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.32);border-radius:50px;padding:6px 20px;">
+<span style="color:#ffffff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;">${typeIcon} ${label}</span>
+</td></tr></table>
+</td></tr></table>
+
+<!-- Barra de acento tricolor -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td style="height:4px;background:linear-gradient(90deg,#F66EFD,#A506AD,#0362CF);"></td></tr>
+</table>
+
+<!-- Contenido principal -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td style="padding:40px 40px 32px;text-align:center;">
+<h1 style="font-size:22px;font-weight:800;color:#02162E;margin:0 0 14px;line-height:1.35;letter-spacing:-0.3px;">${titulo}</h1>
+<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin-bottom:20px;">
+<tr><td style="width:52px;height:4px;background:linear-gradient(90deg,#A506AD,#0362CF);border-radius:2px;"></td></tr>
+</table>
+${resumen ? `<p style="font-size:15px;line-height:1.75;color:#4B5563;margin:0 0 20px;">${resumen}</p>` : ""}
 <p style="font-size:13px;color:#9CA3AF;margin:0 0 28px;">Publicado el ${fecha}</p>
-<a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#A506AD,#0362CF);color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 38px;border-radius:50px;box-shadow:0 6px 20px rgba(165,6,173,0.3);">Leer publicaci&#xF3;n completa</a>
-</div>
+<table role="presentation" cellpadding="0" cellspacing="0" align="center">
+<tr><td style="background:linear-gradient(135deg,#A506AD,#0362CF);border-radius:50px;box-shadow:0 6px 20px rgba(165,6,173,0.30);">
+<a href="${url}" style="display:block;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 38px;border-radius:50px;">Leer publicaci&#xF3;n completa</a>
+</td></tr></table>
+</td></tr></table>
 
-<div style="background:#FAFAFE;padding:20px 36px;border-top:1px solid rgba(165,6,173,0.06);">
-<table width="100%" cellpadding="0" cellspacing="0"><tr>
-<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;"><strong style="color:#A506AD;display:block;font-size:13px;margin-bottom:2px;">Gratuidad</strong>Todos nuestros servicios son gratuitos</td>
-<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;border-left:1px solid rgba(165,6,173,0.08);border-right:1px solid rgba(165,6,173,0.08);"><strong style="color:#0362CF;display:block;font-size:13px;margin-bottom:2px;">Confidencialidad</strong>Atenci&#xF3;n completamente privada</td>
-<td width="33%" style="text-align:center;padding:8px;font-size:12px;color:#6B7280;"><strong style="color:#A506AD;display:block;font-size:13px;margin-bottom:2px;">Equidad</strong>Con perspectiva de g&#xE9;nero</td>
+<!-- Los tres pilares institucionales -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid rgba(165,6,173,0.06);background:#FAFAFE;">
+<tr>
+<td width="33%" style="text-align:center;padding:16px 8px;vertical-align:top;">
+<strong style="color:#A506AD;font-size:13px;display:block;margin-bottom:3px;">Gratuidad</strong>
+<span style="color:#6B7280;font-size:11px;line-height:1.5;">Todos nuestros servicios<br>son gratuitos</span>
+</td>
+<td width="34%" style="text-align:center;padding:16px 8px;vertical-align:top;border-left:1px solid rgba(165,6,173,0.08);border-right:1px solid rgba(165,6,173,0.08);">
+<strong style="color:#0362CF;font-size:13px;display:block;margin-bottom:3px;">Confidencialidad</strong>
+<span style="color:#6B7280;font-size:11px;line-height:1.5;">Atenci&#xF3;n completamente<br>privada</span>
+</td>
+<td width="33%" style="text-align:center;padding:16px 8px;vertical-align:top;">
+<strong style="color:#A506AD;font-size:13px;display:block;margin-bottom:3px;">Equidad</strong>
+<span style="color:#6B7280;font-size:11px;line-height:1.5;">Con perspectiva<br>de g&#xE9;nero</span>
+</td>
 </tr></table>
-</div>
 
-<div style="background-color:#F5F0FF;padding:28px 24px;text-align:center;font-size:12px;color:#9CA3AF;border-top:1px solid rgba(165,6,173,0.08);">
-<img src="${head}" alt="" style="max-width:80px;height:auto;margin-bottom:12px;opacity:0.25;">
-<p style="margin:4px 0;color:#6B7280;font-weight:600;">Instituto Municipal de la Mujer de Lagunillas</p>
-<p style="margin:4px 0;">Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia</p>
-<div style="margin:14px 0;">
-<a href="https://www.instagram.com/immujellags_/" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">Instagram</a>
-<span style="color:#D1D5DB;">|</span>
-<a href="https://api.whatsapp.com/send?phone=584246540241" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">WhatsApp</a>
-<span style="color:#D1D5DB;">|</span>
-<a href="https://www.facebook.com/profile.php?id=100094636431215" style="color:#A506AD;text-decoration:none;font-weight:500;margin:0 10px;">Facebook</a>
-</div>
-<p style="margin:8px 0 0;font-size:11px;color:#B0B7C3;">Recibiste este correo porque est&#xE1;s registrada en IMMUJEL.</p>
-<p style="margin:4px 0 0;font-size:11px;color:#B0B7C3;">&#xA9; 2026 IMMUJEL &middot; Todos los derechos reservados</p>
-</div>
+<!-- Footer -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0FF;border-top:1px solid rgba(165,6,173,0.08);">
+<tr><td style="padding:24px 32px;text-align:center;">
+<img src="${head}" alt="" width="60" style="display:block;width:60px;height:auto;margin:0 auto 12px;opacity:0.22;">
+<p style="margin:0 0 3px;color:#4B5563;font-weight:600;font-size:13px;">Instituto Municipal de la Mujer de Lagunillas</p>
+<p style="margin:0 0 14px;color:#9CA3AF;font-size:11px;line-height:1.6;">Calle Vargas, esq. Calle Piar, Casa N.&#xB0; 218<br>Ciudad Ojeda, Estado Zulia</p>
+<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin-bottom:14px;"><tr>
+<td style="padding:0 8px;"><a href="https://www.instagram.com/immujellags_/" style="color:#A506AD;text-decoration:none;font-weight:600;font-size:12px;">Instagram</a></td>
+<td style="color:#D1D5DB;font-size:12px;">|</td>
+<td style="padding:0 8px;"><a href="https://api.whatsapp.com/send?phone=584246540241" style="color:#A506AD;text-decoration:none;font-weight:600;font-size:12px;">WhatsApp</a></td>
+<td style="color:#D1D5DB;font-size:12px;">|</td>
+<td style="padding:0 8px;"><a href="https://www.facebook.com/profile.php?id=100094636431215" style="color:#A506AD;text-decoration:none;font-weight:600;font-size:12px;">Facebook</a></td>
+</tr></table>
+<p style="margin:0 0 2px;font-size:11px;color:#B0B7C3;">Recibiste este correo porque est&#xE1;s registrada en IMMUJEL.</p>
+<p style="margin:0;font-size:11px;color:#B0B7C3;">&#xA9; 2026 IMMUJEL &middot; Todos los derechos reservados</p>
+</td></tr></table>
 
-</div>
+</td></tr><!-- fin tarjeta -->
+</table><!-- fin max-width -->
 </td></tr></table>
 </body></html>`;
 }
