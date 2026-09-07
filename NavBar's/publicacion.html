@@ -207,6 +207,16 @@
             // Título
             document.getElementById('publicacion-titulo').textContent = data.titulo;
 
+            // Registrar en historial (solo si hay consentimiento funcional)
+            if (window.HistorialUtil) {
+                window.HistorialUtil.registrarVisita({
+                    id: data.id,
+                    titulo: data.titulo,
+                    tipo: data.tipo,
+                    url: window.location.pathname + window.location.search
+                });
+            }
+
             // Resumen
             const resumenEl = document.getElementById('publicacion-resumen');
             if (data.resumen) {
@@ -286,6 +296,8 @@
     </button>
     <script src="../animations.js" defer></script>
     <script src="../js/ui.js" defer></script>
+    <script src="../js/cookies.js"></script>
+    <script src="../js/historial.js"></script>
     <script src="../Login/Login_supabase.js"></script>
     <script src="../auth.js"></script>
     <script src="../js/sw-register.js" defer></script>
