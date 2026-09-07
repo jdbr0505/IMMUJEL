@@ -39,6 +39,7 @@ function injectBanner() {
   banner.innerHTML = `
     <p style="flex:1;min-width:240px;margin:0;font-size:14px;color:#1f2937;max-width:640px;">
       Usamos cookies esenciales para el funcionamiento del sitio y, si lo permites, cookies funcionales para guardar tu historial de publicaciones vistas y tus preferencias. No usamos cookies de publicidad ni rastreo externo.
+      <a href="/NavBar's/privacidad.html" style="color:#A506AD;font-weight:600;text-decoration:underline;">Más información</a>
     </p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button id="cookie-reject" style="padding:10px 18px;border-radius:10px;border:1px solid #D1D5DB;background:#fff;color:#374151;font-weight:600;cursor:pointer;">Solo esenciales</button>
