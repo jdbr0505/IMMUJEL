@@ -80,6 +80,12 @@
             <p class="text-gray-600 text-lg">Las últimas noticias y novedades del Instituto.</p>
         </div>
 
+        <!-- Historial de vistas recientes (solo con consentimiento funcional) -->
+        <div id="historial-wrapper" class="max-w-2xl mx-auto mb-8 bg-white rounded-xl border border-purple-100 shadow-sm p-4 hidden">
+            <h2 class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><i class="fas fa-clock-rotate-left text-purple-500"></i> Vistos recientemente</h2>
+            <div id="historial-container"></div>
+        </div>
+
         <div class="max-w-md mx-auto mb-8">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-search"></i></span>
@@ -256,6 +262,15 @@
     <script src="../Login/Login_supabase.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/cookies.js"></script>
+    <script src="../js/historial.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.HistorialUtil || !window.CookieUtil?.hasFunctionalConsent()) return;
+            if (window.HistorialUtil.getHistorial().length === 0) return;
+            window.HistorialUtil.renderHistorial('historial-container');
+            document.getElementById('historial-wrapper')?.classList.remove('hidden');
+        });
+    </script>
     <script src="../js/sw-register.js" defer></script>
 </body>
 </html>
