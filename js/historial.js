@@ -22,6 +22,13 @@ function borrarHistorial() {
   localStorage.removeItem(HISTORIAL_KEY);
 }
 
+function escapeHtml(t) {
+  if (!t) return '';
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
+}
+
 function renderHistorial(containerId) {
   const el = document.getElementById(containerId);
   if (!el) return;
@@ -37,8 +44,8 @@ function renderHistorial(containerId) {
   }
 
   el.innerHTML = historial.map(h => `
-    <a href="${h.url}" class="block px-3 py-2 rounded-lg hover:bg-purple-50 transition text-sm">
-      <span class="font-medium text-gray-800">${h.titulo}</span>
+    <a href="${escapeHtml(h.url)}" class="block px-3 py-2 rounded-lg hover:bg-purple-50 transition text-sm">
+      <span class="font-medium text-gray-800">${escapeHtml(h.titulo)}</span>
       <span class="text-xs text-gray-400 block">${h.tipo === 'semanario' ? 'Semanario' : 'Noticiero'} · ${new Date(h.visto_en).toLocaleDateString('es-ES')}</span>
     </a>
   `).join('');
