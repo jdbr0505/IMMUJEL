@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ===== EVENT HANDLERS =====
-  window.viewCMS = function(id) { window.open('../NavBar\'s/publicacion.html?id=' + id, '_blank'); };
+  window.viewCMS = function(id) { window.open('../navegacion/publicacion.html?id=' + id, '_blank'); };
 
   window.togglePublishCMS = async function(id, currentStatus) {
     var result = await supabase.from('publicaciones').update({ publicado: !currentStatus }).eq('id', id);

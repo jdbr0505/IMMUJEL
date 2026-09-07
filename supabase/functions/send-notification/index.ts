@@ -181,7 +181,7 @@ async function deleteExpiredSubscription(endpoint) {
 function buildEmailHtml(id, titulo, resumen, label, fecha) {
   const logo    = `${SITE_URL}/Images/LOGO%20IMMUJEL.png`;
   const head    = `${SITE_URL}/Images/HEAD.svg`;
-  const url     = `${SITE_URL}/NavBar's/publicacion.html?id=${id}`;
+  const url     = `${SITE_URL}/navegacion/publicacion.html?id=${id}`;
   const isS     = label === "Semanario Institucional";
   const icon    = isS ? "&#128240;" : "&#128226;";
   const badgeBg = isS
@@ -425,7 +425,7 @@ Deno.serve(async (req) => {
       results.push_debug = { subs_fetched: 0, subs_sent: 0, subs_expired: 0 };
       const subs = await fetchPushSubscriptions();
       results.push_debug.subs_fetched = subs.length;
-      const payload = { titulo: label, cuerpo: titulo, url: `${SITE_URL}/NavBar's/publicacion.html?id=${id}` };
+      const payload = { titulo: label, cuerpo: titulo, url: `${SITE_URL}/navegacion/publicacion.html?id=${id}` };
       for (const sub of subs) {
         try {
           const res = await sendWebPush(sub, payload);

@@ -77,8 +77,8 @@ La aplicación es una **PWA instalable**: funciona en computadora, tablet y celu
 | **Sitio en producción** | [immujel.vercel.app](https://immujel.vercel.app) |
 | **Espejo GitHub Pages** | [jdbr0505.github.io/IMMUJEL](https://jdbr0505.github.io/IMMUJEL/) |
 | **Solicitar asesoría** | [Formulario en línea](https://immujel.vercel.app/Forms/form.html) |
-| **Semanario Institucional** | [Ver ediciones](https://immujel.vercel.app/NavBar%27s/semanario.html) |
-| **Noticiero** | [Ver noticias](https://immujel.vercel.app/NavBar%27s/noticiero.html) |
+| **Semanario Institucional** | [Ver ediciones](https://immujel.vercel.app/navegacion/semanario.html) |
+| **Noticiero** | [Ver noticias](https://immujel.vercel.app/navegacion/noticiero.html) |
 
 <br>
 
@@ -251,53 +251,59 @@ IMMUJEL/
 │
 ├── index.html                    Página principal
 ├── styles.css                    Identidad visual y tema oscuro
-├── auth.js                       Sesión, roles e inyección de botones
-├── animations.js                 Animaciones de scroll
 ├── sw.js                         Service Worker (offline + push)
 ├── manifest.json                 Manifiesto PWA
 ├── vercel.json                   Cabeceras de seguridad y caché
 │
+├── js/                           Scripts compartidos por todo el sitio
+│   ├── auth.js                   Sesión, roles e inyección de botones
+│   ├── animations.js             Animaciones de scroll
+│   ├── cookies.js                Consentimiento de cookies (banner + utilidades)
+│   ├── historial.js              Historial local de publicaciones vistas
+│   ├── sw-register.js            Registro del Service Worker
+│   └── ui.js                     Utilidades de interfaz
+│
 ├── Login/                        Autenticación
-│   ├── login.html · login.js
-│   ├── signup.html · signup.js
+│   ├── login.html · login.js · login-styles.css
+│   ├── signup.html · signup.js · signup-styles.css
 │   ├── update-password.html
 │   ├── email-confirmacion.html
 │   └── Login_supabase.js         Cliente Supabase compartido
 │
 ├── Forms/                        Solicitudes de asesoría
 │   ├── form.html
-│   └── form.js                   Validación y modo incógnito
+│   ├── form.js                   Validación y modo incógnito
+│   └── form-styles.css
 │
-├── NavBar's/                     Secciones públicas
+├── navegacion/                   Secciones públicas del sitio
 │   ├── semanario.html            Semanario Institucional
 │   ├── noticiero.html            Noticiero
 │   ├── publicacion.html          Vista individual
 │   ├── Programas.html            Talleres y formación
 │   ├── Sobre Nosotras.html       Información institucional
-│   └── FL.html                   Fundamentos legales
+│   ├── FL.html                   Fundamentos legales
+│   └── privacidad.html           Política de privacidad y cookies
 │
 ├── Admin/                        Panel de administración
 │   ├── Admin.html
 │   ├── Admin.js                  Asesorías + gestión de usuarias
 │   ├── Admin_cms.js              CMS de publicaciones
-│   └── Admin_styles.css
+│   └── admin-styles.css
 │
 ├── api/
 │   └── config.js                 Entrega saneada de credenciales
-│
-├── js/
-│   ├── sw-register.js            Registro del Service Worker
-│   └── ui.js                     Utilidades de interfaz
 │
 ├── supabase/functions/
 │   └── send-notification/
 │       └── index.ts              Web Push + correo (Deno)
 │
-├── Supabase SQL/                 Migraciones y políticas
+├── supabase-sql/                 Migraciones y políticas
 │   ├── TODO_EN_UNO.sql           Esquema completo
 │   ├── setup_notificaciones.sql
 │   ├── setup_push_subscriptions.sql
 │   └── alter_storage_rls.sql
+│
+├── docs/                         Manual de uso y material de capacitación
 │
 └── Images/                       Logo, QR y recursos visuales
 ```
@@ -362,7 +368,7 @@ VAPID_PRIVATE_KEY=clave_privada_vapid
 Ejecuta el script completo desde el **SQL Editor** de Supabase:
 
 ```
-Supabase SQL/TODO_EN_UNO.sql
+supabase-sql/TODO_EN_UNO.sql
 ```
 
 Esto crea las tablas principales:
@@ -378,14 +384,14 @@ Esto crea las tablas principales:
 ### 2. Configurar notificaciones
 
 ```
-Supabase SQL/setup_notificaciones.sql
-Supabase SQL/setup_push_subscriptions.sql
+supabase-sql/setup_notificaciones.sql
+supabase-sql/setup_push_subscriptions.sql
 ```
 
 ### 3. Permisos de Storage
 
 ```
-Supabase SQL/alter_storage_rls.sql
+supabase-sql/alter_storage_rls.sql
 ```
 
 Crea dos buckets públicos: `publicacion-imagenes` y `publicacion-pdfs`.
@@ -435,8 +441,9 @@ Las cabeceras de seguridad (`X-Frame-Options`, `X-Content-Type-Options`, `Referr
 
 | Documento | Descripción |
 |:---|:---|
-| **Manual de Uso** | Guía paso a paso para asesoras y personal, en lenguaje sencillo y sin tecnicismos |
-| **Diapositivas del Taller** | Material de capacitación para el personal de IMMUJEL |
+| [**Manual de Uso**](docs/Manual%20de%20Uso%20-%20IMMUJEL.docx) | Guía paso a paso para asesoras y personal, en lenguaje sencillo y sin tecnicismos |
+| [**Diapositivas del Taller**](docs/Diapositivas%20-%20Taller%20IMMUJEL.pptx) | Material de capacitación para el personal de IMMUJEL |
+| [**Política de Privacidad**](navegacion/privacidad.html) | Qué datos recopilamos, cookies y derechos de las usuarias |
 
 El manual cubre el registro de cuentas, el envío de solicitudes, la activación de notificaciones y el uso completo del panel de administración, además de una sección de preguntas frecuentes y un glosario de términos.
 

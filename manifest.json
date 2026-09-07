@@ -38,14 +38,14 @@
       "name": "Semanario",
       "short_name": "Semanario",
       "description": "Semanario Institucional IMMUJEL",
-      "url": "/NavBar's/semanario.html",
+      "url": "/navegacion/semanario.html",
       "icons": [{ "src": "/Images/LOGO IMMUJEL.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Noticiero",
       "short_name": "Noticiero",
       "description": "Noticias IMMUJEL",
-      "url": "/NavBar's/noticiero.html",
+      "url": "/navegacion/noticiero.html",
       "icons": [{ "src": "/Images/LOGO IMMUJEL.png", "sizes": "192x192", "type": "image/png" }]
     },
     {

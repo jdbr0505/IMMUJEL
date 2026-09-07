@@ -1,5 +1,5 @@
-const CACHE = 'immujel-v3';
-const STATIC_CACHE = 'immujel-static-v3';
+const CACHE = 'immujel-v4';
+const STATIC_CACHE = 'immujel-static-v4';
 
 const PRECACHE = [
   '/',
@@ -10,16 +10,18 @@ const PRECACHE = [
   '/manifest.json',
   '/Images/LOGO IMMUJEL.png',
   '/Images/HEAD.svg',
-  '/auth.js',
-  '/animations.js',
+  '/js/auth.js',
+  '/js/animations.js',
   '/js/ui.js',
+  '/js/cookies.js',
   '/Login/Login_supabase.js',
-  "NavBar's/semanario.html",
-  "NavBar's/noticiero.html",
-  "NavBar's/publicacion.html",
-  "NavBar's/Programas.html",
-  "NavBar's/Sobre Nosotras.html",
-  "NavBar's/FL.html",
+  '/navegacion/semanario.html',
+  '/navegacion/noticiero.html',
+  '/navegacion/publicacion.html',
+  '/navegacion/Programas.html',
+  '/navegacion/Sobre Nosotras.html',
+  '/navegacion/FL.html',
+  '/navegacion/privacidad.html',
   '/Forms/form.html',
   '/Login/login.html',
   '/Login/signup.html',

@@ -49,15 +49,15 @@
       <archivo nombre="index.html"><tipo>HTML</tipo><descripcion>Landing page con carrusel, servicios, impacto, CTA</descripcion></archivo>
       <archivo nombre="404.html"><tipo>HTML</tipo><descripcion>Página 404 personalizada con enlaces institucionales</descripcion></archivo>
       <archivo nombre="styles.css"><tipo>CSS</tipo><descripcion>Estilos globales: modo oscuro, skip-link, glassmorphism, animaciones, marcas de agua</descripcion></archivo>
-      <archivo nombre="animations.js"><tipo>JavaScript</tipo><descripcion>Scroll reveal con IntersectionObserver</descripcion></archivo>
-      <archivo nombre="auth.js"><tipo>JavaScript</tipo><descripcion>Sesión global, navbar dinámico, push subscription con campana</descripcion></archivo>
+      <archivo nombre="js/animations.js"><tipo>JavaScript</tipo><descripcion>Scroll reveal con IntersectionObserver</descripcion></archivo>
+      <archivo nombre="js/auth.js"><tipo>JavaScript</tipo><descripcion>Sesión global, navbar dinámico, push subscription con campana</descripcion></archivo>
       <archivo nombre="sw.js"><tipo>JavaScript</tipo><descripcion>Service Worker: precache, Cache First (estáticos), Network First (API Supabase), push/notificationclick</descripcion></archivo>
       <archivo nombre="manifest.json"><tipo>JSON</tipo><descripcion>Manifest PWA: display standalone, icons 192/512, theme-color #A506AD</descripcion></archivo>
       <archivo nombre="email-confirmacion.html"><tipo>HTML</tipo><descripcion>Template de correo de confirmación con SVG inline</descripcion></archivo>
       <archivo nombre="offline.html"><tipo>HTML</tipo><descripcion>Página personalizada offline para el SW fallback</descripcion></archivo>
       <archivo nombre="sitemap.xml"><tipo>XML</tipo><descripcion>Sitemap SEO con todas las URLs del sitio</descripcion></archivo>
       <archivo nombre="vercel.json"><tipo>JSON</tipo><descripcion>Configuración Vercel: headers, cleanUrls, rutas SW</descripcion></archivo>
-      <directorio nombre="Supabase SQL/"><descripcion>Migraciones SQL: push subscriptions, triggers, fix_triggers_v2</descripcion></directorio>
+      <directorio nombre="supabase-sql/"><descripcion>Migraciones SQL: push subscriptions, triggers, fix_triggers_v2</descripcion></directorio>
       <directorio nombre="supabase/functions/send-notification/"><descripcion>Edge Function: SMTP + VAPID Web Push</descripcion></directorio>
       <directorio nombre="js/">
         <archivo nombre="ui.js"><tipo>JavaScript</tipo><descripcion>Utilidades de UI: theme toggle, scroll-to-top, menú móvil</descripcion></archivo>
@@ -69,13 +69,13 @@
       <archivo nombre="Admin.html"><tipo>HTML</tipo><descripcion>Panel con 3 tabs (Asesorías, CMS, Usuarias), modales con focus management y aria</descripcion></archivo>
       <archivo nombre="Admin.js"><tipo>JavaScript</tipo><descripcion>Lógica de asesorías y usuarias: KPIs, filtros, paginación, cambio de rol</descripcion></archivo>
       <archivo nombre="Admin_cms.js"><tipo>JavaScript</tipo><descripcion>CMS: CRUD de publicaciones, editor enriquecido, subida de archivos a Storage, paginación, búsqueda, auto-save</descripcion></archivo>
-      <archivo nombre="Admin_styles.css"><tipo>CSS</tipo><descripcion>Estilos admin: modal slide-in, toolbar, tabla responsive, modo oscuro</descripcion></archivo>
+      <archivo nombre="admin-styles.css"><tipo>CSS</tipo><descripcion>Estilos admin: modal slide-in, toolbar, tabla responsive, modo oscuro</descripcion></archivo>
     </directorio>
 
     <directorio nombre="Forms/">
       <archivo nombre="form.html"><tipo>HTML</tipo><descripcion>Formulario público de asesoría con modo anónimo</descripcion></archivo>
       <archivo nombre="form.js"><tipo>JavaScript</tipo><descripcion>Validación en tiempo real: bordes rojos/verdes, feedback inline, debounce, formatos cédula/email/teléfono</descripcion></archivo>
-      <archivo nombre="form_styles.css"><tipo>CSS</tipo><descripcion>Estilos de formulario con colores brand</descripcion></archivo>
+      <archivo nombre="form-styles.css"><tipo>CSS</tipo><descripcion>Estilos de formulario con colores brand</descripcion></archivo>
     </directorio>
 
     <directorio nombre="Images/">
@@ -95,17 +95,17 @@
       <archivo nombre="Login_supabase.js"><tipo>JavaScript</tipo><descripcion>Inicialización cliente Supabase con anon key</descripcion></archivo>
       <archivo nombre="login.html"><tipo>HTML</tipo><descripcion>Inicio de sesión con resolución usuario→email</descripcion></archivo>
       <archivo nombre="login.js"><tipo>JavaScript</tipo><descripcion>Lógica de login, recuperación de contraseña</descripcion></archivo>
-      <archivo nombre="login_styles.css"><tipo>CSS</tipo><descripcion>Estilos de login con fondo brand</descripcion></archivo>
+      <archivo nombre="login-styles.css"><tipo>CSS</tipo><descripcion>Estilos de login con fondo brand</descripcion></archivo>
       <archivo nombre="signup.html"><tipo>HTML</tipo><descripcion>Registro de usuarias</descripcion></archivo>
       <archivo nombre="signup.js"><tipo>JavaScript</tipo><descripcion>Lógica de registro con validación</descripcion></archivo>
-      <archivo nombre="signup.css"><tipo>CSS</tipo><descripcion>Estilos de registro</descripcion></archivo>
+      <archivo nombre="signup-styles.css"><tipo>CSS</tipo><descripcion>Estilos de registro</descripcion></archivo>
       <archivo nombre="update-password.html"><tipo>HTML</tipo><descripcion>Cambio de contraseña post-reset</descripcion></archivo>
       <archivo nombre="update-password.js"><tipo>JavaScript</tipo><descripcion>Lógica de actualización con indicador de fortaleza</descripcion></archivo>
       <archivo nombre="update-password.css"><tipo>CSS</tipo><descripcion>Estilos de cambio de contraseña</descripcion></archivo>
       <archivo nombre="email-confirmacion.html"><tipo>HTML</tipo><descripcion>Template de correo de confirmación</descripcion></archivo>
     </directorio>
 
-    <directorio nombre="NavBar's/">
+    <directorio nombre="navegacion/">
       <archivo nombre="Sobre Nosotras.html"><tipo>HTML</tipo><descripcion>Historia, misión, visión, valores, línea de tiempo, áreas de atención</descripcion></archivo>
       <archivo nombre="Programas.html"><tipo>HTML</tipo><descripcion>Programas: Empoderamiento, Prevención VBG, Atención Integral</descripcion></archivo>
       <archivo nombre="FL.html"><tipo>HTML</tipo><descripcion>Fundamentos Legales con leyes, tratados y ordenanzas</descripcion></archivo>
@@ -114,7 +114,7 @@
       <archivo nombre="publicacion.html"><tipo>HTML</tipo><descripcion>Detalle de publicación con galería, PDFs, error boundary</descripcion></archivo>
     </directorio>
 
-    <directorio nombre="Supabase SQL/">
+    <directorio nombre="supabase-sql/">
       <archivo nombre="setup_push_subscriptions.sql"><tipo>SQL</tipo><descripcion>Tabla push_subscriptions con RLS para Web Push</descripcion></archivo>
       <archivo nombre="setup_notificaciones.sql"><tipo>SQL</tipo><descripcion>Triggers que llaman a Edge Function via pg_net</descripcion></archivo>
       <archivo nombre="fix_triggers_v2.sql"><tipo>SQL</tipo><descripcion>Triggers corregidos con URL directa (sin vault settings)</descripcion></archivo>
