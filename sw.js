@@ -36,7 +36,11 @@ self.addEventListener('install', e => {
       })).catch(err => {
         console.warn('Precache falló para algunos recursos:', err);
       });
-    }).then(() => self.skipWaiting())
+    })
+    // No skipWaiting() aquí: el SW nuevo se queda "waiting" hasta que
+    // sw-register.js reciba confirmación del usuario y envíe el mensaje.
+    // Así el reload por controllerchange solo ocurre cuando el usuario
+    // realmente aceptó actualizar, no en cada visita tras un deploy.
   );
 });
 
