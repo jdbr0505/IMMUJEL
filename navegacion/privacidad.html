@@ -181,7 +181,10 @@
             <!-- ===== 4. COOKIES ===== -->
             <section id="cookies">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-cookie-bite text-purple-600"></i> 4. Cookies y almacenamiento local</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Al entrar por primera vez verás un aviso donde puedes elegir qué categorías aceptar. Puedes cambiar tu elección en cualquier momento borrando los datos del sitio desde la configuración de tu navegador.</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Al entrar por primera vez verás un aviso donde puedes aceptar o rechazar las cookies funcionales. Puedes cambiar tu elección cuando quieras con el botón de abajo.</p>
+                <button id="btn-reabrir-cookies" class="inline-flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-xl mb-6 transition hover:scale-[1.02]" style="background:linear-gradient(135deg,#A506AD,#0362CF);">
+                    <i class="fas fa-sliders"></i> Cambiar mi elección de cookies
+                </button>
                 <div class="grid md:grid-cols-2 gap-5">
                     <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:#A506AD;">
                         <span class="inline-block text-xs font-bold uppercase tracking-wide text-white px-3 py-1 rounded-full mb-3" style="background:#A506AD;">Siempre activas</span>
@@ -283,5 +286,10 @@
     <script src="../js/auth.js"></script>
     <script src="../js/cookies.js"></script>
     <script src="../js/sw-register.js" defer></script>
+    <script>
+        document.getElementById('btn-reabrir-cookies')?.addEventListener('click', () => {
+            window.CookieUtil?.reabrirPreferencias();
+        });
+    </script>
 </body>
 </html>

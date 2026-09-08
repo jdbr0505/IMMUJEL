@@ -42,8 +42,8 @@ function injectBanner() {
       <a href="/navegacion/privacidad.html" style="color:#A506AD;font-weight:600;text-decoration:underline;">Más información</a>
     </p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button id="cookie-reject" style="padding:10px 18px;border-radius:10px;border:1px solid #D1D5DB;background:#fff;color:#374151;font-weight:600;cursor:pointer;">Solo esenciales</button>
-      <button id="cookie-accept" style="padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#A506AD,#0362CF);color:#fff;font-weight:700;cursor:pointer;">Aceptar todas</button>
+      <button id="cookie-reject" style="padding:10px 18px;border-radius:10px;border:1px solid #D1D5DB;background:#fff;color:#374151;font-weight:600;cursor:pointer;">Rechazar</button>
+      <button id="cookie-accept" style="padding:10px 22px;border-radius:10px;border:none;background:linear-gradient(135deg,#A506AD,#0362CF);color:#fff;font-weight:700;cursor:pointer;">Aceptar</button>
     </div>
   `;
   document.body.appendChild(banner);
@@ -54,12 +54,19 @@ function injectBanner() {
   });
   document.getElementById('cookie-reject').addEventListener('click', () => {
     setConsent({ esencial: true, funcional: false });
+    if (window.HistorialUtil) window.HistorialUtil.borrarHistorial();
     banner.remove();
   });
+}
+
+function reabrirPreferencias() {
+  const existing = document.getElementById('cookie-banner');
+  if (existing) existing.remove();
+  injectBanner();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!getConsent()) injectBanner();
 });
 
-window.CookieUtil = { setCookie, getCookie, deleteCookie, getConsent, setConsent, hasFunctionalConsent };
+window.CookieUtil = { setCookie, getCookie, deleteCookie, getConsent, setConsent, hasFunctionalConsent, reabrirPreferencias };
