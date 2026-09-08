@@ -7,6 +7,8 @@
       return base + '/sw.js';
     })();
 
+    let userInitiatedUpdate = false;
+
     navigator.serviceWorker.register(swPath, { scope: '/' })
       .then(reg => {
         reg.addEventListener('updatefound', () => {
@@ -14,6 +16,7 @@
           newSW.addEventListener('statechange', () => {
             if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
               if (confirm('Nueva versión disponible. ¿Actualizar?')) {
+                userInitiatedUpdate = true;
                 newSW.postMessage({ action: 'skipWaiting' });
               }
             }
@@ -22,9 +25,12 @@
       })
       .catch(() => {});
 
+    // El primer control (self.clients.claim() en la primera activación) también
+    // dispara 'controllerchange', aunque no haya ninguna actualización real.
+    // Solo recargamos si el propio usuario confirmó una actualización.
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (refreshing) return;
+      if (!userInitiatedUpdate || refreshing) return;
       refreshing = true;
       window.location.reload();
     });
