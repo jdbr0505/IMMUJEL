@@ -164,6 +164,33 @@
         ],
         "createdAt": "2026-09-09T14:17:55.413Z",
         "reason": "efecto hover de boton (relleno de ancho) preexistente en linea 549, no tocado en esta sesion"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "styles.css"
+        ],
+        "createdAt": "2026-09-09T14:59:51.548Z",
+        "reason": "shim de utilidades Tailwind (bg-gradient-to-r.from-purple-600.to-blue-600) que redirige el gradiente morado-azul EXISTENTE del sitio (mandado por el Manual de Identidad Visual IMMUJEL 2026, hex A506AD-0362CF) hacia las variables de tema; no introduce el gradiente, lo hace reactivo al tema estacional"
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "Admin/Admin.html"
+        ],
+        "createdAt": "2026-09-09T14:59:51.900Z",
+        "reason": "13 tarjetas KPI/stat preexistentes (border-t-4 border-purple-600 etc, Total/Pendiente/EnProceso/Finalizado), ninguna forma parte de la seccion Estilo agregada esta sesion (verificado: 0 coincidencias de border-t-4 dentro de esa seccion)"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-09T14:59:52.041Z",
+        "reason": "dropdown de SERVICIOS (bg-white/90 backdrop-blur-md + text-gray-700), mismo patron preexistente ya confirmado en Admin.html y privacidad.html esta sesion, no tocado por ninguna edicion de hoy"
       }
     ]
   }
