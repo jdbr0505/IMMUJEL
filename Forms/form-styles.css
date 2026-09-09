@@ -1,17 +1,10 @@
 /* form_styles.css – Estilos del formulario de asesoría (identidad IMMUJEL) */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
-/* Reutilizamos las variables definidas en styles.css */
-:root {
-    --purple-primary: #A506AD;
-    --blue-primary: #0362CF;
-    --magenta: #F66EFD;
-    --lavender: #FCBFFF;
-    --sky-blue: #4190EB;
-    --pale-blue: #BAD7F8;
-    --deep-blue: #02162E;
-    --white: #FFFFFF;
-}
+/* Los tokens de marca (--purple-primary, --blue-primary, etc.) ya los
+   define styles.css, cargado antes en form.html — redeclararlos aquí con
+   los mismos valores fijos era redundante y bloqueaba que reaccionaran
+   al tema estacional activo. */
 
 body.dark-theme {
     /* Modo oscuro */
@@ -21,7 +14,7 @@ body.dark-theme {
     --text-primary: #F3F4F6;
     --text-secondary: #D1D5DB;
     --border-light: #4B5563;
-    --accent: #C474E8;
+    --accent: var(--amethyst);
 }
 
 /* Fondo con gradiente igual al home */

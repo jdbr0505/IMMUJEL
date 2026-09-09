@@ -728,56 +728,77 @@
             <!-- Selector de tema (solo visible en modo manual) -->
             <div id="estilo-temas-wrapper" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
                 <h3 class="font-bold text-gray-800 mb-1">Tema</h3>
-                <p class="text-sm text-gray-500 mb-4">Haz clic en una tarjeta para previsualizarla al instante en esta pantalla. No se aplica al sitio hasta que presiones Guardar.</p>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3" id="estilo-temas-grid">
-                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="institucional">
+                <p class="text-sm text-gray-500 mb-4">Haz clic en una tarjeta para previsualizarla al instante en esta pantalla, tal cual se vería en el sitio. No se aplica hasta que presiones Guardar.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" id="estilo-temas-grid">
+
+                    <label class="tema-card rounded-2xl cursor-pointer transition" data-tema="institucional">
                         <input type="radio" name="estilo-tema" value="institucional" class="sr-only">
-                        <div class="flex gap-1.5">
-                            <span class="w-6 h-6 rounded-full" style="background:#A506AD"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#0362CF"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#F66EFD"></span>
+                        <div class="tema-preview-banner" style="background:linear-gradient(135deg,#A506AD 0%,#0362CF 65%,#02162E 100%);">
+                            <span class="tema-preview-badge"><i class="fas fa-shield-heart"></i> Institucional</span>
                         </div>
-                        <span>
-                            <span class="block font-semibold text-gray-800 text-sm">Institucional</span>
-                            <span class="block text-xs text-gray-500">Paleta oficial de siempre</span>
-                        </span>
+                        <div class="tema-card-body">
+                            <div class="tema-swatch-row">
+                                <span style="background:#A506AD"></span>
+                                <span style="background:#0362CF"></span>
+                                <span style="background:#F66EFD"></span>
+                                <span style="background:#02162E"></span>
+                            </div>
+                            <span class="tema-card-title">Institucional</span>
+                            <span class="tema-card-desc">Paleta oficial de siempre</span>
+                        </div>
                     </label>
-                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="dia-naranja">
+
+                    <label class="tema-card rounded-2xl cursor-pointer transition" data-tema="dia-naranja">
                         <input type="radio" name="estilo-tema" value="dia-naranja" class="sr-only">
-                        <div class="flex gap-1.5">
-                            <span class="w-6 h-6 rounded-full" style="background:#FF4D19"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#FF7A00"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#FF734B"></span>
+                        <div class="tema-preview-banner" style="background:linear-gradient(135deg,#FF4D19 0%,#FF7A00 65%,#341206 100%);">
+                            <span class="tema-preview-badge"><i class="fas fa-bullhorn"></i> Día Naranja</span>
                         </div>
-                        <span>
-                            <span class="block font-semibold text-gray-800 text-sm">Día Naranja</span>
-                            <span class="block text-xs text-gray-500">25 de cada mes · 25 sept</span>
-                        </span>
+                        <div class="tema-card-body">
+                            <div class="tema-swatch-row">
+                                <span style="background:#FF4D19"></span>
+                                <span style="background:#FF7A00"></span>
+                                <span style="background:#FF734B"></span>
+                                <span style="background:#341206"></span>
+                            </div>
+                            <span class="tema-card-title">Día Naranja</span>
+                            <span class="tema-card-desc">25 de cada mes · 25 sept</span>
+                        </div>
                     </label>
-                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="octubre-rosa">
+
+                    <label class="tema-card rounded-2xl cursor-pointer transition" data-tema="octubre-rosa">
                         <input type="radio" name="estilo-tema" value="octubre-rosa" class="sr-only">
-                        <div class="flex gap-1.5">
-                            <span class="w-6 h-6 rounded-full" style="background:#F81B96"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#ED3991"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#0362CF"></span>
+                        <div class="tema-preview-banner" style="background:linear-gradient(135deg,#F81B96 0%,#ED3991 65%,#0362CF 100%);">
+                            <span class="tema-preview-badge"><i class="fas fa-ribbon"></i> Octubre Rosa</span>
                         </div>
-                        <span>
-                            <span class="block font-semibold text-gray-800 text-sm">Octubre Rosa</span>
-                            <span class="block text-xs text-gray-500">Mes completo de octubre</span>
-                        </span>
+                        <div class="tema-card-body">
+                            <div class="tema-swatch-row">
+                                <span style="background:#F81B96"></span>
+                                <span style="background:#ED3991"></span>
+                                <span style="background:#FF70B2"></span>
+                                <span style="background:#0362CF"></span>
+                            </div>
+                            <span class="tema-card-title">Octubre Rosa</span>
+                            <span class="tema-card-desc">Mes completo de octubre</span>
+                        </div>
                     </label>
-                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="activismo-16dias">
+
+                    <label class="tema-card rounded-2xl cursor-pointer transition" data-tema="activismo-16dias">
                         <input type="radio" name="estilo-tema" value="activismo-16dias" class="sr-only">
-                        <div class="flex gap-1.5">
-                            <span class="w-6 h-6 rounded-full" style="background:#9614D0"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#56007D"></span>
-                            <span class="w-6 h-6 rounded-full" style="background:#DF99FF"></span>
+                        <div class="tema-preview-banner" style="background:linear-gradient(135deg,#9614D0 0%,#56007D 65%,#2B0A45 100%);">
+                            <span class="tema-preview-badge"><i class="fas fa-venus"></i> Activismo</span>
                         </div>
-                        <span>
-                            <span class="block font-semibold text-gray-800 text-sm">Activismo</span>
-                            <span class="block text-xs text-gray-500">Día de la Mujer · 16 días</span>
-                        </span>
+                        <div class="tema-card-body">
+                            <div class="tema-swatch-row">
+                                <span style="background:#9614D0"></span>
+                                <span style="background:#56007D"></span>
+                                <span style="background:#DF99FF"></span>
+                                <span style="background:#E8B5FF"></span>
+                            </div>
+                            <span class="tema-card-title">Activismo</span>
+                            <span class="tema-card-desc">Día de la Mujer · 16 días</span>
+                        </div>
                     </label>
+
                 </div>
             </div>
 
