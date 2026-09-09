@@ -39,12 +39,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const currentUserId = user.id;
   const isAdmin = profile.rol === 'admin';
+  window.isAdmin = isAdmin; // switchTab() vive fuera de este closure y necesita leerlo
 
-  // Mostrar tab de Usuarias solo para admin
+  // Mostrar tab de Usuarias y de Estilo solo para admin
   const tabUsuarios = document.getElementById('tab-usuarios');
   if (tabUsuarios) {
     if (isAdmin) tabUsuarios.classList.remove('hidden');
     else tabUsuarios.classList.add('hidden');
+  }
+  const tabEstilo = document.getElementById('tab-estilo');
+  if (tabEstilo) {
+    if (isAdmin) tabEstilo.classList.remove('hidden');
+    else tabEstilo.classList.add('hidden');
   }
 
   const userNameEl = document.getElementById('user-name');
@@ -571,10 +577,125 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
   });
 
+  // 10. Estilo institucional (temas por evento/fecha especial) — solo admin
+  const TEMA_LABELS = {
+    'institucional': 'Institucional',
+    'dia-naranja': 'Día Naranja',
+    'octubre-rosa': 'Octubre Rosa',
+    'activismo-16dias': 'Activismo / Día de la Mujer'
+  };
+  const estiloModoOpciones = document.getElementById('estilo-modo-opciones');
+  const estiloTemasWrapper = document.getElementById('estilo-temas-wrapper');
+  const estiloTemasGrid = document.getElementById('estilo-temas-grid');
+  const estiloActivoTexto = document.getElementById('estilo-activo-texto');
+  const estiloGuardadoHint = document.getElementById('estilo-guardado-hint');
+  const btnGuardarEstilo = document.getElementById('btn-guardar-estilo');
+  let estiloConfigOriginal = null;
+
+  function estiloModoSeleccionado() {
+    const checked = estiloModoOpciones?.querySelector('input[name="estilo-modo"]:checked');
+    return checked ? checked.value : 'automatico';
+  }
+  function estiloTemaSeleccionado() {
+    const checked = estiloTemasGrid?.querySelector('input[name="estilo-tema"]:checked');
+    return checked ? checked.value : 'institucional';
+  }
+  function actualizarVisibilidadTemas() {
+    if (!estiloTemasWrapper) return;
+    estiloTemasWrapper.classList.toggle('hidden', estiloModoSeleccionado() !== 'manual');
+  }
+  function actualizarBadgeActivo() {
+    if (!estiloActivoTexto || !window.ThemeEventsUtil) return;
+    const modo = estiloModoSeleccionado();
+    let temaEfectivo;
+    if (modo === 'ninguno') temaEfectivo = 'institucional';
+    else if (modo === 'manual') temaEfectivo = estiloTemaSeleccionado();
+    else temaEfectivo = window.ThemeEventsUtil.temaPorFecha(new Date());
+    estiloActivoTexto.textContent = `Ahora se ve: ${TEMA_LABELS[temaEfectivo] || temaEfectivo}`;
+  }
+  function previsualizarTema(temaId) {
+    window.ThemeEventsUtil?.aplicarTema(temaId);
+    actualizarBadgeActivo();
+  }
+
+  async function cargarEstilo() {
+    if (!isAdmin) return;
+    const { data, error } = await supabase
+      .from('configuracion_visual')
+      .select('modo, tema_manual')
+      .eq('id', 'global')
+      .single();
+    if (error || !data) {
+      window.showToast?.('No se pudo cargar la configuración de estilo.', 'error');
+      return;
+    }
+    estiloConfigOriginal = data;
+    const modoInput = estiloModoOpciones?.querySelector(`input[value="${data.modo}"]`);
+    if (modoInput) modoInput.checked = true;
+    const temaInput = estiloTemasGrid?.querySelector(`input[value="${data.tema_manual || 'institucional'}"]`);
+    if (temaInput) temaInput.checked = true;
+    actualizarVisibilidadTemas();
+    actualizarBadgeActivo();
+    if (estiloGuardadoHint) estiloGuardadoHint.textContent = '';
+  }
+
+  async function guardarEstilo() {
+    if (!btnGuardarEstilo) return;
+    const modo = estiloModoSeleccionado();
+    const temaManual = modo === 'manual' ? estiloTemaSeleccionado() : null;
+    btnGuardarEstilo.disabled = true;
+    btnGuardarEstilo.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...';
+    const { error } = await supabase
+      .from('configuracion_visual')
+      .update({ modo, tema_manual: temaManual, actualizado_por: currentUserId, actualizado_en: new Date().toISOString() })
+      .eq('id', 'global');
+    btnGuardarEstilo.disabled = false;
+    btnGuardarEstilo.innerHTML = '<i class="fas fa-save mr-1"></i> Guardar';
+    if (error) {
+      window.showToast?.('Error al guardar: ' + error.message, 'error');
+      return;
+    }
+    estiloConfigOriginal = { modo, tema_manual: temaManual };
+    window.showToast?.('Estilo institucional actualizado para todo el sitio.', 'success');
+    if (estiloGuardadoHint) {
+      estiloGuardadoHint.textContent = 'Guardado el ' + new Date().toLocaleString('es-ES');
+    }
+  }
+
+  if (estiloModoOpciones) {
+    estiloModoOpciones.addEventListener('change', () => {
+      actualizarVisibilidadTemas();
+      actualizarBadgeActivo();
+    });
+  }
+  if (estiloTemasGrid) {
+    estiloTemasGrid.querySelectorAll('.tema-card').forEach(card => {
+      card.addEventListener('click', () => previsualizarTema(card.dataset.tema));
+    });
+  }
+  if (btnGuardarEstilo) btnGuardarEstilo.addEventListener('click', guardarEstilo);
+
+  // switchTab() vive fuera de este closure (llamada por onclick en el HTML);
+  // sin exponerlas aquí, cada cambio de pestaña fallaba en silencio con
+  // "ReferenceError" (promesa no manejada) y nunca refrescaba los datos.
+  window.cargarEstilo = cargarEstilo;
+  window.loadAsesoras = loadAsesoras;
+  window.loadReports = loadReports;
+  window.loadUsuarios = loadUsuarios;
+
+  // Al salir de la pestaña Estilo sin guardar, restaurar el tema real (deshace el preview)
+  window.addEventListener('beforeunload', () => {
+    if (estiloConfigOriginal) {
+      const activo = estiloConfigOriginal.modo === 'manual' ? estiloConfigOriginal.tema_manual : null;
+      window.ThemeEventsUtil?.aplicarTema(activo || window.ThemeEventsUtil.temaPorFecha(new Date()));
+    }
+  });
+
   // Carga inicial
   await loadAsesoras();
   await loadReports({});
   if (isAdmin) await loadUsuarios('', '');
+  if (isAdmin) await cargarEstilo();
 });
 
 // Función global para cambiar de tab (llamada por onclick en HTML)
@@ -590,9 +711,11 @@ window.switchTab = async function(tab) {
   document.getElementById(`section-${tab}`)?.classList.remove('hidden');
 
   if (tab === 'asesorias') {
-    await loadAsesoras();
-    await loadReports({});
-  } else if (tab === 'usuarios' && isAdmin) {
-    await loadUsuarios('', '');
+    await window.loadAsesoras?.();
+    await window.loadReports?.({});
+  } else if (tab === 'usuarios' && window.isAdmin) {
+    await window.loadUsuarios?.('', '');
+  } else if (tab === 'estilo' && window.isAdmin) {
+    await window.cargarEstilo?.();
   }
 };

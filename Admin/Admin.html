@@ -125,6 +125,9 @@
             <button id="tab-usuarios" class="tab-btn hidden px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="usuarios" onclick="switchTab('usuarios')">
                 <i class="fas fa-users mr-1"></i> Usuarias
             </button>
+            <button id="tab-estilo" class="tab-btn hidden px-6 py-3 font-semibold text-sm rounded-t-lg transition text-gray-600 hover:text-purple-700 hover:bg-purple-50" data-tab="estilo" onclick="switchTab('estilo')">
+                <i class="fas fa-palette mr-1"></i> Estilo
+            </button>
         </div>
 
         <!-- ===== SECCIÓN ASESORÍAS ===== -->
@@ -679,6 +682,113 @@
 
         </div><!-- fin section-usuarios -->
 
+        <!-- ===== SECCIÓN ESTILO INSTITUCIONAL ===== -->
+        <div id="section-estilo" class="tab-content hidden">
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex items-start justify-between flex-wrap gap-3 mb-1">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-palette text-purple-600"></i> Estilo institucional</h2>
+                        <p class="text-sm text-gray-500 mt-1">Cambia la paleta de colores de todo el sitio para fechas y campañas especiales. Cada tema conserva su propio modo oscuro.</p>
+                    </div>
+                    <div id="estilo-activo-badge" class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+                        <i class="fas fa-circle text-[6px]"></i> <span id="estilo-activo-texto">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modo -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <h3 class="font-bold text-gray-800 mb-1">Modo</h3>
+                <p class="text-sm text-gray-500 mb-4">Automático aplica el tema según la fecha (Día Naranja el 25 de cada mes, Octubre Rosa en octubre, Activismo del 25 nov al 10 dic y el 8 de marzo). Manual te deja fijar un tema tú misma. Ninguno mantiene siempre la paleta institucional.</p>
+                <div class="grid sm:grid-cols-3 gap-3" id="estilo-modo-opciones">
+                    <label class="modo-card flex items-start gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300">
+                        <input type="radio" name="estilo-modo" value="automatico" class="mt-1">
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm"><i class="fas fa-calendar-check text-purple-500 mr-1"></i> Automático</span>
+                            <span class="block text-xs text-gray-500 mt-0.5">Recomendado — sigue el calendario</span>
+                        </span>
+                    </label>
+                    <label class="modo-card flex items-start gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300">
+                        <input type="radio" name="estilo-modo" value="manual" class="mt-1">
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm"><i class="fas fa-hand-pointer text-purple-500 mr-1"></i> Manual</span>
+                            <span class="block text-xs text-gray-500 mt-0.5">Tú eliges el tema fijo</span>
+                        </span>
+                    </label>
+                    <label class="modo-card flex items-start gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300">
+                        <input type="radio" name="estilo-modo" value="ninguno" class="mt-1">
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm"><i class="fas fa-ban text-purple-500 mr-1"></i> Ninguno</span>
+                            <span class="block text-xs text-gray-500 mt-0.5">Siempre paleta institucional</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Selector de tema (solo visible en modo manual) -->
+            <div id="estilo-temas-wrapper" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+                <h3 class="font-bold text-gray-800 mb-1">Tema</h3>
+                <p class="text-sm text-gray-500 mb-4">Haz clic en una tarjeta para previsualizarla al instante en esta pantalla. No se aplica al sitio hasta que presiones Guardar.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3" id="estilo-temas-grid">
+                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="institucional">
+                        <input type="radio" name="estilo-tema" value="institucional" class="sr-only">
+                        <div class="flex gap-1.5">
+                            <span class="w-6 h-6 rounded-full" style="background:#A506AD"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#0362CF"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#F66EFD"></span>
+                        </div>
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm">Institucional</span>
+                            <span class="block text-xs text-gray-500">Paleta oficial de siempre</span>
+                        </span>
+                    </label>
+                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="dia-naranja">
+                        <input type="radio" name="estilo-tema" value="dia-naranja" class="sr-only">
+                        <div class="flex gap-1.5">
+                            <span class="w-6 h-6 rounded-full" style="background:#FF4D19"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#FF7A00"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#FF734B"></span>
+                        </div>
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm">Día Naranja</span>
+                            <span class="block text-xs text-gray-500">25 de cada mes · 25 sept</span>
+                        </span>
+                    </label>
+                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="octubre-rosa">
+                        <input type="radio" name="estilo-tema" value="octubre-rosa" class="sr-only">
+                        <div class="flex gap-1.5">
+                            <span class="w-6 h-6 rounded-full" style="background:#F81B96"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#ED3991"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#0362CF"></span>
+                        </div>
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm">Octubre Rosa</span>
+                            <span class="block text-xs text-gray-500">Mes completo de octubre</span>
+                        </span>
+                    </label>
+                    <label class="tema-card flex flex-col gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition hover:border-purple-300" data-tema="activismo-16dias">
+                        <input type="radio" name="estilo-tema" value="activismo-16dias" class="sr-only">
+                        <div class="flex gap-1.5">
+                            <span class="w-6 h-6 rounded-full" style="background:#9614D0"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#56007D"></span>
+                            <span class="w-6 h-6 rounded-full" style="background:#DF99FF"></span>
+                        </div>
+                        <span>
+                            <span class="block font-semibold text-gray-800 text-sm">Activismo</span>
+                            <span class="block text-xs text-gray-500">Día de la Mujer · 16 días</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+                <p id="estilo-guardado-hint" class="text-xs text-gray-400"></p>
+                <button id="btn-guardar-estilo" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 px-6 rounded-xl transition disabled:opacity-50">
+                    <i class="fas fa-save mr-1"></i> Guardar
+                </button>
+            </div>
+        </div><!-- fin section-estilo -->
+
     </main><!-- fin contenido principal -->
 
     <!-- ========== FOOTER ========== -->
@@ -748,6 +858,7 @@
     <script src="../Login/Login_supabase.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/cookies.js"></script>
+    <script src="../js/theme-events.js"></script>
     <script src="../js/sw-register.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "createdAt": "2026-09-07T13:41:52.409Z",
+        "reason": "Sitio usa 'Arial Nova', Arial como font-family global en styles.css/login_styles.css desde antes; cookies.js hereda el mismo stack"
+      },
+      {
+        "rule": "overused-font",
+        "value": "montserrat",
+        "createdAt": "2026-09-07T13:41:52.557Z",
+        "reason": "Montserrat es tipografía institucional oficial de IMMUJEL para titulares, importada en styles.css desde antes de este cambio, no introducida ahora"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "purple",
+        "files": [
+          "NavBar's/publicacion.html"
+        ],
+        "createdAt": "2026-09-07T13:41:52.704Z",
+        "reason": "Morado/azul (#A506AD/#0362CF) es la paleta institucional oficial de IMMUJEL, documentada como PALETA OFICIAL en styles.css y usada en todo el sitio desde antes, no una elección arbitraria de IA"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "NavBar's/privacidad.html"
+        ],
+        "createdAt": "2026-09-07T14:16:20.543Z",
+        "reason": "Navbar/dropdown/hero replican verbatim el componente compartido ya presente sin modificar en FL.html, Programas.html, Sobre Nosotras.html y demás páginas del sitio; no es un patrón nuevo"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "purple",
+        "createdAt": "2026-09-07T14:44:56.289Z",
+        "reason": "Paleta oficial institucional de IMMUJEL (#A506AD morado / #0362CF azul), documentada como PALETA OFICIAL en styles.css y usada consistentemente en todo el sitio desde antes de esta sesión (login, botones, navbar, correos)"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-09-07T14:59:27.597Z",
+        "reason": "Paleta oficial institucional IMMUJEL (morado/azul, degradados de tarjeta) documentada en styles.css; el ignore de valor 'purple' no cubre todas las variantes emitidas por el detector"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "navegacion/noticiero.html"
+        ],
+        "createdAt": "2026-09-07T14:59:27.905Z",
+        "reason": "Misma paleta oficial institucional IMMUJEL, patrón idéntico al de semanario.html"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "offline.html"
+        ],
+        "createdAt": "2026-09-07T14:59:28.070Z",
+        "reason": "Misma paleta oficial institucional IMMUJEL, gradiente de fondo preexistente"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "navegacion/privacidad.html"
+        ],
+        "createdAt": "2026-09-08T13:02:59.130Z",
+        "reason": "paleta oficial institucional IMMUJEL (#A506AD/#0362CF), definida en styles.css como PALETA OFICIAL INSTITUCIONAL, usada en todo el sitio desde antes de esta sesion"
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "navegacion/privacidad.html"
+        ],
+        "createdAt": "2026-09-08T13:03:05.890Z",
+        "reason": "replica intencional del patron de tarjeta del login (border-top 4px + rounded-3xl), firma visual del sitio IMMUJEL"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "styles.css"
+        ],
+        "createdAt": "2026-09-09T14:04:35.284Z",
+        "reason": "brand-gradient-text/.text-transparent.bg-clip-text ya existian inline/Tailwind en 404.html, login.html y signup.html antes de esta sesion; solo se centralizaron en clases reutilizables para que reaccionen al tema estacional, no es un patron nuevo"
+      }
+    ]
+  }
+}
