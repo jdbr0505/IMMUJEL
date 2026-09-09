@@ -172,9 +172,12 @@ html[data-theme-event="octubre-rosa"] body.dark-theme {
     --tw-ring-color: color-mix(in srgb, var(--purple-primary) 40%, white) !important;
     border-color: var(--purple-primary) !important;
 }
-.text-blue-500 { color: var(--blue-primary) !important; }
+.text-blue-500, .text-blue-600, .text-blue-700 { color: var(--blue-primary) !important; }
 .text-blue-800 { color: color-mix(in srgb, var(--blue-primary) 82%, black) !important; }
 .bg-blue-100 { background-color: color-mix(in srgb, var(--blue-primary) 12%, white) !important; }
+.text-pink-500, .text-pink-600, .text-pink-700 { color: var(--magenta) !important; }
+.text-pink-800 { color: color-mix(in srgb, var(--magenta) 75%, black) !important; }
+.bg-pink-100 { background-color: color-mix(in srgb, var(--magenta) 15%, white) !important; }
 .bg-gradient-to-r.from-purple-600.to-blue-600,
 .bg-gradient-to-r.from-purple-500.to-blue-600,
 .hover\:from-purple-700:hover.hover\:to-blue-700:hover {
@@ -199,9 +202,16 @@ body.dark-theme .hover\:bg-purple-50:hover { background-color: color-mix(in srgb
 body.dark-theme .bg-purple-100 { background-color: color-mix(in srgb, var(--accent) 16%, transparent) !important; }
 body.dark-theme .border-purple-100,
 body.dark-theme .ring-purple-100 { border-color: color-mix(in srgb, var(--accent) 22%, transparent) !important; }
-body.dark-theme .text-blue-500 { color: color-mix(in srgb, var(--blue-primary) 70%, white) !important; }
+body.dark-theme .text-blue-500,
+body.dark-theme .text-blue-600,
+body.dark-theme .text-blue-700,
 body.dark-theme .text-blue-800 { color: color-mix(in srgb, var(--blue-primary) 70%, white) !important; }
 body.dark-theme .bg-blue-100 { background-color: color-mix(in srgb, var(--blue-primary) 18%, transparent) !important; }
+body.dark-theme .text-pink-500,
+body.dark-theme .text-pink-600,
+body.dark-theme .text-pink-700,
+body.dark-theme .text-pink-800 { color: color-mix(in srgb, var(--magenta) 70%, white) !important; }
+body.dark-theme .bg-pink-100 { background-color: color-mix(in srgb, var(--magenta) 18%, transparent) !important; }
 
 * {
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -391,6 +401,18 @@ body.dark-theme .section-gradient-pink {
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+/* Botones/controles sueltos que antes usaban clases Tailwind con hex
+   arbitrario (bg-[#A506AD]/80, hover:bg-[#F66EFD]...) — Tailwind no
+   permite :hover en inline style, así que se centralizan aquí. */
+.carousel-arrow { background: color-mix(in srgb, var(--purple-primary) 80%, transparent); }
+.carousel-arrow:hover { background: var(--magenta); }
+.brand-solid-btn { background: var(--purple-primary); }
+.brand-solid-btn:hover { background: var(--magenta); }
+.brand-sky-btn { background: var(--sky-blue); }
+.brand-sky-btn:hover { background: var(--blue-primary); }
+.dot-active { background: var(--magenta); }
+.dot-inactive { background: color-mix(in srgb, var(--magenta) 45%, white); }
 
 /* Degradados institucionales del manual */
 .bg-brand-purple-blue {

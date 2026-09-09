@@ -34,13 +34,25 @@
     return 'institucional';
   }
 
+  // Color de la barra del navegador móvil por tema (el <meta> no entiende
+  // var(), así que se actualiza con el hex real cada vez que cambia el tema).
+  var COLOR_BARRA = {
+    'institucional': '#A506AD',
+    'dia-naranja': '#FF4D19',
+    'octubre-rosa': '#F81B96',
+    'activismo-16dias': '#9614D0'
+  };
+
   function aplicarTema(temaId) {
     var root = document.documentElement;
-    if (!temaId || temaId === 'institucional' || TEMAS_VALIDOS.indexOf(temaId) === -1) {
+    var valido = temaId && TEMAS_VALIDOS.indexOf(temaId) !== -1 ? temaId : 'institucional';
+    if (valido === 'institucional') {
       root.removeAttribute('data-theme-event');
     } else {
-      root.setAttribute('data-theme-event', temaId);
+      root.setAttribute('data-theme-event', valido);
     }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', COLOR_BARRA[valido]);
   }
 
   // 1) Aplicar de inmediato por fecha local (evita parpadeo mientras
