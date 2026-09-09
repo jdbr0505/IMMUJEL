@@ -92,6 +92,78 @@
         ],
         "createdAt": "2026-09-09T14:04:35.284Z",
         "reason": "brand-gradient-text/.text-transparent.bg-clip-text ya existian inline/Tailwind en 404.html, login.html y signup.html antes de esta sesion; solo se centralizaron en clases reutilizables para que reaccionen al tema estacional, no es un patron nuevo"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "Admin/Admin.html"
+        ],
+        "createdAt": "2026-09-09T14:17:53.890Z",
+        "reason": "dropdown de SERVICIOS (bg-white/90 backdrop-blur-md) con texto gray-700/gray-500: preexistente, no tocado en ninguna edicion de esta sesion, se re-flagea en cada edit a Admin.html por ser el mismo archivo grande; el fondo es blanco semitransparente asi que el contraste real es correcto"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "Login/login-styles.css"
+        ],
+        "createdAt": "2026-09-09T14:17:54.075Z",
+        "reason": "border-top:4px del .bg-white (tarjeta login/signup) es la firma visual preexistente del sitio, confirmada verbatim en el archivo original antes de esta sesion, solo se convirtio el hex a var()"
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "Login/login-styles.css"
+        ],
+        "createdAt": "2026-09-09T14:17:54.348Z",
+        "reason": "mismo border-top:4px preexistente de la tarjeta login/signup, solo se convirtio hex a var()"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "Login/login.html"
+        ],
+        "createdAt": "2026-09-09T14:17:54.502Z",
+        "reason": "encabezado 'Bienvenida IMMUJEL' con gradiente morado-azul preexistente, no tocado en esta sesion, ya identificado y descartado anteriormente"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "Login/signup.html"
+        ],
+        "createdAt": "2026-09-09T14:17:54.683Z",
+        "reason": "encabezado 'Crear cuenta IMMUJEL' preexistente, no tocado en esta sesion"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "Login/update-password.html"
+        ],
+        "createdAt": "2026-09-09T14:17:54.946Z",
+        "reason": "encabezado 'Nueva contrasena' preexistente, no tocado en esta sesion"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "animate-bounce",
+        "files": [
+          "styles.css"
+        ],
+        "createdAt": "2026-09-09T14:17:55.234Z",
+        "reason": "referencia dentro de regla prefers-reduced-motion que DESACTIVA animate-bounce, no la introduce; preexistente, no tocado en esta sesion"
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "styles.css"
+        ],
+        "createdAt": "2026-09-09T14:17:55.413Z",
+        "reason": "efecto hover de boton (relleno de ancho) preexistente en linea 549, no tocado en esta sesion"
       }
     ]
   }
