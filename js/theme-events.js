@@ -17,12 +17,16 @@
     // Día de la Mujer (8 de marzo) — misma paleta que Activismo
     if (mes === 3 && dia === 8) return 'activismo-16dias';
 
+    // 16 días de activismo contra la violencia de género (25 nov - 10 dic).
+    // Va ANTES que la regla de "25 de cada mes": el 25 de noviembre es la
+    // fecha oficial de inicio de la campaña (Día Internacional de la
+    // Eliminación de la Violencia contra la Mujer) y debe verse como
+    // Activismo, no como Día Naranja genérico.
+    if ((mes === 11 && dia >= 25) || (mes === 12 && dia <= 10)) return 'activismo-16dias';
+
     // Día Naranja: 25 de cada mes (incluye el 25 de septiembre,
     // Día Internacional de la Eliminación de la Violencia contra la Mujer)
     if (dia === 25) return 'dia-naranja';
-
-    // 16 días de activismo contra la violencia de género (25 nov - 10 dic)
-    if ((mes === 11 && dia >= 25) || (mes === 12 && dia <= 10)) return 'activismo-16dias';
 
     // Octubre Rosa (mes completo)
     if (mes === 10) return 'octubre-rosa';
