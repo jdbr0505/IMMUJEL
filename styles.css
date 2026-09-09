@@ -162,9 +162,9 @@ html, body {
     min-height: 100vh;
     background-color: var(--bg-gradient-start);
     background-image:
-        radial-gradient(ellipse at 15% 20%, rgba(252, 191, 255, 0.25) 0%, transparent 60%),
-        radial-gradient(ellipse at 85% 30%, rgba(186, 215, 248, 0.2) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 85%, rgba(246, 110, 253, 0.06) 0%, transparent 50%);
+        radial-gradient(ellipse at 15% 20%, color-mix(in srgb, var(--lavender) 25%, transparent) 0%, transparent 60%),
+        radial-gradient(ellipse at 85% 30%, color-mix(in srgb, var(--pale-blue) 20%, transparent) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 85%, color-mix(in srgb, var(--magenta) 6%, transparent) 0%, transparent 50%);
     font-family: 'Arial Nova', Arial, 'Helvetica Neue', sans-serif;
     color: var(--text-primary);
 }
