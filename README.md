@@ -288,7 +288,12 @@ IMMUJEL/
 │   ├── Admin.html
 │   ├── Admin.js                  Asesorías + gestión de usuarias
 │   ├── Admin_cms.js              CMS de publicaciones
-│   └── admin-styles.css
+│   ├── admin-styles.css
+│   ├── Dashboard.html            Dashboard de asesorías (KPIs y gráficos agregados, sin datos personales)
+│   ├── dashboard.js              Carga de datos, filtros y actualización en vivo
+│   ├── dashboard-metrics.js      Cálculos puros (probados en tests/)
+│   ├── dashboard-charts.js       Gráficos Chart.js y sparkline
+│   └── dashboard.css
 │
 ├── api/
 │   └── config.js                 Entrega saneada de credenciales

@@ -1,0 +1,194 @@
+<!-- ===== Dashboard.html – Dashboard de asesorías IMMUJEL (solo admin / asesora) ===== -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard de Asesorías | IMMUJEL</title>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://vhgfyqodiieblhfwbama.supabase.co">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="dashboard.css?v=2">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous" defer></script>
+    <link rel="icon" href="../Images/HEAD.svg">
+    <meta name="theme-color" content="#A506AD">
+    <link rel="manifest" href="../manifest.json">
+</head>
+<body class="dash-page dash-loading antialiased">
+    <a href="#contenido" class="skip-link">Saltar al contenido principal</a>
+
+    <header class="dash-header">
+        <div class="dash-header-inner">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" aria-label="Ir al inicio de IMMUJEL">
+                    <img src="../Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-14 w-auto">
+                </a>
+                <nav class="dash-nav" aria-label="Secciones del panel">
+                    <a href="Admin.html"><i class="fas fa-gavel" aria-hidden="true"></i> Gestión de asesorías</a>
+                    <a href="Dashboard.html" aria-current="page"><i class="fas fa-chart-line" aria-hidden="true"></i> Dashboard</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-3">
+                <div id="theme-toggle" class="theme-switch" role="button" tabindex="0" aria-label="Cambiar modo oscuro">
+                    <div class="slider">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Zm11.394-5.834a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18Zm-5.834-2.166a.75.75 0 0 0-1.06 1.06l1.59 1.591a.75.75 0 1 0 1.061-1.06l-1.59-1.591ZM5.25 12a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H4.5a.75.75 0 0 1 .75.75Zm.894-5.834a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" clip-rule="evenodd"/></svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"/></svg>
+                    </div>
+                </div>
+                <div id="auth-section" class="flex items-center"></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenido" class="dash max-w-7xl mx-auto px-4 py-8" tabindex="-1">
+
+        <div class="dash-title-row">
+            <div>
+                <h1 class="dash-title">Dashboard de Asesorías</h1>
+                <p class="dash-lede">Seguimiento de las solicitudes de asesoría recibidas por el Instituto Municipal de la Mujer de Lagunillas. Solo muestra datos agregados: no incluye nombres, cédulas, teléfonos ni correos.</p>
+            </div>
+            <div class="dash-controls">
+                <div class="seg" role="radiogroup" aria-label="Periodo de análisis" id="periodo-control">
+                    <button type="button" role="radio" aria-checked="false" data-periodo="30">30 días</button>
+                    <button type="button" role="radio" aria-checked="false" data-periodo="90">90 días</button>
+                    <button type="button" role="radio" aria-checked="false" data-periodo="365">12 meses</button>
+                    <button type="button" role="radio" aria-checked="true" data-periodo="all">Todo</button>
+                </div>
+                <button type="button" class="btn-refresh" id="btn-refresh" aria-busy="false"><i class="fas fa-rotate" aria-hidden="true"></i> Actualizar</button>
+                <span class="dash-updated"><span class="live-dot" id="live-dot" data-live="false" aria-hidden="true"></span><span id="updated-label">Cargando datos…</span></span>
+            </div>
+        </div>
+
+        <div id="dash-error" class="dash-error" role="alert" hidden>
+            <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+            <span id="dash-error-msg">No se pudieron cargar los datos.</span>
+            <button type="button" id="dash-error-retry">Reintentar</button>
+        </div>
+
+        <section class="dash-hero" aria-labelledby="hero-headline">
+            <p class="dash-hero-kicker">Lo más importante hoy</p>
+            <p class="dash-hero-headline" id="hero-headline">Calculando resumen…</p>
+            <p class="dash-hero-detail" id="hero-detail"></p>
+        </section>
+
+        <section class="kpi-grid" aria-label="Indicadores principales">
+            <article class="kpi kpi--total">
+                <h2 class="kpi-label">Solicitudes recibidas</h2>
+                <p class="kpi-value" id="kpi-total">—</p>
+                <p class="kpi-delta" id="kpi-total-delta" data-tone="flat"></p>
+                <div class="kpi-spark" id="kpi-spark" aria-hidden="true"></div>
+            </article>
+            <article class="kpi" id="kpi-vencidas-card">
+                <h2 class="kpi-label">Pendientes hace +7 días</h2>
+                <p class="kpi-value" id="kpi-vencidas">—</p>
+                <p class="kpi-note" id="kpi-vencidas-note"></p>
+            </article>
+            <article class="kpi">
+                <h2 class="kpi-label">Tasa de finalización</h2>
+                <p class="kpi-value" id="kpi-tasa">—</p>
+                <p class="kpi-delta" id="kpi-tasa-delta" data-tone="flat"></p>
+                <p class="kpi-note" id="kpi-tasa-note"></p>
+            </article>
+            <article class="kpi">
+                <h2 class="kpi-label">Solicitudes anónimas</h2>
+                <p class="kpi-value" id="kpi-anon">—</p>
+                <p class="kpi-note" id="kpi-anon-note"></p>
+            </article>
+        </section>
+
+        <div class="dash-row dash-row--2">
+            <section class="panel" aria-labelledby="trend-title">
+                <div>
+                    <h2 class="panel-title" id="trend-title">Solicitudes por mes</h2>
+                    <p class="panel-sub" id="trend-sub"></p>
+                </div>
+                <div class="chart-box"><canvas id="chart-trend" role="img" aria-label="Gráfico de área: solicitudes por mes"></canvas></div>
+            </section>
+            <section class="panel" aria-labelledby="estado-title">
+                <div>
+                    <h2 class="panel-title" id="estado-title">Estado de las solicitudes</h2>
+                    <p class="panel-sub" id="estado-sub"></p>
+                </div>
+                <ul class="estado-list" id="estado-list"></ul>
+            </section>
+        </div>
+
+        <div class="dash-row dash-row--3">
+            <section class="panel" aria-labelledby="parroquia-title">
+                <div>
+                    <h2 class="panel-title" id="parroquia-title">Solicitudes por parroquia</h2>
+                    <p class="panel-sub" id="parroquia-sub"></p>
+                </div>
+                <div class="chart-box" id="box-parroquia"><canvas id="chart-parroquia" role="img" aria-label="Gráfico de barras: solicitudes por parroquia"></canvas></div>
+            </section>
+            <section class="panel" aria-labelledby="tipo-title">
+                <div>
+                    <h2 class="panel-title" id="tipo-title">Tipo de asesoría</h2>
+                    <p class="panel-sub" id="tipo-sub"></p>
+                </div>
+                <div class="chart-box" id="box-tipo"><canvas id="chart-tipo" role="img" aria-label="Gráfico de barras: solicitudes por tipo de asesoría"></canvas></div>
+            </section>
+            <section class="panel" aria-labelledby="asesora-title">
+                <div>
+                    <h2 class="panel-title" id="asesora-title">Carga por asesora</h2>
+                    <p class="panel-sub" id="asesora-sub"></p>
+                </div>
+                <div class="chart-box" id="box-asesora"><canvas id="chart-asesora" role="img" aria-label="Gráfico de barras: solicitudes por asesora"></canvas></div>
+            </section>
+        </div>
+
+        <section class="panel" aria-labelledby="recientes-title">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h2 class="panel-title" id="recientes-title">Solicitudes más recientes</h2>
+                    <p class="panel-sub">Las 10 últimas del periodo. Para ver el detalle de una solicitud usa la gestión de asesorías.</p>
+                </div>
+                <a class="btn-link" href="Admin.html"><i class="fas fa-gavel" aria-hidden="true"></i> Abrir gestión de asesorías</a>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <caption class="dash-sr">Solicitudes más recientes, sin datos personales</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Parroquia</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Asignada a</th>
+                            <th scope="col" class="num">Antigüedad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <p class="dash-foot"><i class="fas fa-shield-halved" aria-hidden="true"></i>Fuente: solicitudes registradas en la app de IMMUJEL. Las solicitudes anónimas no registran parroquia, por eso no aparecen en el gráfico por parroquia. Los datos se actualizan solos cuando llega una solicitud nueva y cada minuto mientras tengas esta página abierta.</p>
+    </main>
+
+    <p id="sr-live" class="dash-sr" role="status"></p>
+
+    <script src="../js/ui.js" defer></script>
+    <script src="dashboard-metrics.js?v=1"></script>
+    <script src="dashboard-charts.js?v=1"></script>
+    <script src="dashboard.js?v=3"></script>
+    <script src="../Login/Login_supabase.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cookies.js"></script>
+    <script src="../js/theme-events.js"></script>
+    <script src="../js/sw-register.js" defer></script>
+</body>
+</html>
