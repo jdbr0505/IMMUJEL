@@ -168,6 +168,10 @@ html[data-theme-event="octubre-rosa"] body.dark-theme {
 .bg-purple-50, .hover\:bg-purple-50:hover { background-color: color-mix(in srgb, var(--purple-primary) 6%, white) !important; }
 .bg-purple-100 { background-color: color-mix(in srgb, var(--purple-primary) 12%, white) !important; }
 .border-purple-100, .ring-purple-100 { border-color: color-mix(in srgb, var(--purple-primary) 15%, white) !important; }
+/* Bordes de acento (tarjetas con border-t-4, botones de contorno): mismo problema que los textos y fondos de arriba. */
+.border-purple-400 { border-color: color-mix(in srgb, var(--purple-primary) 70%, white) !important; }
+.border-purple-500, .border-purple-600 { border-color: var(--purple-primary) !important; }
+.border-blue-500, .border-blue-600 { border-color: var(--blue-primary) !important; }
 .focus\:ring-purple-400:focus, .focus\:ring-purple-500:focus, .focus\:border-purple-500:focus {
     --tw-ring-color: color-mix(in srgb, var(--purple-primary) 40%, white) !important;
     border-color: var(--purple-primary) !important;
@@ -202,6 +206,11 @@ body.dark-theme .hover\:bg-purple-50:hover { background-color: color-mix(in srgb
 body.dark-theme .bg-purple-100 { background-color: color-mix(in srgb, var(--accent) 16%, transparent) !important; }
 body.dark-theme .border-purple-100,
 body.dark-theme .ring-purple-100 { border-color: color-mix(in srgb, var(--accent) 22%, transparent) !important; }
+body.dark-theme .border-purple-400,
+body.dark-theme .border-purple-500,
+body.dark-theme .border-purple-600 { border-color: var(--accent) !important; }
+body.dark-theme .border-blue-500,
+body.dark-theme .border-blue-600 { border-color: color-mix(in srgb, var(--blue-primary) 70%, white) !important; }
 body.dark-theme .text-blue-500,
 body.dark-theme .text-blue-600,
 body.dark-theme .text-blue-700,

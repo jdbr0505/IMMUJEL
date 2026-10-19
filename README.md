@@ -289,10 +289,14 @@ IMMUJEL/
 │   ├── Admin.js                  Asesorías + gestión de usuarias
 │   ├── Admin_cms.js              CMS de publicaciones
 │   ├── admin-styles.css
-│   ├── Dashboard.html            Dashboard de asesorías (KPIs y gráficos agregados, sin datos personales)
-│   ├── dashboard.js              Carga de datos, filtros y actualización en vivo
+│   ├── Dashboard.html            Dashboard: asesorías, usuarias (solo admin) y publicaciones, sin datos personales
+│   ├── dashboard.js              Carga de datos, periodo, actualización en vivo, CSV e impresión
 │   ├── dashboard-metrics.js      Cálculos puros (probados en tests/)
+│   ├── dashboard-export.js       Exportación a CSV de los totales
 │   ├── dashboard-charts.js       Gráficos Chart.js y sparkline
+│   ├── dashboard-ui.js           Utilidades de interfaz compartidas
+│   ├── dashboard-render.js       Sección de asesorías
+│   ├── dashboard-render-extra.js Secciones de usuarias y publicaciones
 │   └── dashboard.css
 │
 ├── api/
@@ -306,6 +310,7 @@ IMMUJEL/
 │   ├── TODO_EN_UNO.sql           Esquema completo
 │   ├── setup_notificaciones.sql
 │   ├── setup_push_subscriptions.sql
+│   ├── add_finalizado_en.sql     Opcional: registra el cierre de cada solicitud (tiempo de resolución del dashboard)
 │   └── alter_storage_rls.sql
 │
 ├── docs/                         Manual de uso y material de capacitación

@@ -1,5 +1,5 @@
-const CACHE = 'immujel-v4';
-const STATIC_CACHE = 'immujel-static-v4';
+const CACHE = 'immujel-v5';
+const STATIC_CACHE = 'immujel-static-v5';
 
 const PRECACHE = [
   '/',

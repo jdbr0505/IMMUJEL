@@ -1,4 +1,4 @@
-// dashboard-metrics.js – Cálculos puros del dashboard de asesorías (sin DOM ni red).
+// dashboard-metrics.js – Cálculos puros del dashboard (sin DOM ni red).
 // Se usa en el navegador (window.DashboardMetrics) y en Node para las pruebas.
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
@@ -14,15 +14,35 @@
     social: 'Social',
     general: 'General'
   };
+  var TIPOS_PUBLICACION = [
+    { tipo: 'semanario', etiqueta: 'Semanario' },
+    { tipo: 'noticiero', etiqueta: 'Noticiero' }
+  ];
+  // Mismas opciones (y mismo texto) que el selector del formulario de asesorías.
+  var PARROQUIAS = ['Alonso de Ojeda (Paraute)', 'Libertad', 'Campo Lara', 'Eleazar López Contreras', 'Venezuela'];
   var MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   var MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
-  function fecha(row) {
-    return new Date(row.creado_en);
+  // Una fecha sin hora ("2026-09-10") se toma como día local; new Date() la leería como UTC
+  // y en Venezuela mostraría el día anterior.
+  function fechaLocal(valor) {
+    if (valor instanceof Date) return valor;
+    if (typeof valor === 'string') {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor);
+      if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    }
+    return new Date(valor);
   }
 
-  function diasDesde(row, ahora) {
-    return Math.floor((ahora.getTime() - fecha(row).getTime()) / MS_DIA);
+  function tiempoDe(row, campo) {
+    var valor = row[campo || 'creado_en'];
+    if (valor === null || valor === undefined || valor === '') return null;
+    var t = fechaLocal(valor).getTime();
+    return isNaN(t) ? null : t;
+  }
+
+  function diasDesde(row, ahora, campo) {
+    return Math.floor((ahora.getTime() - tiempoDe(row, campo)) / MS_DIA);
   }
 
   function ratio(parte, total) {
@@ -31,7 +51,7 @@
 
   // periodoDias: número de días o null (todo el histórico).
   // Devuelve el periodo actual y el inmediatamente anterior de igual duración.
-  function dividirPorPeriodo(rows, periodoDias, ahora) {
+  function dividirPorPeriodo(rows, periodoDias, ahora, campo) {
     if (periodoDias === null) return { actual: rows.slice(), anterior: null };
     var fin = ahora.getTime();
     var inicio = fin - periodoDias * MS_DIA;
@@ -39,7 +59,8 @@
     var actual = [];
     var anterior = [];
     rows.forEach(function (r) {
-      var t = fecha(r).getTime();
+      var t = tiempoDe(r, campo);
+      if (t === null) return;
       if (t > inicio && t <= fin) actual.push(r);
       else if (t > inicioPrevio && t <= inicio) anterior.push(r);
     });
@@ -97,11 +118,9 @@
   }
 
   // Serie mensual rellenada con ceros. Entre 6 y 12 meses terminando en el mes actual.
-  function serieMensual(rows, ahora) {
-    var primero = rows.reduce(function (min, r) {
-      var t = fecha(r).getTime();
-      return t < min ? t : min;
-    }, ahora.getTime());
+  function serieMensual(rows, ahora, campo) {
+    var tiempos = rows.map(function (r) { return tiempoDe(r, campo); }).filter(function (t) { return t !== null; });
+    var primero = tiempos.reduce(function (min, t) { return t < min ? t : min; }, ahora.getTime());
     var d0 = new Date(primero);
     var meses = (ahora.getFullYear() - d0.getFullYear()) * 12 + (ahora.getMonth() - d0.getMonth()) + 1;
     meses = Math.max(6, Math.min(12, meses));
@@ -118,8 +137,8 @@
     }
     var porClave = {};
     serie.forEach(function (s) { porClave[s.clave] = s; });
-    rows.forEach(function (r) {
-      var s = porClave[claveMes(fecha(r))];
+    tiempos.forEach(function (t) {
+      var s = porClave[claveMes(new Date(t))];
       if (s) s.cantidad += 1;
     });
     return serie;
@@ -149,11 +168,24 @@
   }
 
   // Las anónimas no registran parroquia por diseño del formulario: se cuentan aparte.
-  function porParroquia(rows, limite) {
+  // Con `oficiales`, las parroquias sin solicitudes también aparecen (en cero).
+  function porParroquia(rows, limite, oficiales) {
     var identificadas = rows.filter(function (r) { return r.es_anonimo !== true; });
     var excluidas = rows.length - identificadas.length;
     var lista = agrupar(identificadas, function (r) { return r.parroquia || 'Sin parroquia'; });
-    return { items: lista.slice(0, limite || 10), excluidas: excluidas };
+
+    if (oficiales) {
+      var presentes = {};
+      lista.forEach(function (i) { presentes[i.etiqueta] = true; });
+      oficiales.forEach(function (nombre) {
+        if (!presentes[nombre]) lista.push({ etiqueta: nombre, cantidad: 0 });
+      });
+      ordenar(lista);
+    }
+    var sinSolicitudes = oficiales
+      ? lista.filter(function (i) { return i.cantidad === 0; }).map(function (i) { return i.etiqueta; })
+      : [];
+    return { items: lista.slice(0, limite || 10), excluidas: excluidas, sinSolicitudes: sinSolicitudes };
   }
 
   function porTipo(rows) {
@@ -171,14 +203,138 @@
   }
 
   function recientes(rows, cantidad) {
-    return rows.slice().sort(function (a, b) { return fecha(b) - fecha(a); }).slice(0, cantidad);
+    return rows.slice().sort(function (a, b) { return (tiempoDe(b) || 0) - (tiempoDe(a) || 0); }).slice(0, cantidad);
+  }
+
+  // Cola de trabajo: pendientes de la más antigua a la más reciente. Sin nombre, cédula ni contacto.
+  function pendientesAntiguas(rows, ahora, limite) {
+    var pendientes = rows
+      .filter(function (r) { return r.estado === 'pendiente' && tiempoDe(r) !== null; })
+      .sort(function (a, b) { return tiempoDe(a) - tiempoDe(b) || String(a.id).localeCompare(String(b.id)); });
+
+    return {
+      items: pendientes.slice(0, limite).map(function (r) {
+        var dias = diasDesde(r, ahora);
+        return {
+          id: r.id,
+          creado_en: r.creado_en,
+          dias: dias,
+          vencida: dias > DIAS_VENCIDA,
+          anonima: r.es_anonimo === true,
+          parroquia: r.parroquia || null,
+          tipo: TIPOS[r.tipo_asesoria] || null,
+          asignadaA: r.asignada_a || null
+        };
+      }),
+      total: pendientes.length,
+      vencidas: pendientes.filter(function (r) { return diasDesde(r, ahora) > DIAS_VENCIDA; }).length,
+      sinAsignar: pendientes.filter(function (r) { return !r.asignada_a; }).length
+    };
+  }
+
+  // Días entre la creación y el cierre. Solo cuenta solicitudes que tienen fecha de cierre registrada.
+  function tiempoResolucion(rows) {
+    var duraciones = rows
+      .filter(function (r) { return r.estado === 'finalizado' && r.finalizado_en && tiempoDe(r) !== null; })
+      .map(function (r) { return Math.max(0, (fechaLocal(r.finalizado_en).getTime() - tiempoDe(r)) / MS_DIA); })
+      .filter(function (d) { return isFinite(d); })
+      .sort(function (a, b) { return a - b; });
+
+    if (duraciones.length === 0) return { n: 0, promedioDias: null, medianaDias: null };
+    var suma = duraciones.reduce(function (acc, d) { return acc + d; }, 0);
+    var medio = Math.floor(duraciones.length / 2);
+    var mediana = duraciones.length % 2 === 1 ? duraciones[medio] : (duraciones[medio - 1] + duraciones[medio]) / 2;
+    return { n: duraciones.length, promedioDias: suma / duraciones.length, medianaDias: mediana };
+  }
+
+  function esEquipo(rol) {
+    return rol === 'admin' || rol === 'asesora';
+  }
+
+  // perfiles: [{ rol, creado_en }]. Un rol vacío cuenta como usuaria, igual que en el panel de usuarias.
+  function usuarias(perfiles, periodoDias, ahora) {
+    var asesoras = perfiles.filter(function (p) { return p.rol === 'asesora'; }).length;
+    var admins = perfiles.filter(function (p) { return p.rol === 'admin'; }).length;
+    var soloUsuarias = perfiles.filter(function (p) { return !esEquipo(p.rol); });
+    var partes = dividirPorPeriodo(soloUsuarias, periodoDias, ahora);
+    var nuevas = partes.actual.length;
+    var previas = partes.anterior ? partes.anterior.length : null;
+
+    return {
+      total: perfiles.length,
+      registradas: soloUsuarias.length,
+      asesoras: asesoras,
+      admins: admins,
+      equipo: asesoras + admins,
+      nuevas: nuevas,
+      nuevasPrevias: previas,
+      variacion: previas === null ? null : variacion(nuevas, previas),
+      serie: serieMensual(soloUsuarias, ahora),
+      conFecha: soloUsuarias.length === 0 || soloUsuarias.some(function (p) { return tiempoDe(p) !== null; })
+    };
+  }
+
+  // rows: [{ tipo, publicado, fecha }]
+  function publicaciones(rows, periodoDias, ahora) {
+    var publicadas = rows.filter(function (r) { return r.publicado === true; });
+    var partes = dividirPorPeriodo(publicadas, periodoDias, ahora, 'fecha');
+    var previas = partes.anterior ? partes.anterior.length : null;
+
+    var ultimaMs = publicadas
+      .map(function (r) { return tiempoDe(r, 'fecha'); })
+      .filter(function (t) { return t !== null && t <= ahora.getTime(); })
+      .reduce(function (max, t) { return max === null || t > max ? t : max; }, null);
+
+    return {
+      total: rows.length,
+      publicadas: publicadas.length,
+      borradores: rows.length - publicadas.length,
+      porTipo: TIPOS_PUBLICACION.map(function (t) {
+        return {
+          tipo: t.tipo,
+          etiqueta: t.etiqueta,
+          publicadas: publicadas.filter(function (r) { return r.tipo === t.tipo; }).length,
+          borradores: rows.filter(function (r) { return r.publicado !== true && r.tipo === t.tipo; }).length
+        };
+      }),
+      publicadasPeriodo: partes.actual.length,
+      publicadasPrevias: previas,
+      variacion: previas === null ? null : variacion(partes.actual.length, previas),
+      ultima: ultimaMs === null ? null : { fecha: new Date(ultimaMs), dias: Math.floor((ahora.getTime() - ultimaMs) / MS_DIA) },
+      serie: serieMensual(publicadas, ahora, 'fecha')
+    };
+  }
+
+  // Todo lo que el dashboard muestra, calculado una sola vez para pantalla, CSV e impresión.
+  function construirVista(datos) {
+    var ahora = datos.ahora || new Date();
+    var solicitudes = datos.solicitudes || [];
+    var k = kpis(solicitudes, datos.periodoDias, ahora);
+    var filas = k.periodo;
+
+    return {
+      totalHistorico: solicitudes.length,
+      k: k,
+      serie: serieMensual(solicitudes, ahora),
+      estados: porEstado(filas),
+      parroquias: porParroquia(filas, 10, datos.parroquias || PARROQUIAS),
+      tipos: porTipo(filas),
+      asesoras: porAsesora(filas, datos.equipo || {}),
+      cola: pendientesAntiguas(solicitudes, ahora, 5),
+      recientes: recientes(filas, 10),
+      resolucion: tiempoResolucion(filas),
+      usuarias: datos.perfiles ? usuarias(datos.perfiles, datos.periodoDias, ahora) : null,
+      publicaciones: datos.publicaciones ? publicaciones(datos.publicaciones, datos.periodoDias, ahora) : null
+    };
   }
 
   return {
     DIAS_VENCIDA: DIAS_VENCIDA,
     ESTADOS: ESTADOS,
     TIPOS: TIPOS,
+    PARROQUIAS: PARROQUIAS,
     MESES_LARGOS: MESES_LARGOS,
+    fechaLocal: fechaLocal,
     diasDesde: diasDesde,
     dividirPorPeriodo: dividirPorPeriodo,
     kpis: kpis,
@@ -187,6 +343,11 @@
     porParroquia: porParroquia,
     porTipo: porTipo,
     porAsesora: porAsesora,
-    recientes: recientes
+    recientes: recientes,
+    pendientesAntiguas: pendientesAntiguas,
+    tiempoResolucion: tiempoResolucion,
+    usuarias: usuarias,
+    publicaciones: publicaciones,
+    construirVista: construirVista
   };
 });

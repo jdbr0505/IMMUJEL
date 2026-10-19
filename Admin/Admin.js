@@ -696,6 +696,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadReports({});
   if (isAdmin) await loadUsuarios('', '');
   if (isAdmin) await cargarEstilo();
+
+  // Dashboard.html enlaza a Admin.html#cms, #usuarios y #estilo para abrir esa pestaña directamente.
+  const pestanaInicial = window.location.hash.replace('#', '');
+  if (['cms', 'usuarios', 'estilo'].includes(pestanaInicial) && (isAdmin || pestanaInicial === 'cms')) {
+    window.switchTab(pestanaInicial);
+  }
 });
 
 // Función global para cambiar de tab (llamada por onclick en HTML)

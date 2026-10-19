@@ -1,9 +1,9 @@
-// dashboard-charts.js – Gráficos del dashboard (Chart.js + sparkline SVG).
+// dashboard-charts.js: gráficos del dashboard (Chart.js).
 // Los colores se leen de los tokens CSS activos, así que siguen el tema oscuro y los estacionales.
 (function () {
   'use strict';
 
-  var FUENTE = "'Montserrat', 'Arial Nova', Arial, sans-serif";
+  var FUENTE = "ui-sans-serif, system-ui, sans-serif"; // se reemplaza por la tipografía real de la página al crear el primer gráfico
   var instancias = {};
   var firmas = {};
   var configurado = false;
@@ -38,6 +38,7 @@
 
   function configurarChart() {
     if (configurado) return;
+    FUENTE = getComputedStyle(document.body).fontFamily || FUENTE;
     Chart.defaults.font.family = FUENTE;
     Chart.defaults.font.size = 12;
     configurado = true;
@@ -45,7 +46,7 @@
 
   function animacion(animar) {
     var reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return animar && !reducir ? { duration: 600 } : false;
+    return animar && !reducir ? { duration: 250 } : false;
   }
 
   function tooltip(p, etiqueta) {
@@ -167,6 +168,14 @@
     canvas.hidden = false;
   }
 
+  // Deja el gráfico sin dibujar y muestra un mensaje en su lugar.
+  function vacio(opciones) {
+    var canvas = document.getElementById(opciones.canvasId);
+    quitar(opciones.clave);
+    mostrarVacio(document.getElementById(opciones.cajaId), canvas, opciones.mensaje);
+    canvas.setAttribute('aria-label', opciones.mensaje);
+  }
+
   function barras(opciones) {
     var caja = document.getElementById(opciones.cajaId);
     var canvas = document.getElementById(opciones.canvasId);
@@ -225,39 +234,73 @@
       items.map(function (i) { return i.etiqueta + ' ' + i.cantidad; }).join(', '));
   }
 
-  function sparkline(contenedor, serie) {
-    var NS = 'http://www.w3.org/2000/svg';
-    var ANCHO = 200;
-    var ALTO = 48;
-    var margen = 4;
-    var max = Math.max.apply(null, serie.map(function (e) { return e.cantidad; }).concat(1));
-    var paso = serie.length > 1 ? (ANCHO - margen * 2) / (serie.length - 1) : 0;
-    var puntos = serie.map(function (e, i) {
-      return [margen + i * paso, ALTO - margen - (e.cantidad / max) * (ALTO - margen * 2)];
-    });
-    var linea = 'M' + puntos.map(function (pt) { return pt[0].toFixed(1) + ' ' + pt[1].toFixed(1); }).join(' L');
-    var ultimo = puntos[puntos.length - 1];
-    var area = linea + ' L' + ultimo[0].toFixed(1) + ' ' + ALTO + ' L' + puntos[0][0].toFixed(1) + ' ' + ALTO + ' Z';
+  var etiquetasColumna = {
+    id: 'etiquetasColumna',
+    afterDatasetsDraw: function (chart, args, opciones) {
+      var ctx = chart.ctx;
+      ctx.save();
+      ctx.font = '700 12px ' + FUENTE;
+      ctx.fillStyle = opciones.color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      chart.getDatasetMeta(0).data.forEach(function (barra, i) {
+        var valor = chart.data.datasets[0].data[i];
+        if (valor > 0) ctx.fillText(String(valor), barra.x, barra.y - 4);
+      });
+      ctx.restore();
+    }
+  };
 
-    var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('viewBox', '0 0 ' + ANCHO + ' ' + ALTO);
-    svg.setAttribute('preserveAspectRatio', 'none');
-    var rellenoPath = document.createElementNS(NS, 'path');
-    rellenoPath.setAttribute('d', area);
-    rellenoPath.setAttribute('fill', 'currentColor');
-    rellenoPath.setAttribute('fill-opacity', '0.14');
-    var lineaPath = document.createElementNS(NS, 'path');
-    lineaPath.setAttribute('d', linea);
-    lineaPath.setAttribute('fill', 'none');
-    lineaPath.setAttribute('stroke', 'currentColor');
-    lineaPath.setAttribute('stroke-width', '2');
-    lineaPath.setAttribute('stroke-linejoin', 'round');
-    lineaPath.setAttribute('vector-effect', 'non-scaling-stroke');
-    svg.appendChild(rellenoPath);
-    svg.appendChild(lineaPath);
-    contenedor.textContent = '';
-    contenedor.appendChild(svg);
+  // Columnas por mes. `unidad` = [singular, plural] para el tooltip.
+  function columnas(opciones) {
+    var caja = document.getElementById(opciones.cajaId);
+    var canvas = document.getElementById(opciones.canvasId);
+    var serie = opciones.serie;
+    var p = opciones.paleta;
+
+    if (!serie.some(function (e) { return e.cantidad > 0; })) {
+      quitar(opciones.clave);
+      mostrarVacio(caja, canvas, opciones.mensajeVacio);
+      canvas.setAttribute('aria-label', opciones.mensajeVacio);
+      return;
+    }
+    ocultarVacio(caja, canvas);
+
+    var config = {
+      type: 'bar',
+      data: {
+        labels: serie.map(function (e) { return e.etiqueta; }),
+        datasets: [{
+          data: serie.map(function (e) { return e.cantidad; }),
+          backgroundColor: opciones.color,
+          borderRadius: 6,
+          borderSkipped: false,
+          maxBarThickness: 36
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: animacion(opciones.animar),
+        layout: { padding: { top: 22 } },
+        plugins: {
+          legend: { display: false },
+          etiquetasColumna: { color: p.texto },
+          tooltip: tooltip(p, function (ctx) {
+            return ctx.parsed.y + ' ' + (ctx.parsed.y === 1 ? opciones.unidad[0] : opciones.unidad[1]);
+          })
+        },
+        scales: {
+          x: { grid: { display: false }, border: { display: false }, ticks: { color: p.tenue } },
+          y: { display: false, beginAtZero: true, suggestedMax: 3 }
+        }
+      },
+      plugins: [etiquetasColumna]
+    };
+    montar(opciones.clave, opciones.canvasId, config, JSON.stringify([serie, opciones.color, p.texto]));
+    canvas.setAttribute('aria-label', opciones.descripcion + ': ' +
+      serie.map(function (e) { return e.etiqueta + ' ' + e.cantidad; }).join(', '));
   }
 
-  window.DashboardCharts = { paleta: paleta, tendencia: tendencia, barras: barras, sparkline: sparkline };
+  window.DashboardCharts = { paleta: paleta, tendencia: tendencia, barras: barras, columnas: columnas, vacio: vacio };
 })();
