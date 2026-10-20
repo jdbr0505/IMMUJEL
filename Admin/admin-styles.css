@@ -26,6 +26,10 @@ body.dark-theme input,
 body.dark-theme select,
 body.dark-theme textarea { background-color: #1e1e2f; color: #F3F4F6; border-color: #4B5563; }
 body.dark-theme #report-detail-content { color: #E5E7EB; }
+/* Asignación de casos: en modo oscuro estas clases claras de Tailwind quedaban apagadas o invisibles. */
+body.dark-theme #report-detail-content .bg-gray-50 { background-color: rgba(255, 255, 255, 0.06) !important; }
+body.dark-theme .text-amber-700 { color: #fbbf24 !important; }
+body.dark-theme #personal-tbody .text-red-600 { color: #f87171 !important; }
 
 .tab-btn { position: relative; }
 .tab-btn.bg-purple-600::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--purple-primary); border-radius: 3px 3px 0 0; }

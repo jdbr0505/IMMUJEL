@@ -1,134 +1,27 @@
-/* home.css – Página principal (index.html).
-   Solo lo que Tailwind y styles.css no cubren. Todo el color sale de los tokens de marca
-   (--purple-primary, --blue-primary, --magenta, --lavender, --accent), así que los temas de
-   temporada (html[data-theme-event]) y el modo oscuro (body.dark-theme) llegan solos.
-   Forma: botones y chips en píldora, tarjetas de 1.5rem, paneles y hojas de 2.25rem.
-   Estructura: cada sección es una "hoja" con las esquinas superiores redondeadas que se apoya sobre la anterior. */
+/* home.css – Solo lo propio de la página principal (index.html): hero con emblema y láminas, servicios, líneas de atención,
+   actividades e impacto. Los tokens, botones, hojas, títulos y el pie salen de ds.css (el body lleva las clases ds y home). */
 
 .home {
-    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-
-    --h-ink: var(--text-primary);
-    --h-muted: var(--text-secondary);
-    --h-card: #fff;
-    --h-sheet: #fff;
-    --h-accent: var(--purple-primary);
-
-    /* Los tres tonos del degradado de cada tema: los mismos que muestra su tarjeta en el panel
-       Estilo institucional (Octubre Rosa cierra en azul y Activismo en un violeta muy oscuro). */
-    --h-g1: var(--purple-primary);
-    --h-g2: var(--blue-primary);
-    --h-g3: var(--deep-blue);
-
-    /* Respaldo para navegadores sin color-mix(): paleta institucional oscurecida, siempre legible con texto blanco. */
-    --h-tint: #f6e9fb;
-    --h-line: rgba(165, 6, 173, 0.14);
-    --h-ornament: rgba(246, 110, 253, 0.15);
-    --h-ornament-line: rgba(246, 110, 253, 0.4);
+    --venus-ratio: 369 / 473; /* proporción del símbolo ♀ del sprite (viewBox 26 144 369 473) */
     --h-emblem-a: rgba(246, 110, 253, 0.34);
     --h-emblem-b: rgba(165, 6, 173, 0.06);
-    --h-shadow: rgba(80, 20, 100, 0.45);
-    --h-deep-1: #7d0585;
-    --h-deep-mid: #023e81;
-    --h-deep-2: #021225;
-    --h-band: #024ca1;
-    --h-glow: #fccdfe;
-    --h-on-deep: #fee5ff;
-
-    --venus-ratio: 369 / 473; /* proporción del símbolo ♀ del sprite (viewBox 26 144 369 473) */
     /* Los tonos del degradado del símbolo se definen aquí (no en el svg que lo usa) porque el <linearGradient> vive en el sprite. */
     --venus-a: var(--h-emblem-a);
     --venus-b: var(--h-emblem-b);
-    --h-radius-card: 1.5rem;
-    --h-radius-panel: 2.25rem;
-    --h-gutter: clamp(1rem, 4vw, 2rem);
 }
-html[data-theme-event="octubre-rosa"] body.home { --h-g2: var(--pink-medium); --h-g3: var(--blue-primary); }
-html[data-theme-event="activismo-16dias"] body.home { --h-g3: #2b0a45; }
-body.home.dark-theme {
-    --h-card: var(--card-bg);
-    --h-sheet: var(--card-bg);
-    --h-accent: var(--accent);
-    --h-line: rgba(196, 116, 232, 0.24);
-    --h-shadow: rgba(0, 0, 0, 0.55);
-}
-
-/* Con color-mix() los tonos salen del tema activo. Las superficies profundas (botón principal, tarjeta destacada,
-   banner) se oscurecen desde cada tono del degradado, así que con texto blanco dan 4.5:1 o más en los cuatro temas. */
 @supports (color: color-mix(in srgb, red 50%, blue)) {
     .home {
-        --h-tint: color-mix(in srgb, var(--lavender) 30%, white);
-        --h-line: color-mix(in srgb, var(--purple-primary) 14%, transparent);
-        --h-ornament: color-mix(in srgb, var(--magenta) 15%, transparent);
-        --h-ornament-line: color-mix(in srgb, var(--magenta) 40%, transparent);
         --h-emblem-a: color-mix(in srgb, var(--magenta) 34%, transparent);
         --h-emblem-b: color-mix(in srgb, var(--purple-primary) 6%, transparent);
-        --h-shadow: color-mix(in srgb, var(--purple-primary) 60%, transparent);
-        --h-deep-1: color-mix(in srgb, var(--h-g1) 74%, #0b0214);
-        --h-deep-mid: color-mix(in srgb, var(--h-g2) 62%, #0a0210);
-        --h-deep-2: color-mix(in srgb, var(--h-g3) 80%, black);
-        --h-band: color-mix(in srgb, var(--blue-primary) 78%, black);
-        --h-glow: color-mix(in srgb, var(--magenta) 35%, white);
-        --h-on-deep: color-mix(in srgb, var(--lavender) 40%, white);
     }
     body.home.dark-theme {
-        --h-tint: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
-        --h-line: color-mix(in srgb, var(--accent) 24%, transparent);
-        --h-ornament: color-mix(in srgb, var(--accent) 14%, transparent);
-        --h-ornament-line: color-mix(in srgb, var(--accent) 36%, transparent);
         --h-emblem-a: color-mix(in srgb, var(--accent) 36%, transparent);
         --h-emblem-b: color-mix(in srgb, var(--accent) 6%, transparent);
-        --h-shadow: rgba(0, 0, 0, 0.55);
-        --h-deep-1: color-mix(in srgb, var(--h-g1) 66%, #07010f);
-        --h-deep-mid: color-mix(in srgb, var(--h-g2) 56%, #06010c);
-        --h-deep-2: color-mix(in srgb, var(--h-g3) 70%, black);
-        --h-on-deep: color-mix(in srgb, var(--lavender) 50%, white);
     }
 }
-
-.home ::selection { background: color-mix(in srgb, var(--purple-primary) 28%, transparent); }
-.home :focus-visible { outline: 3px solid var(--h-accent); outline-offset: 3px; }
-.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.wrap { width: 100%; max-width: 75rem; margin-inline: auto; padding-inline: var(--h-gutter); }
 
 /* Símbolo ♀ del logotipo: dos capas (relleno y contorno) que se pintan con --venus-fill y --venus-line. */
 .venus { display: block; flex: none; aspect-ratio: var(--venus-ratio); }
-
-.sec-title {
-    margin: 0; font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem); line-height: 1.1; font-weight: 800;
-    letter-spacing: -0.02em; color: var(--h-ink); text-wrap: balance;
-}
-.sec-accent { color: var(--h-accent); }
-/* Cinta corta de color bajo cada título (la misma del pie de página). */
-.sec-title::after { content: ""; display: block; width: 4.5rem; height: 0.3rem; margin-top: 1rem; border-radius: 9999px; background: linear-gradient(90deg, var(--purple-primary), var(--magenta)); }
-.sec-lead { margin: 1.25rem 0 0; max-width: 32rem; font-size: 1.0625rem; line-height: 1.7; color: var(--h-muted); text-wrap: pretty; }
-
-/* ===== Botones ===== */
-.hbtn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3rem;
-    padding: 0.8rem 1.6rem; border: 2px solid transparent; border-radius: 9999px; cursor: pointer;
-    font-family: 'Montserrat', 'Arial Nova', sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.1; text-align: center; text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 220ms ease;
-}
-.hbtn:active { transform: scale(0.97); }
-.hbtn--solid { background: var(--h-deep-1); color: #fff; box-shadow: 0 12px 24px -12px var(--h-shadow); }
-.hbtn--ghost { background: transparent; color: var(--h-deep-1); border-color: color-mix(in srgb, var(--h-deep-1) 55%, transparent); }
-.hbtn--light { background: #fff; color: var(--h-deep-1); box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.45); }
-.hbtn i { transition: transform 220ms var(--ease-out); }
-body.home.dark-theme .hbtn--solid { background: var(--accent); color: #1a0a2e; }
-body.home.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
-
-/* El logotipo de cabecera y pie usa Images/logo-immujel-recortado.png: LOGO IMMUJEL.png trae un 25 % de margen transparente
-   arriba y abajo y por eso se veía diminuto. La cabecera lo muestra a la par de la barra (h-12 md:h-14), sin colgar. */
-
-
-/* ===== Hojas: cada sección se apoya sobre la anterior con las esquinas superiores redondeadas ===== */
-.sheet, .contact {
-    position: relative; margin-top: calc(var(--h-radius-panel) * -1);
-    border-radius: var(--h-radius-panel) var(--h-radius-panel) 0 0; box-shadow: 0 -22px 40px -30px var(--h-shadow);
-}
 
 /* ===== Hero ===== */
 .hero { position: relative; isolation: isolate; overflow: hidden; overflow: clip; padding-block: 2rem 5rem; padding-block: clamp(2rem, 4.5vw, 4rem) clamp(4.5rem, 8vw, 7rem); }
@@ -151,11 +44,6 @@ body.home.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mi
     }
 }
 .hero-lead { margin: 1.25rem 0 0; max-width: 34rem; font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem); line-height: 1.75; color: var(--h-muted); text-wrap: pretty; }
-/* Cinta de color tipo lámina: la frase clave resaltada con el azul de la marca. */
-.hl {
-    padding: 0.08em 0.42em; border-radius: 0.4em; background: var(--h-band); color: #fff; font-weight: 700;
-    -webkit-box-decoration-break: clone; box-decoration-break: clone;
-}
 .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
 .hero-actions .hbtn { flex: 0 1 auto; }
 /* Datos clave como píldoras con contorno fino de magenta (mismo trazo que los marcos de las fotos del semanario). */
@@ -301,6 +189,7 @@ body.home.dark-theme .svc-link { color: var(--accent); }
 
 /* ===== Líneas de atención (banda de color a todo el ancho, como los bloques de color del semanario) ===== */
 .contact {
+    position: relative; margin-top: calc(var(--h-radius-panel) * -1); border-radius: var(--h-radius-panel) var(--h-radius-panel) 0 0; box-shadow: 0 -22px 40px -30px var(--h-shadow);
     z-index: 2; isolation: isolate; color: #fff; padding: 4.75rem 1rem;
     background-color: #3a0759;
     background-image: linear-gradient(225deg, var(--h-deep-1) 0%, var(--h-deep-mid) 65%, var(--h-deep-2) 100%);
@@ -381,56 +270,24 @@ body.home.dark-theme .contact-go { color: var(--accent); }
 .impact-stat dd { margin: 0; font-family: 'Montserrat', 'Arial Nova', sans-serif; font-size: clamp(2.25rem, 1.2rem + 3vw, 3.75rem); line-height: 1; font-weight: 900; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: #fff; }
 .impact-sfx { color: var(--h-glow); }
 
-/* ===== Pie de página: cinta de marca arriba, logotipo grande en una pestaña que sobresale y chips sociales ===== */
-.home footer {
-    position: relative; z-index: 5; margin-top: 0; border-top: 0; background-color: var(--h-sheet);
-    background-image: linear-gradient(90deg, var(--purple-primary), var(--magenta), var(--blue-primary));
-    background-size: 100% 4px; background-repeat: no-repeat; background-position: top;
-}
-.foot-logo {
-    position: relative; z-index: 1; display: flex; width: fit-content; margin: -5.5rem auto 1.25rem; padding: 0.9rem 1.5rem;
-    border-radius: 1.75rem; background: #fff; box-shadow: 0 22px 34px -22px var(--h-shadow);
-}
-.foot-logo img { display: block; }
-@media (min-width: 48rem) { .foot-logo { margin-inline: 0; } }
-.social-chip {
-    display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; font-size: 1.15rem; text-decoration: none;
-    background: color-mix(in srgb, var(--purple-primary) 9%, transparent); color: var(--text-secondary);
-    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease;
-}
-.social-chip:active { transform: scale(0.94); }
-.home footer a:not(.social-chip):not(.foot-logo) { text-underline-offset: 0.25em; }
-
-/* ===== Hover solo con puntero fino: en pantallas táctiles el hover se queda pegado ===== */
+/* ===== Interacciones propias de la principal ===== */
 @media (hover: hover) and (pointer: fine) {
-    .hbtn--solid:hover { background: color-mix(in srgb, var(--h-deep-1) 86%, white); }
-    .hbtn--ghost:hover { background: color-mix(in srgb, var(--h-deep-1) 8%, transparent); border-color: var(--h-deep-1); }
-    .hbtn--light:hover { background: color-mix(in srgb, #fff 90%, var(--h-deep-1)); }
-    body.home.dark-theme .hbtn--solid:hover { background: color-mix(in srgb, var(--accent) 86%, white); }
-    body.home.dark-theme .hbtn--ghost:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); border-color: var(--accent); }
-    .hbtn:hover .fa-arrow-right, .svc-card:hover .svc-link i, .news-card:hover .svc-link i { transform: translateX(4px); }
+    .svc-card:hover .svc-link i, .news-card:hover .svc-link i { transform: translateX(4px); }
     .svc-card, .news-card { transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out); }
     .svc-card:hover, .news-card:hover { transform: translateY(-4px); box-shadow: 0 26px 40px -26px var(--h-shadow); }
     .svc-card--feature:hover { box-shadow: 0 40px 60px -30px var(--h-shadow); }
-    .social-chip:hover { transform: translateY(-2px); background: var(--h-deep-1); color: #fff; }
-    body.home.dark-theme .social-chip:hover { background: var(--accent); color: #1a0a2e; }
 }
 .svc-card:active, .news-card:active { transform: scale(0.985); }
 .svc-link:focus-visible { outline: none; }
 .svc-link:focus-visible::after { outline: 3px solid var(--h-accent); outline-offset: -3px; border-radius: var(--h-radius-card); }
 
-/* ===== Entrada de la página: un momento de movimiento (hero) y escalonado en las tarjetas ===== */
-@keyframes h-rise { from { opacity: 0; transform: translateY(14px); } }
-@keyframes h-pop { from { opacity: 0; transform: translateY(18px) scale(0.97); } }
+/* La lámina entra con un pequeño salto un poco después del texto (el texto usa data-rise de ds.css). */
 @media (prefers-reduced-motion: no-preference) {
-    .hero [data-rise] { animation: h-rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 70ms + 40ms); }
     .hero .poster { animation: h-pop 760ms var(--ease-out) backwards; animation-delay: 220ms; }
-    .js [data-stagger]:not(.is-in) > * { opacity: 0; }
-    .js [data-stagger].is-in > * { animation: h-rise 560ms var(--ease-out) backwards; animation-delay: calc(var(--n, 0) * 70ms); }
 }
-[data-stagger] > :nth-child(2) { --n: 1; }
-[data-stagger] > :nth-child(3) { --n: 2; }
-[data-stagger] > :nth-child(4) { --n: 3; }
+@media (max-width: 767px) {
+    .hero .poster { animation-delay: 0s !important; }
+}
 
 /* Relleno de los paneles por ancho de pantalla (valores fijos, sin clamp). */
 @media (min-width: 40rem) {
@@ -439,7 +296,4 @@ body.home.dark-theme .contact-go { color: var(--accent); }
 @media (min-width: 64rem) {
     .impact-panel { padding: 4.5rem; }
     .svc-card--feature { padding: 2.5rem; }
-}
-@media (max-width: 767px) {
-    .hero [data-rise], .hero .poster, .js [data-stagger].is-in > * { animation-delay: 0s !important; }
 }

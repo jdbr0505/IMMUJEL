@@ -23,7 +23,7 @@
     <!-- Fuentes oficiales -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Estilos propios del panel -->
-    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="admin-styles.css?v=2">
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="icon" href="../Images/HEAD.svg">
@@ -146,8 +146,11 @@
             </button>
         </div>
 
+        <!-- Aviso de asignación: para la abogada institucional o cuando falta activar la función en la base -->
+        <p id="asignacion-aviso" class="hidden mb-6 rounded-xl border px-4 py-3 text-sm" role="status"></p>
+
         <!-- KPIs -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-purple-600">
                 <div class="flex items-center justify-between">
                     <div>
@@ -184,6 +187,15 @@
                     <i class="fas fa-check-circle text-green-500 text-3xl opacity-80"></i>
                 </div>
             </div>
+            <div class="bg-white rounded-xl shadow-md p-5 border-t-4 border-amber-500 col-span-2 md:col-span-1">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Sin asignar</p>
+                        <p id="kpi-sinasignar" class="text-2xl font-bold text-amber-600">0</p>
+                    </div>
+                    <i class="fas fa-user-clock text-amber-500 text-3xl opacity-80"></i>
+                </div>
+            </div>
         </div>
 
         <!-- Filtros -->
@@ -211,6 +223,14 @@
                         <option>cancelado</option>
                     </select>
                 </div>
+                <div>
+                    <label for="filter-asignacion" class="text-sm text-gray-600 font-medium">Asignación</label>
+                    <select id="filter-asignacion" class="mt-1 block w-full rounded-lg border-gray-300 focus:ring-purple-500 focus:border-purple-500">
+                        <option value="">Todas</option>
+                        <option value="sin-asignar">Sin asignar</option>
+                        <option value="mias">Asignadas a mí</option>
+                    </select>
+                </div>
                 <button id="apply-filter" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md">Filtrar</button>
                 <button id="reset-filter" class="text-purple-600 hover:text-purple-800 font-medium underline text-sm">Limpiar filtros</button>
             </div>
@@ -226,8 +246,7 @@
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono</th>
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Parroquia</th>
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
-                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada por</th>
-                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignada a</th>
+                        <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Personal asignado</th>
                         <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
@@ -685,6 +704,66 @@
                 </div>
             </div>
 
+            <!-- ===== Personal de asesorías ===== -->
+            <section id="personal-section" class="mt-12" aria-labelledby="personal-title">
+                <div class="mb-6">
+                    <h2 id="personal-title" class="text-2xl font-black text-gray-800">Personal de asesorías</h2>
+                    <p class="text-gray-500 mt-1 max-w-3xl">Las personas disponibles y capacitadas para atender los casos. Todos los casos llegan primero a la abogada institucional, que es la única que los asigna (hasta dos personas por caso). Aquí decides quién forma parte del equipo.</p>
+                </div>
+
+                <p id="personal-aviso" class="hidden mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800" role="status"></p>
+
+                <div id="personal-resumen" class="flex flex-wrap gap-2 mb-4" aria-label="Personas activas por cargo"></div>
+
+                <!-- Agregar: pide el nombre (de una cuenta registrada) y el cargo -->
+                <form id="personal-form" class="bg-white rounded-xl shadow-md p-5 mb-6" autocomplete="off">
+                    <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_16rem_auto] md:items-end">
+                        <div>
+                            <label for="personal-persona" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                            <input type="text" id="personal-persona" list="personal-cuentas" placeholder="Busca por nombre o correo..." class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500 text-sm" required>
+                            <datalist id="personal-cuentas"></datalist>
+                        </div>
+                        <div>
+                            <label for="personal-cargo" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
+                            <select id="personal-cargo" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-purple-500 focus:border-purple-500 text-sm" required>
+                                <option value="">Elegir cargo</option>
+                                <option value="abogada_institucional">Abogada institucional</option>
+                                <option value="abogada_comunal">Abogada comunal</option>
+                                <option value="psicologa">Psicóloga</option>
+                                <option value="defensora">Defensora</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="personal-agregar" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2.5 rounded-lg transition shadow-md text-sm disabled:opacity-60">
+                            <i class="fas fa-user-plus mr-1"></i> Agregar al personal
+                        </button>
+                    </div>
+                    <p id="personal-cargo-ayuda" class="text-xs text-gray-600 mt-3 min-h-[1rem]"></p>
+                    <p class="text-xs text-gray-500">La persona debe tener cuenta en IMMUJEL: si aún no se registró, pídele que use «Registrarse» y luego aparecerá en la lista.</p>
+                </form>
+
+                <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cargo</th>
+                                <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Correo</th>
+                                <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Rol</th>
+                                <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Casos abiertos</th>
+                                <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
+                                <th class="px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="personal-tbody" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                    <div id="personal-loading" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando personal...</div>
+                    <div id="personal-empty" class="hidden text-center py-10 text-gray-400">
+                        <i class="fas fa-user-shield text-3xl mb-2 block"></i>
+                        <p>Aún no hay personal. Empieza por la abogada institucional.</p>
+                    </div>
+                </div>
+            </section>
+
         </div><!-- fin section-usuarios -->
 
         <!-- ===== SECCIÓN ESTILO INSTITUCIONAL ===== -->
@@ -854,7 +933,9 @@
 
     <!-- Scripts -->
         <script src="../js/ui.js" defer></script>
-    <script src="Admin.js?v=7"></script>
+    <script src="asignacion.js?v=1"></script>
+    <script src="Admin_asignacion.js?v=1"></script>
+    <script src="Admin.js?v=8"></script>
     <script src="Admin_cms.js?v=7"></script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">

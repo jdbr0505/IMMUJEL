@@ -1,0 +1,272 @@
+/* ds.css – Diseño compartido de IMMUJEL (páginas públicas).
+   Tokens de marca, botones, títulos, hojas, cabecera de página, banda de acción, tonos y pie de página.
+   Todo el color sale de los tokens de marca (--purple-primary, --blue-primary, --magenta, --lavender, --accent), así que los
+   temas de temporada (html[data-theme-event]) y el modo oscuro (body.dark-theme) llegan solos.
+   Forma: botones y chips en píldora, tarjetas de 1.5rem, paneles y hojas de 2.25rem.
+   La página principal suma home.css; las demás usan .page-hero (cabecera) y .page-sheet (hoja de contenido). */
+
+.ds {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+    --h-ink: var(--text-primary);
+    --h-muted: var(--text-secondary);
+    --h-card: #fff;
+    --h-sheet: #fff;
+    --h-accent: var(--purple-primary);
+
+    /* Los tres tonos del degradado de cada tema: los mismos que muestra su tarjeta en el panel
+       Estilo institucional (Octubre Rosa cierra en azul y Activismo en un violeta muy oscuro). */
+    --h-g1: var(--purple-primary);
+    --h-g2: var(--blue-primary);
+    --h-g3: var(--deep-blue);
+
+    /* Respaldo para navegadores sin color-mix(): paleta institucional oscurecida, siempre legible con texto blanco. */
+    --h-tint: #f6e9fb;
+    --h-line: rgba(165, 6, 173, 0.14);
+    --h-ornament: rgba(246, 110, 253, 0.15);
+    --h-ornament-line: rgba(246, 110, 253, 0.4);
+    --h-shadow: rgba(80, 20, 100, 0.45);
+    --h-deep-1: #7d0585;
+    --h-deep-mid: #023e81;
+    --h-deep-2: #021225;
+    --h-band: #024ca1;
+    --h-glow: #fccdfe;
+    --h-on-deep: #fee5ff;
+
+    --h-radius-card: 1.5rem;
+    --h-radius-panel: 2.25rem;
+    --h-gutter: clamp(1rem, 4vw, 2rem);
+}
+html[data-theme-event="octubre-rosa"] body.ds { --h-g2: var(--pink-medium); --h-g3: var(--blue-primary); }
+html[data-theme-event="activismo-16dias"] body.ds { --h-g3: #2b0a45; }
+body.ds.dark-theme {
+    --h-card: var(--card-bg);
+    --h-sheet: var(--card-bg);
+    --h-accent: var(--accent);
+    --h-line: rgba(196, 116, 232, 0.24);
+    --h-shadow: rgba(0, 0, 0, 0.55);
+}
+
+/* Con color-mix() los tonos salen del tema activo. Las superficies profundas (botón principal, cabecera de página, banda
+   de acción) se oscurecen desde cada tono del degradado, así que con texto blanco dan 4.5:1 o más en los cuatro temas. */
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+    .ds {
+        --h-tint: color-mix(in srgb, var(--lavender) 30%, white);
+        --h-line: color-mix(in srgb, var(--purple-primary) 14%, transparent);
+        --h-ornament: color-mix(in srgb, var(--magenta) 15%, transparent);
+        --h-ornament-line: color-mix(in srgb, var(--magenta) 40%, transparent);
+        --h-shadow: color-mix(in srgb, var(--purple-primary) 60%, transparent);
+        --h-deep-1: color-mix(in srgb, var(--h-g1) 74%, #0b0214);
+        --h-deep-mid: color-mix(in srgb, var(--h-g2) 62%, #0a0210);
+        --h-deep-2: color-mix(in srgb, var(--h-g3) 80%, black);
+        --h-band: color-mix(in srgb, var(--blue-primary) 78%, black);
+        --h-glow: color-mix(in srgb, var(--magenta) 35%, white);
+        --h-on-deep: color-mix(in srgb, var(--lavender) 40%, white);
+    }
+    body.ds.dark-theme {
+        --h-tint: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
+        --h-line: color-mix(in srgb, var(--accent) 24%, transparent);
+        --h-ornament: color-mix(in srgb, var(--accent) 14%, transparent);
+        --h-ornament-line: color-mix(in srgb, var(--accent) 36%, transparent);
+        --h-shadow: rgba(0, 0, 0, 0.55);
+        --h-deep-1: color-mix(in srgb, var(--h-g1) 66%, #07010f);
+        --h-deep-mid: color-mix(in srgb, var(--h-g2) 56%, #06010c);
+        --h-deep-2: color-mix(in srgb, var(--h-g3) 70%, black);
+        --h-on-deep: color-mix(in srgb, var(--lavender) 50%, white);
+    }
+}
+
+.ds ::selection { background: color-mix(in srgb, var(--purple-primary) 28%, transparent); }
+.ds :focus-visible { outline: 3px solid var(--h-accent); outline-offset: 3px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.wrap { width: 100%; max-width: 75rem; margin-inline: auto; padding-inline: var(--h-gutter); }
+
+.sec-title {
+    margin: 0; font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem); line-height: 1.1; font-weight: 800;
+    letter-spacing: -0.02em; color: var(--h-ink); text-wrap: balance;
+}
+.sec-accent { color: var(--h-accent); }
+/* Cinta corta de color bajo cada título (la misma del pie de página). */
+.sec-title::after { content: ""; display: block; width: 4.5rem; height: 0.3rem; margin-top: 1rem; border-radius: 9999px; background: linear-gradient(90deg, var(--purple-primary), var(--magenta)); }
+.sec-lead { margin: 1.25rem 0 0; max-width: 32rem; font-size: 1.0625rem; line-height: 1.7; color: var(--h-muted); text-wrap: pretty; }
+/* La misma cinta como separador suelto dentro del contenido. */
+.brand-rule { background: linear-gradient(90deg, var(--purple-primary), var(--magenta)); }
+
+/* Cinta de color tipo lámina: la frase clave resaltada con el azul de la marca. */
+.hl {
+    padding: 0.08em 0.42em; border-radius: 0.4em; background: var(--h-band); color: #fff; font-weight: 700;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+
+/* ===== Botones ===== */
+.hbtn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3rem;
+    padding: 0.8rem 1.6rem; border: 2px solid transparent; border-radius: 9999px; cursor: pointer;
+    font-family: 'Montserrat', 'Arial Nova', sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.1; text-align: center; text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 220ms ease;
+}
+.hbtn:active { transform: scale(0.97); }
+.hbtn--solid { background: var(--h-deep-1); color: #fff; box-shadow: 0 12px 24px -12px var(--h-shadow); }
+.hbtn--ghost { background: transparent; color: var(--h-deep-1); border-color: color-mix(in srgb, var(--h-deep-1) 55%, transparent); }
+.hbtn--light { background: #fff; color: var(--h-deep-1); box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.45); }
+.hbtn--outline-light { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.7); }
+.hbtn i { transition: transform 220ms var(--ease-out); }
+body.ds.dark-theme .hbtn--solid { background: var(--accent); color: #1a0a2e; }
+body.ds.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+
+/* ===== Hojas: cada bloque se apoya sobre el anterior con las esquinas superiores redondeadas ===== */
+.sheet {
+    position: relative; margin-top: calc(var(--h-radius-panel) * -1);
+    border-radius: var(--h-radius-panel) var(--h-radius-panel) 0 0; box-shadow: 0 -22px 40px -30px var(--h-shadow);
+}
+
+/* ===== Cabecera de página (páginas interiores) =====
+   Banda con los tres tonos del tema y la retícula de puntos; título al estilo del semanario: una línea corta y una
+   palabra enorme y pesada. El contenido va en una hoja (.page-sheet) que se apoya sobre la banda. */
+.page-hero {
+    position: relative; isolation: isolate; overflow: hidden; color: #fff; padding: 3.5rem 1rem 6.5rem;
+    background-color: #3a0759;
+    background-image: linear-gradient(135deg, var(--h-deep-1) 0%, var(--h-deep-mid) 65%, var(--h-deep-2) 100%);
+    background-image: linear-gradient(in oklab 135deg, var(--h-deep-1) 0%, var(--h-deep-mid) 65%, var(--h-deep-2) 100%);
+}
+.page-hero::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.4px, transparent 1.9px); background-size: 24px 24px;
+    -webkit-mask-image: linear-gradient(100deg, transparent 10%, #000 90%); mask-image: linear-gradient(100deg, transparent 10%, #000 90%);
+}
+.page-hero::after {
+    content: ""; position: absolute; z-index: -1; right: -10%; top: -45%; width: min(46rem, 80vw); aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.16), transparent);
+}
+/* El texto de la cabecera arranca en el mismo borde izquierdo que el contenido de la hoja (contenedor de 72rem o de 56rem con 1rem de margen). */
+.page-hero .wrap { max-width: 70rem; padding-inline: 0; }
+.page-hero .wrap--narrow { max-width: 54rem; }
+@media (min-width: 64rem) { .page-hero { padding-block: 4.5rem 7.5rem; } }
+.page-title { margin: 0; line-height: 1; font-weight: 900; letter-spacing: -0.03em; color: #fff; }
+.page-pre { display: block; font-size: clamp(1.25rem, 0.8rem + 1.8vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--h-on-deep); }
+.page-word { display: block; margin-top: 0.08em; font-size: clamp(2.5rem, 1rem + 6.4vw, 5.25rem); line-height: 0.98; overflow-wrap: anywhere; }
+.page-lead { margin: 1.25rem 0 0; max-width: 40rem; font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem); line-height: 1.7; color: var(--h-on-deep); text-wrap: pretty; }
+.page-meta { margin: 1rem 0 0; font-size: 0.875rem; color: var(--h-on-deep); }
+
+/* Hoja de contenido: blanca (tarjeta oscura en modo oscuro), se apoya sobre la cabecera de página. */
+.page-sheet { z-index: 1; background: var(--h-sheet); padding-bottom: 3.5rem; }
+
+/* ===== Banda de acción: título, frase y botones sobre los tres tonos del tema ===== */
+.cta-band {
+    position: relative; isolation: isolate; overflow: hidden; display: grid; gap: 1.5rem; padding: 2.25rem 1.5rem; margin-top: 3rem;
+    border-radius: var(--h-radius-panel); color: #fff;
+    background-color: #46087f;
+    background-image: radial-gradient(60% 90% at 6% 0%, rgba(255, 255, 255, 0.16), transparent 60%), linear-gradient(135deg, var(--h-deep-1) 0%, var(--h-deep-mid) 65%, var(--h-deep-2) 100%);
+    background-image: radial-gradient(60% 90% at 6% 0%, rgba(255, 255, 255, 0.16), transparent 60%), linear-gradient(in oklab 135deg, var(--h-deep-1) 0%, var(--h-deep-mid) 65%, var(--h-deep-2) 100%);
+    box-shadow: 0 40px 70px -40px var(--h-shadow);
+}
+.cta-band::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.4px, transparent 1.9px); background-size: 24px 24px;
+    -webkit-mask-image: linear-gradient(100deg, transparent 15%, #000 95%); mask-image: linear-gradient(100deg, transparent 15%, #000 95%);
+}
+.cta-band h2 { margin: 0; font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; color: #fff; text-wrap: balance; }
+.cta-band p { margin: 0.75rem 0 0; max-width: 34rem; line-height: 1.7; color: var(--h-on-deep); }
+.cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+@media (min-width: 48rem) { .cta-band { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 3rem; } }
+/* Variante apilada: la banda lleva un encabezado y debajo un bloque ancho (cifras). */
+.cta-band--stack { margin-top: 0; gap: 2rem; }
+@media (min-width: 48rem) { .cta-band--stack { grid-template-columns: minmax(0, 1fr); } }
+.stat-tile { padding: 1.5rem 1rem; border-radius: 1.25rem; text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
+.stat-tile strong { display: block; font-size: clamp(1.875rem, 1.2rem + 2vw, 2.5rem); font-weight: 900; line-height: 1.1; color: #fff; }
+.stat-tile span { display: block; margin-top: 0.25rem; font-size: 0.875rem; color: var(--h-on-deep); }
+
+/* ===== Tonos del tema para paneles, íconos y etiquetas (sustituyen a los colores fijos de Tailwind) ===== */
+.tone-1 { --tone: var(--h-g1); }
+.tone-2 { --tone: var(--h-g2); }
+.tone-3 { --tone: var(--magenta); }
+.tone-panel {
+    display: flex; align-items: center; justify-content: center; padding: 2rem; color: var(--tone, var(--purple-primary));
+    background: #f3e8ff;
+}
+.chip-tone {
+    display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+    background: #f3e8ff; color: var(--tone, var(--purple-primary));
+}
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+    .tone-panel {
+        color: color-mix(in srgb, var(--tone) 80%, black);
+        background: linear-gradient(135deg, color-mix(in srgb, var(--tone) 22%, white), color-mix(in srgb, var(--tone) 8%, white));
+    }
+    .chip-tone { background: color-mix(in srgb, var(--tone) 12%, white); color: color-mix(in srgb, var(--tone) 78%, black); }
+    body.ds.dark-theme .tone-panel { color: color-mix(in srgb, var(--tone) 60%, white); background: color-mix(in srgb, var(--tone) 18%, transparent); }
+    body.ds.dark-theme .chip-tone { background: color-mix(in srgb, var(--tone) 20%, transparent); color: color-mix(in srgb, var(--tone) 55%, white); }
+}
+
+/* Ícono en baldosa, caja tintada y aviso: se pintan con el tono (--tone) del tema, sin colores fijos. */
+.tone-tile {
+    display: grid; place-items: center; flex: none; width: 3.5rem; height: 3.5rem; border-radius: 1rem; font-size: 1.5rem;
+    color: var(--tone, var(--purple-primary)); background: #f3e8ff;
+}
+.tone-tile--sm { width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; font-size: 1rem; }
+.tint-box { padding: 1.25rem; border-radius: 1.25rem; background: var(--h-tint); border: 1px solid var(--h-line); }
+.callout { padding: 1rem 1.25rem; border-radius: 1rem; background: var(--h-tint); border: 1px solid var(--h-line); }
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+    .tone-tile { color: color-mix(in srgb, var(--tone, var(--purple-primary)) 80%, black); background: color-mix(in srgb, var(--tone, var(--purple-primary)) 14%, white); }
+    .callout { background: color-mix(in srgb, var(--tone, var(--purple-primary)) 7%, white); border-color: color-mix(in srgb, var(--tone, var(--purple-primary)) 28%, white); }
+    body.ds.dark-theme .tone-tile { color: color-mix(in srgb, var(--tone, var(--accent)) 60%, white); background: color-mix(in srgb, var(--tone, var(--accent)) 20%, transparent); }
+    body.ds.dark-theme .callout { background: color-mix(in srgb, var(--tone, var(--accent)) 14%, transparent); border-color: color-mix(in srgb, var(--tone, var(--accent)) 30%, transparent); }
+}
+
+/* ===== Tarjeta de contenido de las páginas interiores: esquinas de 1.5rem, filo del color de la marca y sombra suave del tema ===== */
+.ds-card {
+    position: relative; overflow: hidden; border-radius: var(--h-radius-card);
+    background: var(--h-card); border: 1px solid var(--h-line); box-shadow: 0 18px 40px -30px var(--h-shadow);
+}
+.ds-card.reveal { transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out); }
+.ds-card--tint { background: var(--h-tint); }
+
+/* ===== Pie de página: cinta de marca arriba, logotipo grande en una pestaña que sobresale y chips sociales ===== */
+.ds footer {
+    position: relative; z-index: 5; margin-top: 0; border-top: 0; background-color: var(--h-sheet);
+    background-image: linear-gradient(90deg, var(--purple-primary), var(--magenta), var(--blue-primary));
+    background-size: 100% 4px; background-repeat: no-repeat; background-position: top;
+}
+.foot-logo {
+    position: relative; z-index: 1; display: flex; width: fit-content; margin: -5.5rem auto 1.25rem; padding: 0.9rem 1.5rem;
+    border-radius: 1.75rem; background: #fff; box-shadow: 0 22px 34px -22px var(--h-shadow);
+}
+.foot-logo img { display: block; }
+@media (min-width: 48rem) { .foot-logo { margin-inline: 0; } }
+.social-chip {
+    display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; font-size: 1.15rem; text-decoration: none;
+    background: color-mix(in srgb, var(--purple-primary) 9%, transparent); color: var(--text-secondary);
+    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease;
+}
+.social-chip:active { transform: scale(0.94); }
+.ds footer a:not(.social-chip):not(.foot-logo) { text-underline-offset: 0.25em; }
+
+/* ===== Hover solo con puntero fino: en pantallas táctiles el hover se queda pegado ===== */
+@media (hover: hover) and (pointer: fine) {
+    .hbtn--solid:hover { background: color-mix(in srgb, var(--h-deep-1) 86%, white); }
+    .hbtn--ghost:hover { background: color-mix(in srgb, var(--h-deep-1) 8%, transparent); border-color: var(--h-deep-1); }
+    .hbtn--light:hover { background: color-mix(in srgb, #fff 90%, var(--h-deep-1)); }
+    .hbtn--outline-light:hover { background: rgba(255, 255, 255, 0.12); border-color: #fff; }
+    body.ds.dark-theme .hbtn--solid:hover { background: color-mix(in srgb, var(--accent) 86%, white); }
+    body.ds.dark-theme .hbtn--ghost:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); border-color: var(--accent); }
+    .hbtn:hover .fa-arrow-right { transform: translateX(4px); }
+    .social-chip:hover { transform: translateY(-2px); background: var(--h-deep-1); color: #fff; }
+    body.ds.dark-theme .social-chip:hover { background: var(--accent); color: #1a0a2e; }
+}
+
+/* ===== Entrada de la página: un momento de movimiento en la cabecera y escalonado en los grupos de tarjetas ===== */
+@keyframes h-rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes h-pop { from { opacity: 0; transform: translateY(18px) scale(0.97); } }
+@media (prefers-reduced-motion: no-preference) {
+    .ds [data-rise] { animation: h-rise 640ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 70ms + 40ms); }
+    .js [data-stagger]:not(.is-in) > * { opacity: 0; }
+    .js [data-stagger].is-in > * { animation: h-rise 560ms var(--ease-out) backwards; animation-delay: calc(var(--n, 0) * 70ms); }
+}
+[data-stagger] > :nth-child(2) { --n: 1; }
+[data-stagger] > :nth-child(3) { --n: 2; }
+[data-stagger] > :nth-child(4) { --n: 3; }
+@media (max-width: 767px) {
+    .ds [data-rise], .js [data-stagger].is-in > * { animation-delay: 0s !important; }
+}

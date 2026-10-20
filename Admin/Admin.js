@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUserId = user.id;
   const isAdmin = profile.rol === 'admin';
   window.isAdmin = isAdmin; // switchTab() vive fuera de este closure y necesita leerlo
+  const esc = window.Asignacion ? window.Asignacion.escapar : (v) => String(v ?? '');
+  window.AsignacionPanel?.iniciar({ supabase, userId: currentUserId, isAdmin, notify: window.showToast });
 
   // Mostrar tab de Usuarias y de Estilo solo para admin
   const tabUsuarios = document.getElementById('tab-usuarios');
@@ -94,10 +96,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (kpiPendiente) kpiPendiente.textContent = pend ?? 0;
     if (kpiEnProceso) kpiEnProceso.textContent = prog ?? 0;
     if (kpiFinalizado) kpiFinalizado.textContent = fin ?? 0;
+    await actualizarSinAsignar();
+  }
+
+  // Casos abiertos sin nadie asignado: la cola de la abogada institucional. No depende de los filtros de la tabla.
+  async function actualizarSinAsignar() {
+    const kpiSinAsignar = document.getElementById('kpi-sinasignar');
+    if (!kpiSinAsignar) return;
+    const panel = window.AsignacionPanel;
+    if (!panel || !panel.disponible()) { kpiSinAsignar.textContent = '—'; return; }
+    const { data, error } = await supabase.from('solicitudes').select('id, estado').in('estado', ['pendiente', 'en proceso']);
+    kpiSinAsignar.textContent = error ? '—' : panel.contarSinAsignar(data || []);
+  }
+
+  // Aviso sobre la tabla: guía a la abogada institucional o avisa que falta activar la función en la base de datos.
+  function actualizarAvisoAsignacion() {
+    const aviso = document.getElementById('asignacion-aviso');
+    const filtro = document.getElementById('filter-asignacion');
+    const panel = window.AsignacionPanel;
+    if (!aviso || !panel) return;
+    let texto = '';
+    let clases = '';
+    if (!panel.disponible()) {
+      texto = panel.mensajeSinConfigurar;
+      clases = 'bg-amber-50 border-amber-200 text-amber-800';
+    } else if (panel.puedeAsignar()) {
+      texto = 'Eres la abogada institucional: los casos nuevos llegan primero a ti. Los que aparecen como «Sin asignar» esperan que elijas quién los atiende (hasta dos personas).';
+      clases = 'bg-purple-50 border-purple-100 text-purple-800';
+    }
+    aviso.textContent = texto;
+    aviso.className = 'mb-6 rounded-xl border px-4 py-3 text-sm ' + clases + (texto ? '' : ' hidden');
+    if (filtro) filtro.disabled = !panel.disponible();
   }
 
   // 3. Cargar solicitudes
+  let lastFilters = {};
+  const refreshReports = () => loadReports(lastFilters);
+
   async function loadReports(filters = {}) {
+    lastFilters = filters;
     if (loading) loading.classList.remove('hidden');
     let query = supabase
       .from('solicitudes')
@@ -110,17 +147,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await query;
     if (error) {
       console.error('Error al cargar solicitudes:', error);
-      if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-red-500">
-        <i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</td></tr>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-500">
+        <i class="fas fa-exclamation-circle mr-2"></i>Error: ${esc(error.message)}</td></tr>`;
       if (loading) loading.classList.add('hidden');
       return;
     }
 
-    allReports = data || [];
+    // El personal y las asignaciones vigentes se piden junto con las solicitudes para pintar "Personal asignado" y el indicador "Sin asignar".
+    await window.AsignacionPanel?.cargar();
+    actualizarAvisoAsignacion();
     updateKPIGlobal();
 
-    // Cargar nombres de quien asignó
-    const userIds = [...new Set(allReports.flatMap(r => [r.asignada_por, r.asignada_a].filter(Boolean)))];
+    allReports = data || [];
+    if (filters.asignacion && window.AsignacionPanel) {
+      allReports = window.AsignacionPanel.filtrar(allReports, filters.asignacion);
+    }
+
+    // Nombres de quien figura en solicitudes.asignada_a: sirven para las asignaciones hechas antes de que existiera el personal por cargos
+    const userIds = [...new Set(allReports.map(r => r.asignada_a).filter(Boolean))];
     let usersMap = {};
     if (userIds.length > 0) {
       const { data: users } = await supabase.from('perfiles').select('id, nombre_completo').in('id', userIds);
@@ -130,18 +174,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (tbody) {
+      const panel = window.AsignacionPanel;
       if (allReports.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-gray-400">
-          <i class="fas fa-inbox text-3xl mb-2 block"></i>No hay solicitudes registradas aún</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-gray-400">
+          <i class="fas fa-inbox text-3xl mb-2 block"></i>${filters.asignacion ? 'Ninguna solicitud coincide con el filtro' : 'No hay solicitudes registradas aún'}</td></tr>`;
       } else {
         tbody.innerHTML = allReports.map(r => {
-          const asignadaPorNombre = r.asignada_por ? (usersMap[r.asignada_por] || '—') : '—';
-          const asignadaNombre = r.asignada_a ? (usersMap[r.asignada_a] || '—') : '—';
+          const anterior = r.asignada_a ? (usersMap[r.asignada_a] || 'Asesora') : null;
+          const equipo = panel ? panel.celdaEquipo(r, anterior) : '<span class="text-gray-400">—</span>';
+          const resumen = panel ? panel.resumenCorto(r, anterior) : '';
+          const accion = panel ? panel.etiquetaDeAccion(r) : 'Ver';
+          const estiloAccion = accion === 'Asignar'
+            ? 'bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg'
+            : 'text-indigo-600 hover:text-indigo-800 hover:underline';
           return `<tr class="hover:bg-gray-50 transition">
             <td class="px-4 py-3 text-sm whitespace-nowrap">${r.creado_en ? new Date(r.creado_en).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}</td>
-            <td class="px-4 py-3 font-medium">${r.nombre_completo || (r.es_anonimo ? '<em class="text-gray-400">Anónimo</em>' : 'N/A')}</td>
-            <td class="px-4 py-3">${r.telefono || 'N/A'}</td>
-            <td class="px-4 py-3">${r.parroquia || 'N/A'}</td>
+            <td class="px-4 py-3 font-medium">${r.nombre_completo ? esc(r.nombre_completo) : (r.es_anonimo ? '<em class="text-gray-400">Anónimo</em>' : 'N/A')}<div class="md:hidden mt-1 font-normal">${resumen}</div></td>
+            <td class="px-4 py-3">${esc(r.telefono || 'N/A')}</td>
+            <td class="px-4 py-3">${esc(r.parroquia || 'N/A')}</td>
             <td class="px-4 py-3 capitalize">
               <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs rounded-full font-medium ${
                 r.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
@@ -150,13 +200,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'bg-gray-100 text-gray-800'
               }">
                 <span class="w-1.5 h-1.5 rounded-full ${r.estado === 'pendiente' ? 'bg-yellow-500' : r.estado === 'en proceso' ? 'bg-blue-500' : r.estado === 'finalizado' ? 'bg-green-500' : 'bg-gray-500'}"></span>
-                ${r.estado}
+                ${esc(r.estado)}
               </span>
             </td>
-            <td class="px-4 py-3 text-sm">${asignadaPorNombre}</td>
-            <td class="px-4 py-3 text-sm">${asignadaNombre}</td>
+            <td class="px-4 py-3 text-sm">${equipo}</td>
             <td class="px-4 py-3 text-center">
-              <button onclick="openModal('${r.id}')" class="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium">Ver</button>
+              <button onclick="openModal('${esc(r.id)}')" class="${estiloAccion} text-sm font-medium">${accion}</button>
             </td>
           </tr>`;
         }).join('');
@@ -181,62 +230,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadAsesoras();
 
-    const asesorasOptions = asesorasCache.map(a =>
-      `<option value="${a.id}" ${report.asignada_a === a.id ? 'selected' : ''}>${a.nombre_completo || a.nombre_usuario}</option>`
-    ).join('');
-
     if (reportDetail) {
-      const asigPorName = report.asignada_por ? (asesorasCache.find(a => a.id === report.asignada_por)?.nombre_completo || '—') : '—';
-      const asigAName = report.asignada_a ? (asesorasCache.find(a => a.id === report.asignada_a)?.nombre_completo || '—') : '—';
+      // Asignación hecha antes de que existiera el personal por cargos (solicitudes.asignada_a)
+      const anterior = report.asignada_a ? (asesorasCache.find(a => a.id === report.asignada_a)?.nombre_completo || 'Asesora') : null;
       reportDetail.innerHTML = `
         <div class="grid grid-cols-2 gap-3">
-          <div><p class="text-xs text-gray-400">Nombre</p><p class="font-medium">${report.nombre_completo || 'Anónimo'}</p></div>
-          ${report.cedula ? `<div><p class="text-xs text-gray-400">Cédula</p><p class="font-medium">${report.cedula}</p></div>` : ''}
-          <div><p class="text-xs text-gray-400">Teléfono</p><p class="font-medium">${report.telefono || 'N/A'}</p></div>
-          <div><p class="text-xs text-gray-400">Correo</p><p class="font-medium">${report.correo || 'N/A'}</p></div>
-          <div><p class="text-xs text-gray-400">Parroquia</p><p class="font-medium">${report.parroquia || 'N/A'}</p></div>
-          <div><p class="text-xs text-gray-400">Estado</p><p class="font-medium capitalize">${report.estado}</p></div>
-          ${report.tipo_asesoria ? `<div><p class="text-xs text-gray-400">Tipo</p><p class="font-medium capitalize">${report.tipo_asesoria}</p></div>` : ''}
-          <div><p class="text-xs text-gray-400">Asignada por</p><p class="font-medium">${asigPorName}</p></div>
-          <div><p class="text-xs text-gray-400">Asignada a</p><p class="font-medium">${asigAName}</p></div>
+          <div><p class="text-xs text-gray-400">Nombre</p><p class="font-medium">${esc(report.nombre_completo || 'Anónimo')}</p></div>
+          ${report.cedula ? `<div><p class="text-xs text-gray-400">Cédula</p><p class="font-medium">${esc(report.cedula)}</p></div>` : ''}
+          <div><p class="text-xs text-gray-400">Teléfono</p><p class="font-medium">${esc(report.telefono || 'N/A')}</p></div>
+          <div><p class="text-xs text-gray-400">Correo</p><p class="font-medium">${esc(report.correo || 'N/A')}</p></div>
+          <div><p class="text-xs text-gray-400">Parroquia</p><p class="font-medium">${esc(report.parroquia || 'N/A')}</p></div>
+          <div><p class="text-xs text-gray-400">Estado</p><p class="font-medium capitalize">${esc(report.estado)}</p></div>
+          ${report.tipo_asesoria ? `<div><p class="text-xs text-gray-400">Tipo</p><p class="font-medium capitalize">${esc(report.tipo_asesoria)}</p></div>` : ''}
         </div>
         <div class="mt-3 pt-3 border-t border-gray-100">
           <p class="text-xs text-gray-400 mb-1">Descripción</p>
-          <p class="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm">${report.descripcion || 'Sin descripción'}</p>
+          <p class="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm">${esc(report.descripcion || 'Sin descripción')}</p>
         </div>
         <div class="mt-3 pt-3 border-t border-gray-100">
           <p class="text-xs text-gray-400 mb-2">Notas internas</p>
           <div class="space-y-1 max-h-32 overflow-y-auto">
             ${report.notas?.length
-              ? report.notas.map(n => `<div class="flex items-start gap-2 text-sm"><span class="text-purple-400 mt-1"><i class="fas fa-comment-dots text-xs"></i></span><div><p class="text-gray-600">${n.contenido}</p><p class="text-gray-400 text-xs">${new Date(n.creado_en).toLocaleString('es-ES')}</p></div></div>`).join('')
+              ? report.notas.map(n => `<div class="flex items-start gap-2 text-sm"><span class="text-purple-400 mt-1"><i class="fas fa-comment-dots text-xs"></i></span><div><p class="text-gray-600">${esc(n.contenido)}</p><p class="text-gray-400 text-xs">${new Date(n.creado_en).toLocaleString('es-ES')}</p></div></div>`).join('')
               : '<span class="text-gray-400 text-sm">Ninguna nota aún</span>'}
           </div>
         </div>
-        ${isAdmin ? `
-        <div class="mt-3 pt-3 border-t border-gray-100">
-          <p class="text-xs text-gray-400 mb-1">Asignar a</p>
-          <select id="asignar-asesora" class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-purple-500 focus:border-purple-500">
-            <option value="">Sin asignar</option>
-            ${asesorasOptions}
-          </select>
-          <button id="btn-asignar" class="mt-2 w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 rounded-lg transition">Asignar</button>
-        </div>` : ''}
+        ${window.AsignacionPanel ? window.AsignacionPanel.bloqueModal(report, anterior) : ''}
       `;
     }
 
-    // Handler de asignación
-    const btnAsignar = document.getElementById('btn-asignar');
-    if (btnAsignar) {
-      btnAsignar.addEventListener('click', async () => {
-        const asignarA = document.getElementById('asignar-asesora').value;
-        await supabase.from('solicitudes').update({
-          asignada_a: asignarA || null,
-          asignada_por: currentUserId
-        }).eq('id', currentReportId);
-        await openModal(currentReportId);
-        await loadReports({});
-      });
-    }
+    // Solo la abogada institucional ve el formulario de asignación; el botón llama a asignar_caso(), que lo vuelve a exigir en la base.
+    window.AsignacionPanel?.enlazarModal(reportId, async () => {
+      await openModal(currentReportId);
+      await refreshReports();
+    });
 
     if (modal) {
       modal.classList.remove('hidden');
@@ -290,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (modal) modal.classList.add('hidden');
     window.showToast('Estado actualizado a "' + estado + '".', 'success');
-    await loadReports({});
+    await refreshReports();
   }
 
   if (markInProgress) markInProgress.addEventListener('click', () => updateEstado('en proceso'));
@@ -302,12 +329,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const resetFilter = document.getElementById('reset-filter');
   const filterParroquia = document.getElementById('filter-parroquia');
   const filterStatus = document.getElementById('filter-status');
+  const filterAsignacion = document.getElementById('filter-asignacion');
 
   if (applyFilter) {
     applyFilter.addEventListener('click', () => {
       loadReports({
         parroquia: filterParroquia?.value || '',
-        estado: filterStatus?.value || ''
+        estado: filterStatus?.value || '',
+        asignacion: filterAsignacion?.value || ''
       });
     });
   }
@@ -315,6 +344,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     resetFilter.addEventListener('click', () => {
       if (filterParroquia) filterParroquia.value = '';
       if (filterStatus) filterStatus.value = '';
+      if (filterAsignacion) filterAsignacion.value = '';
       loadReports({});
     });
   }
@@ -379,7 +409,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         es_anonimo: anonimo,
         tipo_asesoria: tipo,
         estado: 'pendiente',
-        asignada_por: currentUserId,
         creado_en: new Date().toISOString()
       });
 
@@ -393,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       naModal.classList.add('hidden');
       window.showToast('Asesoría creada correctamente.', 'success');
-      await loadReports({});
+      await refreshReports();
     });
   }
 
@@ -455,20 +484,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     usuariosTbody.innerHTML = users.map(u => {
       const isSelf = u.id === currentUserId;
       return `<tr class="hover:bg-gray-50 transition">
-        <td class="px-4 py-3 font-medium">${u.nombre_completo || '—'}</td>
-        <td class="px-4 py-3 text-sm font-mono">${u.nombre_usuario || '—'}</td>
-        <td class="px-4 py-3 text-sm">${u.email || '—'}</td>
-        <td class="px-4 py-3 text-sm">${u.telefono || '—'}</td>
+        <td class="px-4 py-3 font-medium">${esc(u.nombre_completo || '—')}</td>
+        <td class="px-4 py-3 text-sm font-mono">${esc(u.nombre_usuario || '—')}</td>
+        <td class="px-4 py-3 text-sm">${esc(u.email || '—')}</td>
+        <td class="px-4 py-3 text-sm">${esc(u.telefono || '—')}</td>
         <td class="px-4 py-3">
           <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full font-semibold ${roleColors[u.rol] || 'bg-gray-100 text-gray-700'}">
             <span class="w-1.5 h-1.5 rounded-full ${u.rol === 'admin' ? 'bg-purple-500' : u.rol === 'asesora' ? 'bg-blue-500' : 'bg-gray-500'}"></span>
-            ${u.rol || 'usuaria'}
+            ${esc(u.rol || 'usuaria')}
           </span>
         </td>
         <td class="px-4 py-3 text-center">
           ${isSelf
             ? '<span class="text-xs text-gray-400 italic">(tú, no puedes cambiarte)</span>'
-            : `<select class="rol-select text-xs border border-gray-300 rounded-lg p-1.5 focus:ring-purple-500 focus:border-purple-500 min-w-[110px]" data-userid="${u.id}" data-current="${u.rol || 'usuaria'}" data-name="${u.nombre_completo || u.nombre_usuario || 'usuaria'}">
+            : `<select class="rol-select text-xs border border-gray-300 rounded-lg p-1.5 focus:ring-purple-500 focus:border-purple-500 min-w-[110px]" data-userid="${esc(u.id)}" data-current="${esc(u.rol || 'usuaria')}" data-name="${esc(u.nombre_completo || u.nombre_usuario || 'usuaria')}">
                 ${roles.map(r => `<option value="${r}" ${(u.rol || 'usuaria') === r ? 'selected' : ''}>${r === 'admin' ? '👑 Admin' : r === 'asesora' ? '🛡️ Asesora' : '👤 Usuaria'}</option>`).join('')}
               </select>`
           }
@@ -497,7 +526,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         this.dataset.current = newRol;
-        window.showToast(`Rol de "${userName}" cambiado a "${newRol}"`, 'success');
+        window.showToast(`Rol de "${esc(userName)}" cambiado a "${esc(newRol)}"`, 'success');
         allUsersCache = [];
         await loadUsuarios();
       });
@@ -535,7 +564,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUsuKPI(filtered);
     renderUsuarios(filtered);
+
+    // Personal de asesorías (debajo de la tabla): se recarga con las cuentas, que alimentan el buscador de nombres.
+    await window.AsignacionPanel?.cargarPersonal(allUsersCache);
   }
+
+  // Tras cambiar el rol de una cuenta desde el personal: vuelve a pedir las cuentas al servidor y repinta la tabla.
+  window.recargarUsuarias = async () => {
+    allUsersCache = [];
+    await loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
+  };
 
   // Search handlers with debounce
   let searchDebounceTimer;

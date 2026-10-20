@@ -11,6 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../ds.css?v=1">
     <title>Asesoría Legal | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +32,7 @@
     <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="../manifest.json">
 </head>
-<body class="antialiased" id="main-content">
+<body class="antialiased ds" id="main-content">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
     <!-- ========== HEADER / NAVBAR (idéntico al home) ========== -->
@@ -210,16 +211,18 @@
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-16 w-auto mx-auto md:mx-0 mb-3" loading="lazy">
-                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                <div class="foot-brand">
+                    <a href="../index.html" class="foot-logo" aria-label="IMMUJEL, ir al inicio">
+                        <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-20 md:h-24 w-auto" loading="lazy">
+                    </a>
+                    <p class="text-gray-600 text-sm font-semibold">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Enlaces rápidos</h3>
                     <ul class="space-y-2 text-sm">
                         <li><a href="../navegacion/Sobre Nosotras.html" class="text-gray-600 hover:text-purple-600">Sobre Nosotras</a></li>
-                        <li><a href="../Forms/form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
+                        <li><a href="./form.html" class="text-gray-600 hover:text-purple-600">Asesorías</a></li>
                         <li><a href="../navegacion/Programas.html" class="text-gray-600 hover:text-purple-600">Programas</a></li>
                         <li><a href="../navegacion/FL.html" class="text-gray-600 hover:text-purple-600">Fundamentos Legales</a></li>
                         <li><a href="../navegacion/privacidad.html" class="text-gray-600 hover:text-purple-600">Privacidad</a></li>
@@ -228,9 +231,9 @@
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
                     <div class="flex justify-center md:justify-start space-x-5">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Instagram de IMMUJEL"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Facebook de IMMUJEL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="WhatsApp de IMMUJEL"><i class="fab fa-whatsapp"></i></a>
                     </div>
                     <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
                 </div>

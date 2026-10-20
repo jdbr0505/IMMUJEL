@@ -11,6 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../ds.css?v=1">
     <title>Programas | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +29,7 @@
     <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="../manifest.json">
 </head>
-<body class="antialiased">
+<body class="antialiased ds">
 
     <!-- ========== HEADER / NAVBAR ========== -->
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all border-b border-purple-100">
@@ -100,103 +101,100 @@
         </div>
     </header>
 
-    <!-- ========== HERO SECTION ========== -->
-    <section class="relative overflow-hidden">
-        <div class="absolute inset-0" style="background:linear-gradient(135deg, var(--purple-primary) 0%, var(--blue-primary) 100%);"></div>
-        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3) 0%, transparent 50%);"></div>
-        <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-chalkboard-user mr-2"></i>NUESTRA OFERTA</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Nuestros Programas</h1>
-                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Programas de formación diseñados para fortalecer la autoestima, el liderazgo y la autonomía económica de las mujeres. Incluyen talleres de emprendimiento, habilidades digitales y desarrollo personal.</p>
-            </div>
+    <!-- ========== CABECERA DE PÁGINA ========== -->
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Nuestros</span>
+                <span class="page-word">Programas</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Programas de formación diseñados para fortalecer la autoestima, el liderazgo y la autonomía económica de las mujeres. Incluyen talleres de emprendimiento, habilidades digitales y desarrollo personal.</p>
         </div>
     </section>
 
     <!-- ========== CONTENIDO PRINCIPAL  ========== -->
-    <main class="container mx-auto px-4 py-12 max-w-6xl relative">
-
-        <div class="relative z-10">
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-6xl relative">
 
             <!-- Programa 1: Empoderamiento -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border border-gray-100 hover:shadow-xl transition reveal">
+            <article class="ds-card reveal mb-8">
                 <div class="md:flex">
                     <div class="md:w-2/3 p-8 md:p-10">
-                        <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Formación</span>
+                        <span class="chip-tone tone-1 font-semibold">Formación</span>
                         <h2 class="text-2xl font-bold text-gray-800 mt-3 mb-3">Talleres de Empoderamiento</h2>
                         <p class="text-gray-600 leading-relaxed">Programas de formación diseñados para fortalecer la autoestima, el liderazgo y la autonomía económica de las mujeres. Incluyen talleres de emprendimiento, habilidades digitales y desarrollo personal.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-full">Liderazgo</span>
-                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">Emprendimiento</span>
-                            <span class="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">Autoestima</span>
+                            <span class="chip-tone tone-1">Liderazgo</span>
+                            <span class="chip-tone tone-2">Emprendimiento</span>
+                            <span class="chip-tone tone-3">Autoestima</span>
                         </div>
                     </div>
-                    <div class="md:w-1/3 bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center p-8">
-                        <i class="fas fa-star text-6xl text-purple-400"></i>
+                    <div class="tone-panel tone-1 md:w-1/3" aria-hidden="true">
+                        <i class="fas fa-star text-6xl"></i>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- Programa 2: Prevención -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border border-gray-100 hover:shadow-xl transition reveal">
+            <article class="ds-card reveal mb-8">
                 <div class="md:flex">
-                    <div class="md:w-1/3 bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center p-8 order-2 md:order-1">
-                        <i class="fas fa-shield-halved text-6xl text-blue-400"></i>
+                    <div class="tone-panel tone-2 md:w-1/3 order-2 md:order-1" aria-hidden="true">
+                        <i class="fas fa-shield-halved text-6xl"></i>
                     </div>
                     <div class="md:w-2/3 p-8 md:p-10 order-1 md:order-2">
-                        <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Prevención</span>
+                        <span class="chip-tone tone-2 font-semibold">Prevención</span>
                         <h2 class="text-2xl font-bold text-gray-800 mt-3 mb-3">Prevención de Violencia de Género</h2>
                         <p class="text-gray-600 leading-relaxed">Campañas de sensibilización y charlas educativas dirigidas a la comunidad para prevenir la violencia de género. Trabajamos con instituciones educativas, organizaciones comunitarias y el público en general.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-full">Charlas</span>
-                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">Sensibilización</span>
-                            <span class="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">Comunitario</span>
+                            <span class="chip-tone tone-1">Charlas</span>
+                            <span class="chip-tone tone-2">Sensibilización</span>
+                            <span class="chip-tone tone-3">Comunitario</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- Programa 3: Atención Integral -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border border-gray-100 hover:shadow-xl transition">
+            <article class="ds-card reveal mb-8">
                 <div class="md:flex">
                     <div class="md:w-2/3 p-8 md:p-10">
-                        <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">Atención</span>
+                        <span class="chip-tone tone-3 font-semibold">Atención</span>
                         <h2 class="text-2xl font-bold text-gray-800 mt-3 mb-3">Atención Integral y Acompañamiento</h2>
                         <p class="text-gray-600 leading-relaxed">Programa de acompañamiento continuo para mujeres en situación de vulnerabilidad. Incluye asesoría legal, apoyo psicológico, gestión de recursos y derivación a redes de apoyo especializadas.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-full">Legal</span>
-                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">Psicológico</span>
-                            <span class="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">Acompañamiento</span>
+                            <span class="chip-tone tone-1">Legal</span>
+                            <span class="chip-tone tone-2">Psicológico</span>
+                            <span class="chip-tone tone-3">Acompañamiento</span>
                         </div>
                     </div>
-                    <div class="md:w-1/3 bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center p-8">
-                        <i class="fas fa-hand-holding-heart text-6xl text-green-400"></i>
+                    <div class="tone-panel tone-3 md:w-1/3" aria-hidden="true">
+                        <i class="fas fa-hand-holding-heart text-6xl"></i>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- CTA -->
-            <div class="text-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 mt-12">
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">¿Quieres participar en nuestros programas?</h2>
-                <p class="text-purple-100 mb-6">Comunícate con nosotras y descubre cómo podemos ayudarte.</p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="tel:+584246540241" class="inline-flex items-center justify-center gap-2 bg-white text-purple-700 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition shadow-md">
-                        <i class="fas fa-phone-alt"></i> Llamar ahora
-                    </a>
-                    <a href="../Forms/form.html" class="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white text-white font-semibold py-3 px-6 rounded-full hover:bg-white/10 transition">
-                        <i class="fas fa-pen"></i> Solicitar asesoría
-                    </a>
+            <section class="cta-band reveal" aria-labelledby="cta-programas">
+                <div>
+                    <h2 id="cta-programas">¿Quieres participar en nuestros programas?</h2>
+                    <p>Comunícate con nosotras y descubre cómo podemos ayudarte.</p>
                 </div>
-            </div>
+                <div class="cta-actions">
+                    <a href="tel:+584246540241" class="hbtn hbtn--light"><i class="fas fa-phone-alt"></i> Llamar ahora</a>
+                    <a href="../Forms/form.html" class="hbtn hbtn--outline-light"><i class="fas fa-pen"></i> Solicitar asesoría</a>
+                </div>
+            </section>
         </div>
     </main>
 
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-16 w-auto mx-auto md:mx-0 mb-3" loading="lazy">
-                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                <div class="foot-brand">
+                    <a href="../index.html" class="foot-logo" aria-label="IMMUJEL, ir al inicio">
+                        <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-20 md:h-24 w-auto" loading="lazy">
+                    </a>
+                    <p class="text-gray-600 text-sm font-semibold">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
@@ -212,9 +210,9 @@
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
                     <div class="flex justify-center md:justify-start space-x-5">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Instagram de IMMUJEL"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Facebook de IMMUJEL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="WhatsApp de IMMUJEL"><i class="fab fa-whatsapp"></i></a>
                     </div>
                     <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
                 </div>

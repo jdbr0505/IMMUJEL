@@ -11,6 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../ds.css?v=1">
     <title>Sobre Nosotras | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +29,7 @@
     <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="../manifest.json">
 </head>
-<body class="antialiased">
+<body class="antialiased ds">
 
     <!-- ========== HEADER / NAVBAR ========== -->
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all border-b border-purple-100">
@@ -101,29 +102,26 @@
         </div>
     </header>
 
-    <!-- ========== HERO SECTION ========== -->
-    <section class="relative overflow-hidden">
-        <div class="absolute inset-0" style="background:linear-gradient(135deg, var(--magenta) 0%, var(--purple-primary) 40%, color-mix(in srgb, var(--purple-primary) 65%, black) 100%);"></div>
-        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 25% 35%, rgba(252,191,255,0.5) 0%, transparent 50%), radial-gradient(circle at 75% 65%, rgba(165,6,173,0.3) 0%, transparent 50%);"></div>
-        <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-heart mr-2"></i>CONÓCENOS</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Sobre Nosotras</h1>
-                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Conoce nuestra historia, misi&oacute;n y el compromiso que nos impulsa a servir a las mujeres de Lagunillas.</p>
-            </div>
+    <!-- ========== CABECERA DE PÁGINA ========== -->
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Sobre</span>
+                <span class="page-word">Nosotras</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Conoce nuestra historia, misi&oacute;n y el compromiso que nos impulsa a servir a las mujeres de Lagunillas.</p>
         </div>
     </section>
 
     <!-- ========== CONTENIDO PRINCIPAL ========== -->
-    <main class="container mx-auto px-4 py-12 max-w-6xl relative logo-watermark">
-
-        <div class="relative z-10">
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-6xl relative">
 
             <!-- ===================== ANTECEDENTES ===================== -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-16 border border-gray-100 reveal">
+            <article class="ds-card reveal mb-16">
                 <div class="md:flex">
                     <div class="md:w-3/5 p-8 md:p-10 lg:p-12">
-                        <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Contexto</span>
+                        <span class="chip-tone tone-1 font-semibold">Contexto</span>
                         <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mt-3 mb-5 flex items-center gap-2">
                             <i class="fas fa-gavel text-purple-600"></i> Antecedentes
                         </h2>
@@ -132,31 +130,23 @@
                             <p>Es en este marco constitucional y de derechos humanos donde surge la necesidad de crear un ente municipal especializado que garantice la protección integral de las mujeres lagunillenses, dando respuesta a una deuda histórica del gobierno municipal con este sector de la población.</p>
                         </div>
                     </div>
-                    <div class="md:w-2/5 bg-gradient-to-br from-purple-100 via-blue-50 to-purple-100 flex items-center justify-center p-8 relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10">
-                            <div class="absolute top-10 left-10 w-32 h-32 bg-purple-600 rounded-full blur-3xl"></div>
-                            <div class="absolute bottom-10 right-10 w-40 h-40 bg-blue-600 rounded-full blur-3xl"></div>
-                        </div>
-                        <div class="relative text-center">
-                            <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center border-4 border-purple-100">
+                    <div class="tone-panel tone-1 md:w-2/5">
+                        <div class="text-center">
+                            <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center">
                                 <i class="fas fa-balance-scale text-purple-600 text-4xl"></i>
                             </div>
-                            <p class="text-sm text-gray-500 mt-4 max-w-xs">"Una sociedad democrática, participativa y sin discriminación"</p>
-                            <p class="text-xs text-gray-400 mt-1">Constitución de la República Bolivariana de Venezuela</p>
+                            <p class="text-sm text-gray-600 mt-4 max-w-xs">"Una sociedad democrática, participativa y sin discriminación"</p>
+                            <p class="text-xs text-gray-600 mt-1">Constitución de la República Bolivariana de Venezuela</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- ===================== NACIMIENTO DE IMMUJEL ===================== -->
-            <div class="mb-16 reveal">
-                <div class="text-center mb-10">
-                    <span class="inline-block text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Historia</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-3 flex items-center justify-center gap-3">
-                        <i class="fas fa-history text-purple-600"></i> Nacimiento de IMMUJEL
-                    </h2>
-                    <div class="w-16 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-3"></div>
-                </div>
+            <section class="mb-16 reveal" aria-labelledby="t-nacimiento">
+                <header class="mb-10">
+                    <h2 id="t-nacimiento" class="sec-title">Nacimiento de <span class="sec-accent">IMMUJEL</span></h2>
+                </header>
 
                 <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mb-12">
                     <!-- 2009 -->
@@ -188,7 +178,7 @@
                     <!-- Maria Claret 2023-2024 -->
                     <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,var(--purple-primary),color-mix(in srgb, var(--purple-primary) 82%, black));">
                         <div class="text-2xl font-black text-white">2023</div>
-                        <p class="text-xs text-purple-300 mt-1">Maria Claret Velásquez. Primera presidenta.</p>
+                        <p class="text-xs text-white/90 mt-1">Maria Claret Velásquez. Primera presidenta.</p>
                         <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:color-mix(in srgb, var(--purple-primary) 82%, black);"></div>
                     </div>
                     <div class="hidden md:flex items-center">
@@ -201,7 +191,7 @@
                     <!-- 2024 Yohanna -->
                     <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,var(--blue-primary),var(--purple-primary));">
                         <div class="text-2xl font-black text-white">2024</div>
-                        <p class="text-xs text-blue-200 mt-1">Lcda. Yohanna Boscan asume la presidencia</p>
+                        <p class="text-xs text-white/90 mt-1">Lcda. Yohanna Boscan asume la presidencia</p>
                         <div class="hidden md:block absolute top-1/2 -left-3 w-6 h-6 rounded-full border-4 border-white shadow" style="background:var(--purple-primary);"></div>
                     </div>
                     <div class="hidden md:flex items-center">
@@ -214,51 +204,51 @@
                     <!-- Presente -->
                     <div class="rounded-xl p-5 text-center w-full md:w-48 shadow-lg" style="background:linear-gradient(135deg,var(--deep-blue),var(--blue-primary));">
                         <div class="text-2xl font-black text-white">Presente</div>
-                        <p class="text-xs text-blue-300 mt-1">Atención integral a la mujer lagunillense</p>
+                        <p class="text-xs text-white/90 mt-1">Atención integral a la mujer lagunillense</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 border border-gray-100">
+                <div class="ds-card p-8 md:p-10">
                     <div class="grid md:grid-cols-5 gap-8">
                         <div class="md:col-span-3 space-y-4 text-gray-600 leading-relaxed">
                             <p>En el contexto histórico y político, el gobierno municipal tenía una deuda con la mujer lagunillense. Para el año <strong>2009</strong>, el ciudadano <strong>Eduin Antonio Pirela Parra</strong>, Alcalde del Municipio Lagunillas del Estado Zulia electo para el periodo 2008-2012, quien lamentablemente fallece en el ejercicio del cargo, impulsa la creación del <strong>Instituto Municipal de la Mujer de Lagunillas</strong>, Estado Zulia, como instituto autónomo, cuya ordenanza de creación se publica en la <strong>Gaceta Municipal Extraordinaria</strong> bajo el Número 833, el día <strong>5 de junio de 2009</strong>.</p>
                             <p>Sin embargo, no es hasta el <strong>11 de julio de 2023</strong> cuando, por iniciativa del Alcalde del Municipio Lagunillas, <strong>José Mosquera Adarme</strong> y en cumplimiento de las políticas públicas de protección a la mujer, formalmente se da inicio a las actividades del instituto, tal y como consta en la <strong>Resolución N° 2023-043</strong> de la misma fecha.</p>
-                            <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-r-lg">
-                                <p class="text-sm text-gray-700"><i class="fas fa-quote-left text-purple-400 mr-1"></i> El gobierno municipal tenía una deuda con la mujer lagunillense... hoy IMMUJEL es una realidad al servicio de nuestra gente.</p>
+                            <div class="callout tone-1">
+                                <p class="text-sm text-gray-700"><i class="fas fa-quote-left text-purple-600 mr-1"></i> El gobierno municipal tenía una deuda con la mujer lagunillense... hoy IMMUJEL es una realidad al servicio de nuestra gente.</p>
                             </div>
-                            <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-r-lg">
-                                <p class="text-sm text-gray-700"><i class="fas fa-user-tie text-purple-500 mr-1"></i> En el período <strong>2023–2024</strong>, asume como primera presidenta del instituto la <strong>Lcda. Maria Claret Velásquez</strong>, sentando las bases institucionales de IMMUJEL.</p>
+                            <div class="callout tone-1">
+                                <p class="text-sm text-gray-700"><i class="fas fa-user-tie text-purple-600 mr-1"></i> En el período <strong>2023–2024</strong>, asume como primera presidenta del instituto la <strong>Lcda. Maria Claret Velásquez</strong>, sentando las bases institucionales de IMMUJEL.</p>
                             </div>
-                            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
-                                <p class="text-sm text-gray-700"><i class="fas fa-user-shield text-blue-500 mr-1"></i> Para el período <strong>2024</strong>, asume la presidencia del instituto la <strong>Lcda. Yohanna Boscan</strong>, liderando la consolidación de IMMUJEL como ente rector de las políticas públicas municipales para la protección integral de la mujer lagunillense.</p>
+                            <div class="callout tone-2">
+                                <p class="text-sm text-gray-700"><i class="fas fa-user-shield text-blue-600 mr-1"></i> Para el período <strong>2024</strong>, asume la presidencia del instituto la <strong>Lcda. Yohanna Boscan</strong>, liderando la consolidación de IMMUJEL como ente rector de las políticas públicas municipales para la protección integral de la mujer lagunillense.</p>
                             </div>
                         </div>
                         <div class="md:col-span-2 space-y-4">
-                            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5 border border-purple-100">
+                            <div class="tint-box">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-file-alt text-purple-600"></i>
+                                    <div class="tone-tile tone-tile--sm tone-1">
+                                        <i class="fas fa-file-alt"></i>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-gray-400">Documento</p>
+                                        <p class="text-xs text-gray-600">Documento</p>
                                         <p class="text-sm font-semibold text-gray-800">Gaceta Municipal N° 833</p>
                                     </div>
                                 </div>
-                                <p class="text-xs text-gray-500">05 de junio de 2009 — Creación del Instituto Autónomo</p>
+                                <p class="text-xs text-gray-600">05 de junio de 2009 — Creación del Instituto Autónomo</p>
                             </div>
-                            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-5 border border-blue-100">
+                            <div class="tint-box">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-stamp text-blue-600"></i>
+                                    <div class="tone-tile tone-tile--sm tone-2">
+                                        <i class="fas fa-stamp"></i>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-gray-400">Documento</p>
+                                        <p class="text-xs text-gray-600">Documento</p>
                                         <p class="text-sm font-semibold text-gray-800">Resolución N° 2023-043</p>
                                     </div>
                                 </div>
-                                <p class="text-xs text-gray-500">11 de julio de 2023 — Inicio formal de actividades</p>
+                                <p class="text-xs text-gray-600">11 de julio de 2023 — Inicio formal de actividades</p>
                             </div>
-                            <div class="relative rounded-xl overflow-hidden h-36">
+                            <div class="relative rounded-2xl overflow-hidden h-36">
                                 <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Sede IMMUJEL" class="w-full h-full object-cover" loading="lazy">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                 <p class="absolute bottom-2 left-3 text-white text-xs font-medium"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, Ciudad Ojeda</p>
@@ -266,84 +256,74 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- ===================== MISIÓN Y VISIÓN ===================== -->
             <div class="grid md:grid-cols-2 gap-8 mb-16 reveal">
-                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 transition-all duration-300 hover:shadow-xl border-t-4 border-purple-600 relative overflow-hidden group">
-                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-purple-100 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-                    <div class="relative">
-                        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-5">
-                            <i class="fas fa-bullseye text-purple-600 text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">Misión</h2>
-                        <p class="text-gray-600 leading-relaxed">Trabajar de manera integral para contribuir a la erradicación de la violencia basada en género brindando atención, asesoramiento, apoyo psicológico, legal y social a la mujer y a la familia, fomentamos la concienciación y la prevención en la sociedad, como el ente del gobierno municipal garante del cumplimiento de las políticas públicas en materia de protección y prevención de la violencia hacia la mujer.</p>
+                <article class="ds-card p-8 md:p-10">
+                    <div class="tone-tile tone-1 mb-5">
+                        <i class="fas fa-bullseye"></i>
                     </div>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 transition-all duration-300 hover:shadow-xl border-t-4 border-blue-600 relative overflow-hidden group">
-                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-blue-100 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-                    <div class="relative">
-                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-5">
-                            <i class="fas fa-eye text-blue-600 text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">Visión</h2>
-                        <p class="text-gray-600 leading-relaxed">Brindar asistencia en los procesos de empoderamiento de las mujeres, que sea reconocido en el municipio Lagunillas y en todo el territorio nacional como un centro de apoyo a sus proyectos personales, laborales, profesionales y empresariales, así como en el libre desarrollo, el ejercicio y goce de sus derechos humanos y libertades individuales promoviendo la equidad y la igualdad en todos los ámbitos.</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">Misión</h2>
+                    <p class="text-gray-600 leading-relaxed">Trabajar de manera integral para contribuir a la erradicación de la violencia basada en género brindando atención, asesoramiento, apoyo psicológico, legal y social a la mujer y a la familia, fomentamos la concienciación y la prevención en la sociedad, como el ente del gobierno municipal garante del cumplimiento de las políticas públicas en materia de protección y prevención de la violencia hacia la mujer.</p>
+                </article>
+                <article class="ds-card p-8 md:p-10">
+                    <div class="tone-tile tone-2 mb-5">
+                        <i class="fas fa-eye"></i>
                     </div>
-                </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">Visión</h2>
+                    <p class="text-gray-600 leading-relaxed">Brindar asistencia en los procesos de empoderamiento de las mujeres, que sea reconocido en el municipio Lagunillas y en todo el territorio nacional como un centro de apoyo a sus proyectos personales, laborales, profesionales y empresariales, así como en el libre desarrollo, el ejercicio y goce de sus derechos humanos y libertades individuales promoviendo la equidad y la igualdad en todos los ámbitos.</p>
+                </article>
             </div>
 
             <!-- ===================== VALORES Y PRINCIPIOS ===================== -->
-            <div class="mb-16 bg-white/60 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-lg border border-purple-100 reveal">
-                <div class="text-center mb-10">
-                    <span class="inline-block text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Ética</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-3">Valores y Principios</h2>
-                    <div class="w-16 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-3"></div>
-                    <p class="text-gray-500 mt-3 max-w-xl mx-auto">El código de ética tiene por objeto regular los principios rectores de los deberes y conductas que deben observar los servidores públicos en el ejercicio de sus funciones.</p>
-                </div>
+            <section class="mb-16 reveal" aria-labelledby="t-valores">
+                <header class="mb-10">
+                    <h2 id="t-valores" class="sec-title">Valores y <span class="sec-accent">Principios</span></h2>
+                    <p class="sec-lead">El código de ética tiene por objeto regular los principios rectores de los deberes y conductas que deben observar los servidores públicos en el ejercicio de sus funciones.</p>
+                </header>
                 <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:var(--purple-primary);">
-                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:color-mix(in srgb, var(--purple-primary) 10%, white);">
-                            <i class="fas fa-hand-holding-heart text-2xl" style="color:var(--purple-primary);"></i>
+                    <div class="ds-card p-6 text-center transition-all hover:-translate-y-2 reveal-scale">
+                        <div class="tone-tile tone-1 mx-auto mb-4 rounded-full w-16 h-16">
+                            <i class="fas fa-hand-holding-heart"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Gratuidad</h3>
-                        <p class="text-gray-500 text-sm mt-2">Todos los servicios del instituto son completamente gratuitos como garantía de acceso a la justicia y la protección para todas las mujeres sin distinción.</p>
+                        <p class="text-gray-600 text-sm mt-2">Todos los servicios del instituto son completamente gratuitos como garantía de acceso a la justicia y la protección para todas las mujeres sin distinción.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:var(--purple-primary);">
-                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:color-mix(in srgb, var(--purple-primary) 10%, white);">
-                            <i class="fas fa-shield-alt text-2xl" style="color:var(--purple-primary);"></i>
+                    <div class="ds-card p-6 text-center transition-all hover:-translate-y-2 reveal-scale">
+                        <div class="tone-tile tone-2 mx-auto mb-4 rounded-full w-16 h-16">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Honestidad</h3>
-                        <p class="text-gray-500 text-sm mt-2">Actuamos con transparencia, integridad y rectitud en cada una de nuestras actuaciones, velando siempre por el interés superior de la mujer.</p>
+                        <p class="text-gray-600 text-sm mt-2">Actuamos con transparencia, integridad y rectitud en cada una de nuestras actuaciones, velando siempre por el interés superior de la mujer.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-md text-center transition-all hover:-translate-y-2 hover:shadow-lg reveal-scale border-t-4" style="border-top-color:var(--purple-primary);">
-                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:color-mix(in srgb, var(--purple-primary) 10%, white);">
-                            <i class="fas fa-scale-balanced text-2xl" style="color:var(--purple-primary);"></i>
+                    <div class="ds-card p-6 text-center transition-all hover:-translate-y-2 reveal-scale">
+                        <div class="tone-tile tone-3 mx-auto mb-4 rounded-full w-16 h-16">
+                            <i class="fas fa-scale-balanced"></i>
                         </div>
                         <h3 class="font-bold text-lg text-gray-800">Equidad</h3>
-                        <p class="text-gray-500 text-sm mt-2">Promovemos la igualdad real y efectiva, reconociendo las diferencias y necesidades específicas de cada mujer para garantizar sus derechos.</p>
+                        <p class="text-gray-600 text-sm mt-2">Promovemos la igualdad real y efectiva, reconociendo las diferencias y necesidades específicas de cada mujer para garantizar sus derechos.</p>
                     </div>
                 </div>
-                <div class="mt-8 rounded-xl p-6" style="background:linear-gradient(135deg,color-mix(in srgb, var(--purple-primary) 10%, white),color-mix(in srgb, var(--blue-primary) 8%, white));border:1px solid color-mix(in srgb, var(--purple-primary) 35%, white);">
+                <div class="callout tone-1 mt-8 p-6">
                     <div class="flex items-start gap-4">
-                        <i class="fas fa-book-open mt-1" style="color:var(--purple-primary);"></i>
+                        <i class="fas fa-book-open mt-1 text-purple-600"></i>
                         <div>
                             <p class="text-sm font-semibold text-gray-700">Código de Ética</p>
-                            <p class="text-sm text-gray-500 mt-1">Estos valores éticos rigen el ejercicio de la función pública en IMMUJEL, previniendo los hechos que atenten, amenacen o lesionen la ética pública y la moral administrativa, en beneficio de las mujeres del municipio Lagunillas del Estado Zulia.</p>
+                            <p class="text-sm text-gray-600 mt-1">Estos valores éticos rigen el ejercicio de la función pública en IMMUJEL, previniendo los hechos que atenten, amenacen o lesionen la ética pública y la moral administrativa, en beneficio de las mujeres del municipio Lagunillas del Estado Zulia.</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- ===================== ÁREAS DE ATENCIÓN ===================== -->
-            <div class="mb-16 reveal">
-                <div class="text-center mb-10">
-                    <span class="inline-block text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Servicios</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-3">Áreas de Atención Integral</h2>
-                    <div class="w-16 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-3"></div>
-                    <p class="text-gray-500 mt-3">Brindamos atención multidisciplinaria a través de tres áreas especializadas</p>
-                </div>
+            <section class="mb-16 reveal" aria-labelledby="t-areas">
+                <header class="mb-10">
+                    <h2 id="t-areas" class="sec-title">Áreas de Atención <span class="sec-accent">Integral</span></h2>
+                    <p class="sec-lead">Brindamos atención multidisciplinaria a través de tres áreas especializadas</p>
+                </header>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
+                    <div class="ds-card transition-all hover:-translate-y-2 group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Psicológica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
@@ -355,12 +335,12 @@
                         </div>
                         <div class="p-6">
                             <p class="text-gray-600 text-sm leading-relaxed">Espacios seguros de escucha y acompañamiento emocional para tu bienestar y recuperación.</p>
-                            <div class="mt-4 flex items-center text-xs text-gray-400">
-                                <i class="fas fa-check-circle text-green-500 mr-1"></i> Atención confidencial
+                            <div class="mt-4 flex items-center text-xs text-gray-600">
+                                <i class="fas fa-check-circle text-purple-600 mr-1"></i> Atención confidencial
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
+                    <div class="ds-card transition-all hover:-translate-y-2 group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Jurídica" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
@@ -372,12 +352,12 @@
                         </div>
                         <div class="p-6">
                             <p class="text-gray-600 text-sm leading-relaxed">Orientacion legal para que conozcas y ejerzas tus derechos frente a situaciones de violencia o discriminacion.</p>
-                            <div class="mt-4 flex items-center text-xs text-gray-400">
-                                <i class="fas fa-check-circle text-green-500 mr-1"></i> Defensa legal gratuita
+                            <div class="mt-4 flex items-center text-xs text-gray-600">
+                                <i class="fas fa-check-circle text-purple-600 mr-1"></i> Defensa legal gratuita
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl group reveal-scale">
+                    <div class="ds-card transition-all hover:-translate-y-2 group reveal-scale">
                         <div class="h-48 photo-overlay relative overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Atención Social" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy">
                             <div class="absolute bottom-4 left-4 text-white z-10">
@@ -389,42 +369,40 @@
                         </div>
                         <div class="p-6">
                             <p class="text-gray-600 text-sm leading-relaxed">Apoyo integral que conecta a las mujeres con programas, recursos, asi como orientacion en salud sexual y reproductiva.</p>
-                            <div class="mt-4 flex items-center text-xs text-gray-400">
-                                <i class="fas fa-check-circle text-green-500 mr-1"></i> Acompañamiento integral
+                            <div class="mt-4 flex items-center text-xs text-gray-600">
+                                <i class="fas fa-check-circle text-purple-600 mr-1"></i> Acompañamiento integral
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- ===================== GALERÍA DE ACTIVIDADES ===================== -->
-            <div class="mb-16 reveal">
-                <div class="text-center mb-10">
-                    <span class="inline-block text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Evidencias</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-3">Galería de Actividades</h2>
-                    <div class="w-16 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-3"></div>
-                    <p class="text-gray-500 mt-3">Momentos que reflejan nuestro compromiso con la mujer lagunillense</p>
-                </div>
+            <section class="mb-16 reveal" aria-labelledby="t-galeria">
+                <header class="mb-10">
+                    <h2 id="t-galeria" class="sec-title">Galería de <span class="sec-accent">Actividades</span></h2>
+                    <p class="sec-lead">Momentos que reflejan nuestro compromiso con la mujer lagunillense</p>
+                </header>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+                    <div class="relative group rounded-3xl overflow-hidden aspect-square cursor-pointer">
                         <img src="https://images.unsplash.com/photo-1540573467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Taller de empoderamiento</p>
                         </div>
                     </div>
-                    <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+                    <div class="relative group rounded-3xl overflow-hidden aspect-square cursor-pointer">
                         <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Jornada de asesoría legal</p>
                         </div>
                     </div>
-                    <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+                    <div class="relative group rounded-3xl overflow-hidden aspect-square cursor-pointer">
                         <img src="https://images.unsplash.com/photo-1573497623493-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Equipo IMMUJEL</p>
                         </div>
                     </div>
-                    <div class="relative group rounded-xl overflow-hidden aspect-square cursor-pointer">
+                    <div class="relative group rounded-3xl overflow-hidden aspect-square cursor-pointer">
                         <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Actividad IMMUJEL" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                             <p class="text-white text-sm font-medium">Charla comunitaria</p>
@@ -432,40 +410,20 @@
                     </div>
                 </div>
                 <div class="text-center mt-6">
-                    <p class="text-gray-400 text-sm"><i class="fas fa-camera mr-1"></i> Espacio para fotografías reales de las actividades del instituto</p>
+                    <p class="text-gray-600 text-sm"><i class="fas fa-camera mr-1"></i> Espacio para fotografías reales de las actividades del instituto</p>
                 </div>
-            </div>
+            </section>
 
             <!-- ===================== LÍNEA DE TIEMPO / LOGROS ===================== -->
-            <div class="mb-16 bg-brand-purple-deep rounded-2xl p-8 md:p-12 text-white relative overflow-hidden reveal">
-                <div class="absolute inset-0 opacity-10">
-                    <div class="absolute top-0 left-0 w-64 h-64 bg-pink-500 rounded-full blur-3xl"></div>
-                    <div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full blur-3xl"></div>
+            <section class="cta-band cta-band--stack reveal" aria-labelledby="t-cifras">
+                <h2 id="t-cifras">Nuestra Labor en Cifras</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="stat-tile"><strong>2800+</strong><span>Mujeres Atendidas</span></div>
+                    <div class="stat-tile"><strong>85+</strong><span>Talleres Realizados</span></div>
+                    <div class="stat-tile"><strong>150+</strong><span>Defensoras en el Municipio</span></div>
+                    <div class="stat-tile"><strong>100%</strong><span>Gratuito</span></div>
                 </div>
-                <div class="relative z-10 text-center mb-10">
-                    <span class="inline-block text-xs font-semibold text-pink-300 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Trayectoria</span>
-                    <h2 class="text-3xl md:text-4xl font-bold mt-3">Nuestra Labor en Cifras</h2>
-                    <div class="w-16 h-1 bg-gradient-to-r from-pink-400 to-blue-400 mx-auto rounded-full mt-3"></div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
-                    <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">2800+</div>
-                        <p class="text-purple-200 text-sm">Mujeres Atendidas</p>
-                    </div>
-                    <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">85+</div>
-                        <p class="text-purple-200 text-sm">Talleres Realizados</p>
-                    </div>
-                    <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">150+</div>
-                        <p class="text-purple-200 text-sm">Defensoras en el Municipio</p>
-                    </div>
-                    <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1">100%</div>
-                        <p class="text-purple-200 text-sm">Gratuito</p>
-                    </div>
-                </div>
-            </div>
+            </section>
 
         </div>
     </main>
@@ -473,9 +431,11 @@
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-16 w-auto mx-auto md:mx-0 mb-3" loading="lazy">
-                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                <div class="foot-brand">
+                    <a href="../index.html" class="foot-logo" aria-label="IMMUJEL, ir al inicio">
+                        <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-20 md:h-24 w-auto" loading="lazy">
+                    </a>
+                    <p class="text-gray-600 text-sm font-semibold">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
@@ -491,9 +451,9 @@
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
                     <div class="flex justify-center md:justify-start space-x-5">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Instagram de IMMUJEL"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Facebook de IMMUJEL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="WhatsApp de IMMUJEL"><i class="fab fa-whatsapp"></i></a>
                     </div>
                     <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
                 </div>

@@ -146,11 +146,11 @@ La aplicación es una **PWA instalable**: funciona en computadora, tablet y celu
 <td width="50%" valign="top">
 
 **📊 Pestaña Asesorías**
-- Indicadores (KPI): Total · Pendientes · En Proceso · Finalizados
-- Filtros por parroquia y estado
+- Indicadores (KPI): Total · Pendientes · En Proceso · Finalizados · Sin asignar
+- Filtros por parroquia, estado y asignación (sin asignar, asignadas a mí)
 - Detalle completo de cada solicitud
 - Notas internas por caso
-- Asignación de casos a asesoras
+- Asignación de casos: todos llegan primero a la abogada institucional, que es la única que asigna (hasta dos personas por caso: responsable y apoyo), con historial
 - Registro manual de asesorías presenciales
 
 </td>
@@ -172,6 +172,7 @@ La aplicación es una **PWA instalable**: funciona en computadora, tablet y celu
 
 **👥 Pestaña Usuarias** *(exclusiva para Administradoras)*
 Listado de todo el personal registrado, búsqueda por nombre/usuario/correo, filtro por rol y cambio de rol con confirmación.
+Debajo, la tabla **Personal de asesorías**: la administradora agrega (nombre de una cuenta registrada + cargo), retira y reincorpora a la abogada institucional, la abogada comunal, las psicólogas y las defensoras, y ve cuántos casos abiertos lleva cada una.
 
 </td>
 </tr>
@@ -188,6 +189,23 @@ Listado de todo el personal registrado, búsqueda por nombre/usuario/correo, fil
 | **Admin** | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > Los permisos se aplican en dos capas: la interfaz oculta las opciones no autorizadas, y las **políticas de Row Level Security (RLS)** de PostgreSQL las bloquean a nivel de base de datos.
+
+### Personal de asesorías y asignación de casos
+
+Aparte del rol de la cuenta, el personal que atiende los casos tiene un **cargo**. Los casos llegan primero a la abogada institucional (Dahize Barrada), que decide quién los atiende.
+
+| Cargo | Función | Quién lo agrega o retira |
+|:---|:---|:---|
+| **Abogada institucional** | Recibe todos los casos y es la **única** que los asigna. Solo hay una activa a la vez | Administradora |
+| **Abogada comunal** | Da seguimiento a los órganos receptores de denuncias | Administradora |
+| **Psicóloga** | Acompañamiento psicológico | Administradora |
+| **Defensora** | Cubre el seguimiento cuando la abogada comunal no puede | Administradora |
+
+- Un caso lleva **una o dos personas**: responsable y apoyo. Reasignar libera a la anterior y queda en el historial del caso.
+- Para figurar en el personal hay que **tener cuenta en IMMUJEL**; la administradora la elige por nombre desde Usuarias → Personal de asesorías.
+- La abogada institucional necesita rol **Asesora** (o Admin) para entrar al panel; el panel ofrece dárselo al agregarla.
+- Retirar a alguien no borra nada: sus casos siguen a su nombre hasta que la abogada institucional los reasigne (vuelven a «Sin asignar»).
+- Las reglas las hace cumplir la base de datos (`supabase-sql/setup_asignacion_casos.sql`), no solo la pantalla: ni la administradora puede asignar casos si no es la abogada institucional.
 
 ---
 
@@ -289,6 +307,8 @@ IMMUJEL/
 ├── Admin/                        Panel de administración
 │   ├── Admin.html
 │   ├── Admin.js                  Asesorías + gestión de usuarias
+│   ├── asignacion.js             Reglas de la asignación de casos y del personal (puras, probadas en tests/)
+│   ├── Admin_asignacion.js       Personal de asesorías (Usuarias) y asignación de casos (Asesorías)
 │   ├── Admin_cms.js              CMS de publicaciones
 │   ├── admin-styles.css
 │   ├── Dashboard.html            Dashboard: asesorías, usuarias (solo admin) y publicaciones, sin datos personales
@@ -313,6 +333,8 @@ IMMUJEL/
 │   ├── setup_notificaciones.sql
 │   ├── setup_push_subscriptions.sql
 │   ├── add_finalizado_en.sql     Opcional: registra el cierre de cada solicitud (tiempo de resolución del dashboard)
+│   ├── setup_asignacion_casos.sql  Personal de asesorías, asignación de casos y sus reglas (RLS + función)
+│   ├── proteger_rol_perfiles.sql   Solo una administradora puede dar o cambiar roles
 │   └── alter_storage_rls.sql
 │
 ├── docs/                         Manual de uso y material de capacitación
@@ -408,7 +430,24 @@ supabase-sql/alter_storage_rls.sql
 
 Crea dos buckets públicos: `publicacion-imagenes` y `publicacion-pdfs`.
 
-### 4. Generar claves VAPID
+### 4. Asignación de casos y personal de asesorías
+
+Ejecuta, en este orden, desde el **SQL Editor**:
+
+```
+supabase-sql/setup_asignacion_casos.sql
+supabase-sql/proteger_rol_perfiles.sql
+```
+
+| Tabla / función | Propósito |
+|:---|:---|
+| `personal_asesoria` | Quién forma parte del personal y con qué cargo (se retira desactivando, no borrando) |
+| `asignaciones_caso` | Quién tuvo cada caso y cuándo (máximo dos vigentes por caso) |
+| `asignar_caso()` | Única vía para asignar: exige ser la abogada institucional activa |
+
+El segundo script cierra un hueco de `TODO_EN_UNO.sql`: la política `perfiles_update_auth` deja que cualquier cuenta con sesión cambie cualquier fila de `perfiles`, también su propio `rol`. Con él, solo una administradora puede dar o cambiar roles. Después de ejecutarlos: Usuarias → Personal de asesorías → agrega a la abogada institucional.
+
+### 5. Generar claves VAPID
 
 ```bash
 npx web-push generate-vapid-keys
@@ -416,7 +455,7 @@ npx web-push generate-vapid-keys
 
 Guarda el par de claves en las variables de entorno de la Edge Function.
 
-### 5. Desplegar la Edge Function
+### 6. Desplegar la Edge Function
 
 ```bash
 supabase functions deploy send-notification

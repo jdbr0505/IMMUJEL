@@ -11,6 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../ds.css?v=1">
     <title>Fundamentos Legales | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +29,7 @@
     <link rel="apple-touch-icon" href="../Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="../manifest.json">
 </head>
-<body class="antialiased">
+<body class="antialiased ds">
 
     <!-- ========== HEADER / NAVBAR (mismo que Home y Sobre Nosotras) ========== -->
      <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all border-b border-purple-100">
@@ -104,38 +105,35 @@
         </div>
     </header>
 
-    <!-- ========== HERO SECTION ========== -->
-    <section class="relative overflow-hidden">
-        <div class="absolute inset-0" style="background:linear-gradient(135deg, var(--deep-blue) 0%, var(--blue-primary) 50%, color-mix(in srgb, var(--blue-primary) 70%, black) 100%);"></div>
-        <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 30% 40%, rgba(3,98,207,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(65,144,235,0.3) 0%, transparent 50%);"></div>
-        <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-gavel mr-2"></i>MARCO LEGAL</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Fundamentos Legales</h1>
-                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Las leyes y normativas que respaldan nuestra labor en defensa de los derechos de las mujeres en el Municipio Lagunillas.</p>
-            </div>
+    <!-- ========== CABECERA DE PÁGINA ========== -->
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Fundamentos</span>
+                <span class="page-word">Legales</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Las leyes y normativas que respaldan nuestra labor en defensa de los derechos de las mujeres en el Municipio Lagunillas.</p>
         </div>
     </section>
 
     <!-- ========== CONTENIDO PRINCIPAL ========== -->
-    <main class="container mx-auto px-4 py-12 max-w-6xl relative">
-        <div class="relative z-10">
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-6xl relative">
 
             <!-- ===== BASE CONSTITUCIONAL ===== -->
             <section class="mb-16">
-                <div class="rounded-2xl p-8 md:p-10 mb-10 text-white relative overflow-hidden" style="background:linear-gradient(135deg,var(--deep-blue) 0%,var(--purple-primary) 60%,var(--blue-primary) 100%);">
-                    <div class="absolute right-0 top-0 bottom-0 flex items-center pr-6 pointer-events-none select-none" aria-hidden="true">
-                        <img src="../Images/HEAD.svg" alt="" class="w-52 h-auto opacity-10">
-                    </div>
-                    <div class="relative z-10">
+                <div class="cta-band mt-0 mb-10 reveal">
+                    <div>
                         <span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
                             <i class="fas fa-landmark"></i> Base Constitucional
                         </span>
-                        <h2 class="text-2xl md:text-3xl font-black mb-3">Constitución de la República Bolivariana de Venezuela (CRBV)</h2>
-                        <p class="text-white/85 text-sm md:text-base max-w-2xl leading-relaxed mb-5">
+                        <h2>Constitución de la República Bolivariana de Venezuela (CRBV)</h2>
+                        <p>
                             Promulgada el <strong>30 de diciembre de 1999</strong>, la CRBV establece los pilares fundamentales de igualdad, no discriminación y protección integral que sustentan toda la legislación en materia de derechos de la mujer en Venezuela.
                         </p>
-                        <a href="#" data-pdf="crbv-1999" class="pdf-link inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-2.5 px-5 rounded-full text-sm transition-all">
+                    </div>
+                    <div class="cta-actions">
+                        <a href="#" data-pdf="crbv-1999" class="pdf-link hbtn hbtn--outline-light">
                             <i class="fas fa-spinner fa-spin text-xs"></i> Verificando...
                         </a>
                     </div>
@@ -277,9 +275,11 @@
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-16 w-auto mx-auto md:mx-0 mb-3" loading="lazy">
-                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                <div class="foot-brand">
+                    <a href="../index.html" class="foot-logo" aria-label="IMMUJEL, ir al inicio">
+                        <img src="../Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-20 md:h-24 w-auto" loading="lazy">
+                    </a>
+                    <p class="text-gray-600 text-sm font-semibold">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
@@ -295,9 +295,9 @@
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
                     <div class="flex justify-center md:justify-start space-x-5">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Instagram de IMMUJEL"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Facebook de IMMUJEL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="WhatsApp de IMMUJEL"><i class="fab fa-whatsapp"></i></a>
                     </div>
                     <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
                 </div>
@@ -347,7 +347,7 @@
                     btn.style.pointerEvents = 'none';
                     btn.style.cursor = 'default';
                     if (isBtn) {
-                        btn.style.background = 'linear-gradient(135deg,#9CA3AF,#6B7280)';
+                        btn.style.background = 'linear-gradient(135deg,#6B7280,#4B5563)';
                         btn.innerHTML = '<i class="fas fa-clock mr-1 text-xs"></i> Próximamente disponible';
                     } else {
                         btn.style.color = '#9CA3AF';

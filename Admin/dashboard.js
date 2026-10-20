@@ -90,6 +90,16 @@
     if (res.error) throw res.error;
     var mapa = {};
     res.data.forEach(function (p) { mapa[p.id] = p.nombre_completo || p.nombre_usuario || 'Asesora'; });
+
+    // El personal de asesorías también puede ser responsable de un caso aunque su rol sea "usuaria" (las defensoras, por
+    // ejemplo). Si la tabla todavía no existe o falla, se sigue con los nombres de arriba: es solo un complemento.
+    var personal = await supabase.from('personal_asesoria').select('perfil:perfiles!perfil_id(id, nombre_completo, nombre_usuario)');
+    if (!personal.error && personal.data) {
+      personal.data.forEach(function (fila) {
+        var p = fila.perfil;
+        if (p && !mapa[p.id]) mapa[p.id] = p.nombre_completo || p.nombre_usuario || 'Asesora';
+      });
+    }
     return mapa;
   }
 
