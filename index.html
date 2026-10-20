@@ -11,6 +11,8 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="home.css?v=11">
+    <script>document.documentElement.className += ' js';</script>
     <title>IMMUJEL | Instituto Municipal de la Mujer de Lagunillas</title>
     <!-- Tailwind CSS v3 + Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,16 +28,32 @@
     <link rel="apple-touch-icon" href="./Images/LOGO IMMUJEL.png">
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="antialiased" id="main-content">
+<body class="antialiased home">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- Símbolo ♀ de IMMUJEL: silueta real del logotipo (Images/HEAD.svg) en dos capas que se pintan desde CSS:
+         --venus-fill (relleno) y --venus-line (contorno desplazado). Así toma el color de cada tema. -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+            <path id="venus-shape" vector-effect="non-scaling-stroke" d="M 356.3 382.7 C 356.3 379.1 356.3 375.4 356.3 371.8 C 356.3 365 357.1 363.9 363.8 364 C 367.4 364 368.9 362.4 369.7 359.2 C 378.3 323.5 375.4 288.3 361 255 C 334.9 194.8 288.1 160.3 223.3 150.5 C 195.6 146.4 168.4 150.3 142.5 160.3 C 90.9 180.4 56.1 217 39.1 270 C 27 307.7 28.3 345.4 42.9 381.8 C 66.3 440.3 109.8 475.8 171.6 488.6 C 175.1 489.3 176.5 490.4 176.4 494.1 C 176.2 503 176.2 512 176.5 520.9 C 176.6 524.8 175.1 525.7 171.5 525.7 C 160.9 525.4 150.2 525.6 139.6 525.6 C 134.4 525.5 129.8 527 126.1 530.9 C 120.6 536.9 120.7 555.8 126.3 561.7 C 130 565.6 134.8 566.8 140 566.8 C 150.6 566.9 161.2 567.1 171.8 566.9 C 175.4 566.8 176.6 567.9 176.5 571.5 C 176.2 576.2 176.3 580.9 176.5 585.6 C 176.7 592.8 181.6 598.6 188.6 600.1 C 195.1 601.5 201.6 601.2 208.1 600.4 C 216.3 599.4 221.5 593.4 221.8 584.9 C 222 580.6 222.1 576.1 221.9 571.8 C 221.7 567.9 223.1 566.8 226.9 566.9 C 237.6 567.1 248.4 567.1 259.1 567 C 270.7 567 277 560.7 277.2 549 C 277.2 546.8 277.3 544.5 277.2 542.2 C 276.9 532 270.5 525.7 260.1 525.6 C 249.1 525.6 238 525.4 227 525.7 C 222.5 525.9 221.6 524.2 221.7 520.2 C 222.1 512.8 221.7 505.4 222.1 498 C 222.3 493.6 220.6 492.5 216.6 492.6 C 210.2 492.9 203.8 492.8 197.5 492.7 C 185.6 492.4 177.1 484.3 176.5 472.6 C 176.3 467.4 176.3 462.3 176.6 457.1 C 177.2 448.8 181.4 442.8 189.1 439.7 C 192.5 438.4 193.2 436.6 193.2 433.3 C 192.9 416.8 192.9 400.3 192.9 383.8 C 192.9 381.8 192.4 379 195.7 379.2 C 198.8 379.4 197.9 382 197.9 383.8 C 197.9 400.3 198 416.9 197.8 433.4 C 197.7 437 198.8 438 202.3 438 C 205.7 438 207.1 437.3 207.1 433.5 C 206.9 417.4 206.9 401.3 207 385.3 C 207 383.3 205.3 379.4 209.2 379.6 C 212.7 379.6 211.3 383.3 211.3 385.5 C 211.5 401.7 211.4 417.9 211.4 434.1 C 211.4 437.3 213.4 438.8 215.8 437.6 C 217.5 436.6 216.9 434.9 216.9 433.5 C 216.6 417.1 216.4 400.8 217 384.4 C 217 383 216 380.4 218.3 380.4 C 220.2 380.4 219.4 382.9 219.4 384.3 C 219.5 398.6 219.4 413 219.4 427.4 C 219.4 429.9 219.3 432.3 219.3 434.7 C 219.3 435.8 219 437.6 220.6 437.6 C 222.6 437.7 222.2 435.8 222.3 434.6 C 222.3 433.5 222.3 432.4 222.3 431.4 C 222.2 405.9 222.1 380.5 222 355.1 C 222 349.8 222 344.5 222.3 339.2 C 222.4 336.3 221.6 335.2 218.5 335.3 C 206 335.5 193.6 335.5 181.2 335.3 C 177.9 335.2 177.2 336.2 177 339.3 C 176.8 343.6 179.4 347 179.8 350.8 C 180.6 357.5 180.1 364.4 180 371.2 C 180 372.3 180.5 373.7 178.7 374.1 C 175.6 374.9 175.7 377.5 176.4 379.6 C 177.4 382.3 177.2 384.9 177.2 387.6 C 177.3 403.2 177.1 418.8 177.3 434.4 C 177.4 438 176.2 438.6 173 437.7 C 165.7 435.7 158.7 433.1 151.8 430 C 103.2 407.3 72.2 354 84.6 294.8 C 95.5 242.7 142.1 203.5 192.9 200.5 C 227 198.5 257 207.6 282.7 230.1 C 302.7 247.6 315.6 269.6 320.9 295.6 C 325.2 316.6 324.6 337.8 317.4 358.3 C 316.4 361.2 316.1 363.4 320.6 362.8 C 335.4 360.8 349.6 366.3 355.9 385 C 356.2 383.6 356.3 383.1 356.3 382.7 Z M 193.2 370.3 C 193.5 374.6 190.8 374.2 187.9 374.4 C 184.7 374.5 183.3 373.6 183.4 370.1 C 183.7 363.9 183.4 357.7 183.5 351.5 C 183.5 348.1 184 344.6 188.3 344.6 C 192.8 344.5 193.2 348.2 193.3 351.7 C 193.3 354.7 193.3 357.8 193.3 360.8 L 193.1 360.8 C 193.1 364 192.9 367.1 193.2 370.3 Z M 207.3 368.4 C 207.3 374.9 205.7 376.1 199.2 374.8 C 197.4 374.5 197.1 373.4 197.1 372 C 197.1 364.7 197 357.4 197.2 350.2 C 197.3 347.3 198.6 344.7 202 344.6 C 205.5 344.5 207 347 207.2 350.2 C 207.3 354 207.2 357.8 207.2 361.6 C 207.2 361.6 207.2 361.6 207.3 361.6 C 207.3 363.8 207.3 366.1 207.3 368.4 Z M 180.1 383.4 C 180.1 382.1 179.5 379.9 181.7 379.8 C 184.3 379.6 183.8 381.9 183.8 383.4 C 183.9 400.7 184 417.9 184 435.2 C 184 436.7 184.6 439.4 181.7 439.2 C 179.3 439 180 436.7 180 435.1 C 180 426.5 180 417.9 180 409.3 L 180.1 409.3 C 180.1 400.7 180 392 180.1 383.4 Z M 211.1 349.8 C 211.2 348.2 211.7 346.2 213.7 346 C 216 345.9 216.8 347.9 216.8 349.7 C 217 357.3 217.1 364.8 217 372.4 C 216.9 374.3 215.4 375.6 213.3 375.5 C 210.9 375.4 210.8 373.8 210.9 372 C 210.9 368.5 210.9 365 210.9 361.6 C 210.9 361.6 211 361.6 211 361.6 C 211 357.6 210.9 353.7 211.1 349.8 Z M 220.7 348.8 L 220.7 373.7 C 218.7 365.4 219.8 357.1 220.7 348.8 Z M 220.7 348.8"/>
+            <linearGradient id="venus-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" style="stop-color: var(--venus-a, currentColor)"/>
+                <stop offset="1" style="stop-color: var(--venus-b, currentColor)"/>
+            </linearGradient>
+        </defs>
+        <symbol id="venus-mark" viewBox="26 144 369 473">
+            <use href="#venus-shape" style="fill: var(--venus-fill, currentColor)"/>
+            <use href="#venus-shape" transform="translate(16 12)" style="fill: none; stroke: var(--venus-line, currentColor); stroke-width: 1.5; stroke-linejoin: round"/>
+        </symbol>
+    </svg>
 
      <!-- ========== HEADER / NAVBAR  ========== -->
      <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-purple-100 transition-all">
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
          <!-- Logo y enlace al panel -->
             <div class="flex items-center space-x-4">
-                <a href="./index.html" class="flex items-center space-x-2 transition-transform hover:scale-105">
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 md:h-16 w-auto">
+                <a href="./index.html" class="brand-tab" aria-label="IMMUJEL, ir al inicio">
+                    <img src="./Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-14 md:h-20 w-auto">
                 </a>
                 <!-- Contenedor del botón Panel que se llena con auth.js -->
                 <div id="panel-link"></div>
@@ -94,9 +112,9 @@
                    
                   <!-- Redes sociales en navbar (visible solo en escritorio) -->
                     <li class="hidden lg:flex space-x-4 pl-4 border-l border-gray-200">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-facebook-f text-xl"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600"><i class="fab fa-whatsapp text-xl"></i></a> 
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de IMMUJEL" class="text-gray-500 hover:text-purple-600"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" aria-label="Facebook de IMMUJEL" class="text-gray-500 hover:text-purple-600"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de IMMUJEL" class="text-gray-500 hover:text-purple-600"><i class="fab fa-whatsapp text-xl"></i></a>
                     </li>
                 </ul>
                 <div id="auth-section" class="flex items-center justify-center w-full space-x-3 mt-4 lg:mt-0 lg:ml-8 lg:w-auto lg:justify-start">
@@ -106,209 +124,215 @@
         </div>
     </header>
 
-    <!-- ========== CARRUSEL INSTITUCIONAL  ========== -->
-    <div class="relative w-full mt-6 reveal">
-        <!-- Contenedor con gradiente lavanda → blanco -->
-        <div class="py-10 md:py-14 border-t-4 border-b-4" style="background:linear-gradient(180deg,color-mix(in srgb, var(--lavender) 30%, white) 0%,white 55%,white 100%);border-color:color-mix(in srgb, var(--purple-primary) 20%, transparent);">
-            <div class="relative max-w-5xl mx-auto px-6">
-                
-                <!-- Carrusel -->
-                <div class="relative overflow-hidden rounded-3xl shadow-xl shadow-purple-200/50">
-                    <!-- Slides -->
-                    <div id="slides" class="flex transition-transform duration-700 ease-in-out">
-                        <!-- Slide 1 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/First Slade.webp" alt="Conoce IMMUJEL"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
+    <main id="main-content" tabindex="-1">
+
+        <!-- ========== HERO: bienvenida + láminas institucionales ========== -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-bg" aria-hidden="true"></div>
+            <div class="wrap hero-grid">
+                <div class="hero-copy">
+                    <h1 id="hero-title" class="hero-title" data-rise style="--i:0"><span class="hero-pre">Bienvenida a</span> <span class="hero-brand">IMMUJEL</span></h1>
+                    <p class="hero-lead" data-rise style="--i:1">Somos el Instituto Municipal de la Mujer de Lagunillas, un espacio de apoyo, <mark class="hl">acompañamiento y defensa de tus derechos</mark>.</p>
+                    <div class="hero-actions" data-rise style="--i:2">
+                        <a href="./Forms/form.html" class="hbtn hbtn--solid">Solicita tu asesoría <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="tel:+584246540241" class="hbtn hbtn--ghost"><i class="fa-solid fa-phone" aria-hidden="true"></i> Llámanos ahora</a>
+                    </div>
+                    <ul class="hero-facts" data-rise style="--i:3">
+                        <li><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i> Atención 100% gratuita</li>
+                        <li><i class="fa-solid fa-user-secret" aria-hidden="true"></i> Puedes pedir tu asesoría de forma anónima</li>
+                        <li><i class="fa-solid fa-map-marker-alt" aria-hidden="true"></i> Ciudad Ojeda, Edo. Zulia</li>
+                    </ul>
+                </div>
+
+                <!-- Láminas institucionales (lógica en js/home.js) -->
+                <div class="poster" data-poster role="region" aria-roledescription="carousel" aria-label="Láminas institucionales de IMMUJEL">
+                    <div class="poster-stage">
+                        <!-- Emblema: la lámina queda dentro del símbolo ♀ del logotipo (único uso del símbolo en la página) -->
+                        <div class="emblem" aria-hidden="true">
+                            <span class="emblem-glow"></span>
+                            <span class="emblem-orbit"></span>
+                            <svg class="venus venus--emblem" focusable="false"><use href="#venus-mark" width="100%" height="100%"/></svg>
+                            <span class="emblem-dot emblem-dot--a"></span>
+                            <span class="emblem-dot emblem-dot--b"></span>
+                            <span class="emblem-dot emblem-dot--c"></span>
                         </div>
-                        <!-- Slide 2 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Second Slade.webp" alt="Nuestra Historia"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 3 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Third Slade.webp" alt="Nuestra Labor"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 4 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Fourth Slade.webp" alt="Red de Defensoría"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 5 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Fifth Slade.webp" alt="Apoyo Comunitario"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 6 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Sixth Slade.webp" alt="Construyendo Futuro"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 7 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Seventh Slade.webp" alt="Atención a la Comunidad"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
-                        </div>
-                        <!-- Slide 8 -->
-                        <div class="w-full flex-shrink-0 bg-white/80 backdrop-blur-sm rounded-3xl p-4">
-                            <img src="./Images/Eighth Slade.webp" alt="Estamos para Escuchar"
-                                class="w-full object-contain max-h-[450px] md:max-h-[550px] mx-auto drop-shadow-md"
-                                loading="lazy">
+                        <span class="poster-plate poster-plate--a" aria-hidden="true"></span>
+                        <span class="poster-plate poster-plate--b" aria-hidden="true"></span>
+                        <div class="poster-frame">
+                            <div class="poster-viewport" aria-live="off">
+                                <figure class="poster-slide" data-pos="0" role="group" aria-roledescription="slide" aria-label="1 de 8">
+                                    <img src="./Images/First Slade.webp" width="1600" height="2000" fetchpriority="high" decoding="async" draggable="false"
+                                         alt="Lámina: Conoce el Instituto Municipal de la Mujer de Lagunillas, una historia de compromiso con las mujeres y la comunidad.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="1" role="group" aria-roledescription="slide" aria-label="2 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Second Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Nuestra historia: IMMUJEL nació en 2009 como Instituto Autónomo y hoy es una institución viva, con presencia real y compromiso firme hacia la comunidad femenina.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="out-r" role="group" aria-roledescription="slide" aria-label="3 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Third Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Nuestra labor: asesoría jurídica, atención social y atención psicológica. Porque cada mujer merece vivir con dignidad, seguridad y bienestar.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="out-r" role="group" aria-roledescription="slide" aria-label="4 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Fourth Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Defensoras de la comunidad: la Red de Defensoría de IMMUJEL orienta y acompaña a las mujeres en el proceso de denuncia frente a situaciones de violencia.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="out-l" role="group" aria-roledescription="slide" aria-label="5 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Fifth Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Apoyo comunitario en números 2024-2025: mujeres que participaron en formación y sensibilización, recibieron atención en salud integral y asesoría legal, jornadas sociales y actividades comunitarias.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="out-l" role="group" aria-roledescription="slide" aria-label="6 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Sixth Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Construyendo futuro: talleres, cursos y capacitaciones para fortalecer las capacidades de cada mujer y construir redes de apoyo solidarias.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="out-l" role="group" aria-roledescription="slide" aria-label="7 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Seventh Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Atención a la comunidad: línea de atención segura, confidencial y confiable por WhatsApp, 0424-6540241.">
+                                </figure>
+                                <figure class="poster-slide" data-pos="-1" role="group" aria-roledescription="slide" aria-label="8 de 8" aria-hidden="true" inert>
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./Images/Eighth Slade.webp" width="1600" height="2000" decoding="async" draggable="false"
+                                         alt="Lámina Estamos para escucharte: el Instituto abre sus puertas para acompañar y brindar apoyo integral a las mujeres de la comunidad.">
+                                </figure>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Flechas de navegación -->
-                    <button id="prev" aria-label="Anterior"
-                            class="absolute left-4 top-1/2 -translate-y-1/2 carousel-arrow text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition z-10 flex items-center justify-center">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button id="next" aria-label="Siguiente"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 carousel-arrow text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition z-10 flex items-center justify-center">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-
-                    <!-- Indicadores -->
-                    <div id="indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== BIENVENIDA Y MISIÓN ========== -->
-    <section class="container mx-auto px-4 py-12 text-center max-w-4xl">
-        <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">Bienvenida a <span class="text-purple-700">IMMUJEL</span></h1>
-        <p class="text-gray-600 text-lg md:text-xl">Somos el Instituto Municipal de la Mujer de Lagunillas, un espacio de apoyo, acompañamiento y defensa de tus derechos.</p>
-        <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full mt-6"></div>
-    </section>
-
-    <!-- ========== NUESTROS SERVICIOS (Enfoque principal) ========== -->
-    <section class="bg-white/40 py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Nuestros Servicios</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-gavel text-purple-700 text-2xl"></i></div>
-                    <h3 class="text-xl font-bold mb-2">Asesorías Legales</h3>
-                    <p class="text-gray-600">Acompañamiento especializado en el area juridica basado en violencia de género.</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-brain text-blue-700 text-2xl"></i></div>
-                    <h3 class="text-xl font-bold mb-2">Apoyo Psicológico</h3>
-                    <p class="text-gray-600">Acompañamiento especializado en el área psicológica basado en el fortalecimiento emocional.</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition">
-                    <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-chalkboard-user text-pink-700 text-2xl"></i></div>
-                    <h3 class="text-xl font-bold mb-2">Formación y Empoderamiento</h3>
-                    <p class="text-gray-600">Talleres y programas para el desarrollo personal y profesional.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== LÍNEAS DE ATENCIÓN ========== -->
-   <section class="container mx-auto px-4 py-12">
-    <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-lg shadow-purple-200/50 border border-purple-100">
-        <div class="text-center max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-3">Líneas de Atención</h2>
-            <p class="text-gray-600 mb-6">Estamos disponibles para escucharte y brindarte apoyo inmediato.</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="tel:+584246540241" class="inline-flex items-center justify-center gap-2 brand-solid-btn text-white font-semibold py-3 px-6 rounded-full transition shadow-md">
-                    <i class="fas fa-phone-alt"></i> Llámanos ahora
-                </a>
-                <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="inline-flex items-center justify-center gap-2 brand-sky-btn text-white font-semibold py-3 px-6 rounded-full transition shadow-md">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
-            </div>
-            <p class="text-sm text-gray-500 mt-6 flex items-center justify-center gap-2">
-                <i class="far fa-clock" style="color:var(--purple-primary);"></i> Horario de atención: Lunes a viernes de 8:00 AM a 3:00 PM
-            </p>
-        </div>
-    </div>
-</section>
-
-    <!-- ========== EVENTOS Y SEMANARIO ========== -->
-    <section class="container mx-auto px-4 py-12 reveal">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Actividades y Comunicación</h2>
-        <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg reveal-scale">
-                <div class="h-48 bg-blue-200 flex items-center justify-center text-gray-500"><i class="fas fa-newspaper text-4xl text-blue-500"></i></div>
-                <div class="p-5">
-                    <h3 class="text-xl font-bold mb-2">Semanario Institucional</h3>
-                    <p class="text-gray-600 mb-4">Mantente informada sobre nuestras gestiones, actividades, logros y eventos semanales.</p>
-                    <a href="./navegacion/semanario.html" class="text-purple-600 font-semibold hover:underline">Ver ediciones →</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg reveal-scale">
-                <div class="h-48 bg-purple-200 flex items-center justify-center text-gray-500"><i class="fas fa-bullhorn text-4xl text-purple-500"></i></div>
-                <div class="p-5">
-                    <h3 class="text-xl font-bold mb-2">Noticiero</h3>
-                    <p class="text-gray-600 mb-4">Entérate de las últimas noticias y novedades de IMMUJEL.</p>
-                    <a href="./navegacion/noticiero.html" class="text-purple-600 font-semibold hover:underline">Ver noticias →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== SECCIÓN DE IMPACTO ========== -->
-    <section class="relative py-20 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 opacity-95"></div>
-        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 25% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 75% 50%, rgba(165,6,173,0.3) 0%, transparent 50%);"></div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="text-center mb-12">
-                <span class="inline-block text-pink-300 text-sm font-semibold uppercase tracking-widest mb-2">Nuestro Impacto</span>
-                <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Transformando Vidas</h2>
-                <p class="text-purple-200 max-w-xl mx-auto">Cada número representa una mujer que recibió apoyo, orientación y herramientas para construir un futuro mejor.</p>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
-                    <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="2800">0</span><span class="text-pink-300">+</span>
+                    <div class="poster-controls">
+                        <button type="button" class="poster-btn poster-prev" aria-label="Lámina anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+                        <div class="poster-dots" role="group" aria-label="Elegir lámina"></div>
+                        <span class="poster-count" aria-hidden="true"><span class="poster-n">1</span> / 8</span>
+                        <button type="button" class="poster-btn poster-next" aria-label="Lámina siguiente"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+                        <button type="button" class="poster-btn poster-btn--quiet poster-pause" aria-label="Pausar el cambio automático de láminas" aria-pressed="false"><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
                     </div>
-                    <p class="text-purple-200 text-sm">Mujeres Atendidas</p>
-                </div>
-                <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
-                    <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="85">0</span><span class="text-pink-300">+</span>
-                    </div>
-                    <p class="text-purple-200 text-sm">Talleres Realizados</p>
-                </div>
-                <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
-                    <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="150">0</span><span class="text-pink-300">+</span>
-                    </div>
-                    <p class="text-purple-200 text-sm">Defensoras en el Municipio</p>
-                </div>
-                <div class="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all hover:scale-105 reveal">
-                    <div class="text-4xl font-black text-white mb-1">
-                        <span class="counter" data-target="100">0</span><span class="text-pink-300">%</span>
-                    </div>
-                    <p class="text-purple-200 text-sm">Gratuito</p>
                 </div>
             </div>
-            <div class="mt-12 text-center">
-                <a href="./Forms/form.html" class="inline-flex items-center gap-2 bg-white text-purple-800 px-8 py-3 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all">
-                    Solicita tu asesoría <i class="fas fa-arrow-right"></i>
-                </a>
+        </section>
+
+        <!-- ========== NUESTROS SERVICIOS ========== -->
+        <section class="svc sheet" aria-labelledby="svc-title">
+            <div class="wrap svc-grid">
+                <div class="svc-intro">
+                    <h2 id="svc-title" class="sec-title">Nuestros <span class="sec-accent">Servicios</span></h2>
+                    <p class="sec-lead">Trabajamos cada día para acompañar y proteger a las mujeres que enfrentan situaciones de violencia basada en género, y para brindar apoyo integral a todas las mujeres de nuestra comunidad.</p>
+                </div>
+                <div class="svc-cards" data-stagger>
+                    <article class="svc-card svc-card--feature">
+                        <span class="svc-icon" aria-hidden="true"><i class="fa-solid fa-gavel"></i></span>
+                        <h3>Asesorías Legales</h3>
+                        <p>Acompañamiento especializado en el área jurídica basado en violencia de género.</p>
+                        <a class="svc-link" href="./Forms/form.html">Solicitar asesoría <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                    <article class="svc-card">
+                        <span class="svc-icon" aria-hidden="true"><i class="fa-solid fa-brain"></i></span>
+                        <h3>Apoyo Psicológico</h3>
+                        <p>Acompañamiento especializado en el área psicológica basado en el fortalecimiento emocional.</p>
+                        <a class="svc-link" href="./Forms/form.html">Solicitar apoyo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                    <article class="svc-card">
+                        <span class="svc-icon" aria-hidden="true"><i class="fa-solid fa-chalkboard-user"></i></span>
+                        <h3>Formación y Empoderamiento</h3>
+                        <p>Talleres y programas para el desarrollo personal y profesional.</p>
+                        <a class="svc-link" href="./navegacion/Programas.html">Conocer programas <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- ========== LÍNEAS DE ATENCIÓN ========== -->
+        <section class="contact" aria-labelledby="contact-title">
+            <div class="wrap">
+                <div class="contact-panel">
+                    <div class="contact-copy">
+                        <h2 id="contact-title" class="sec-title">Líneas de <span class="sec-accent">Atención</span></h2>
+                        <p class="sec-lead">Estamos disponibles para escucharte y brindarte apoyo inmediato.</p>
+                        <p class="contact-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> Línea segura, confidencial y confiable.</p>
+                        <p class="contact-note"><i class="far fa-clock" aria-hidden="true"></i> Horario de atención: Lunes a viernes de 8:00 AM a 3:00 PM</p>
+                    </div>
+                    <div class="contact-actions">
+                        <a class="contact-row" href="tel:+584246540241">
+                            <span class="contact-ico" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+                            <span class="contact-text"><strong>Llámanos ahora</strong><span>0424-6540241</span></span>
+                            <i class="fa-solid fa-arrow-right contact-go" aria-hidden="true"></i>
+                        </a>
+                        <a class="contact-row contact-row--wa" href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer">
+                            <span class="contact-ico" aria-hidden="true"><i class="fab fa-whatsapp"></i></span>
+                            <span class="contact-text"><strong>WhatsApp</strong><span>Escríbenos por mensaje</span></span>
+                            <i class="fa-solid fa-arrow-right contact-go" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== ACTIVIDADES Y COMUNICACIÓN ========== -->
+        <section class="news sheet" aria-labelledby="news-title">
+            <div class="wrap">
+                <h2 id="news-title" class="sec-title">Actividades y <span class="sec-accent">Comunicación</span></h2>
+                <div class="news-grid" data-stagger>
+                    <article class="news-card">
+                        <div class="news-art news-art--a" aria-hidden="true">
+                            <i class="fa-solid fa-newspaper"></i>
+                        </div>
+                        <div class="news-body">
+                            <h3>Semanario Institucional</h3>
+                            <p>Mantente informada sobre nuestras gestiones, actividades, logros y eventos semanales.</p>
+                            <a class="svc-link" href="./navegacion/semanario.html">Ver ediciones <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </article>
+                    <article class="news-card">
+                        <div class="news-art news-art--b" aria-hidden="true">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <div class="news-body">
+                            <h3>Noticiero</h3>
+                            <p>Entérate de las últimas noticias y novedades de IMMUJEL.</p>
+                            <a class="svc-link" href="./navegacion/noticiero.html">Ver noticias <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== IMPACTO: banner Transformando Vidas (sigue el tema activo) ========== -->
+        <section class="impact sheet" aria-labelledby="impact-title">
+            <div class="wrap">
+                <div class="impact-panel">
+                    <div class="impact-copy">
+                        <h2 id="impact-title" class="impact-title">Transformando Vidas</h2>
+                        <p class="impact-lead">Cada número representa una mujer que recibió apoyo, orientación y herramientas para construir un futuro mejor.</p>
+                        <a href="./Forms/form.html" class="hbtn hbtn--light">Solicita tu asesoría <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <dl class="impact-stats">
+                        <div class="impact-stat">
+                            <dt>Mujeres Atendidas</dt>
+                            <dd><span class="counter" data-target="2800">2800</span><span class="impact-sfx">+</span></dd>
+                        </div>
+                        <div class="impact-stat">
+                            <dt>Talleres Realizados</dt>
+                            <dd><span class="counter" data-target="85">85</span><span class="impact-sfx">+</span></dd>
+                        </div>
+                        <div class="impact-stat">
+                            <dt>Defensoras en el Municipio</dt>
+                            <dd><span class="counter" data-target="150">150</span><span class="impact-sfx">+</span></dd>
+                        </div>
+                        <div class="impact-stat">
+                            <dt>Gratuito</dt>
+                            <dd><span class="counter" data-target="100">100</span><span class="impact-sfx">%</span></dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <!-- ========== FOOTER ========== -->
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
         <div class="container mx-auto px-4 py-10">
             <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div>
-                    <img src="./Images/LOGO IMMUJEL.png" alt="IMMUJEL" class="h-12 mx-auto md:mx-0 mb-3" loading="lazy">
-                    <p class="text-gray-600 text-sm">Instituto Municipal de la Mujer de Lagunillas</p>
+                <div class="foot-brand">
+                    <a href="./index.html" class="foot-logo" aria-label="IMMUJEL, ir al inicio">
+                        <img src="./Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-20 md:h-24 w-auto" loading="lazy">
+                    </a>
+                    <p class="text-gray-600 text-sm font-semibold">Instituto Municipal de la Mujer de Lagunillas</p>
                     <p class="text-gray-500 text-xs mt-2"><i class="fas fa-map-marker-alt mr-1"></i> Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
                 </div>
                 <div>
@@ -324,11 +348,9 @@
                 <div>
                     <h3 class="font-bold text-gray-800 mb-3">Síguenos</h3>
                     <div class="flex justify-center md:justify-start space-x-5">
-                        <a href="https://www.instagram.com/immujellags_/" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-whatsapp"></i></a>
-                        <a href="https://twitter.com/immujellags" target="_blank" class="text-gray-500 hover:text-purple-600 text-xl"><i class="fab fa-x-twitter"></i></a>
-                    </div>
+                        <a href="https://www.instagram.com/immujellags_/" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Instagram de IMMUJEL"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="Facebook de IMMUJEL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" class="social-chip" aria-label="WhatsApp de IMMUJEL"><i class="fab fa-whatsapp"></i></a>                    </div>
                     <p class="text-sm text-gray-500 mt-4">Correo: immujel2024@hotmail.com</p>
                 </div>
             </div>
@@ -338,84 +360,14 @@
         </div>
     </footer>
 
-    <script>
-    // ---------- CARRUSEL INSTITUCIONAL ----------
-    (function() {
-        const slidesContainer = document.getElementById('slides');
-        const indicatorsContainer = document.getElementById('indicators');
-        if (!slidesContainer || !indicatorsContainer) return;
-        const totalSlides = slidesContainer.children.length;
-        let currentIndex = 0;
-
-        // Generar indicadores con los colores oficiales
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('button');
-            dot.className = `w-3 h-3 rounded-full ${i === 0 ? 'dot-active' : 'dot-inactive'} transition-all duration-300`;
-            dot.setAttribute('aria-label', `Ir a diapositiva ${i + 1}`);
-            dot.addEventListener('click', () => showSlide(i));
-            indicatorsContainer.appendChild(dot);
-        }
-        const indicators = document.querySelectorAll('#indicators button');
-
-        function showSlide(index) {
-            if (index < 0) index = totalSlides - 1;
-            if (index >= totalSlides) index = 0;
-            slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-            currentIndex = index;
-            indicators.forEach((dot, i) => {
-                dot.classList.toggle('dot-active', i === index);
-                dot.classList.toggle('dot-inactive', i !== index);
-                dot.classList.toggle('w-3', i === index);
-                dot.classList.toggle('w-2', i !== index); // efecto de agrandamiento
-            });
-        }
-
-        document.getElementById('prev')?.addEventListener('click', () => showSlide(currentIndex - 1));
-        document.getElementById('next')?.addEventListener('click', () => showSlide(currentIndex + 1));
-        if (totalSlides > 0) setInterval(() => showSlide(currentIndex + 1), 6000);
-    })();
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Counter animation for impacto section
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-                const updateCount = () => {
-                    const target = parseInt(counter.getAttribute('data-target'));
-                    const current = parseInt(counter.innerText);
-                    const increment = Math.ceil(target / 30);
-                    if (current < target) {
-                        counter.innerText = current + increment;
-                        setTimeout(updateCount, 50);
-                    } else {
-                        counter.innerText = target;
-                    }
-                };
-                updateCount();
-            });
-        }
-
-        // Intersection Observer to trigger counter animation when visible
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    observer.disconnect();
-                }
-            });
-        });
-        const impactSection = document.querySelector('.counter');
-        if (impactSection) {
-            observer.observe(impactSection.closest('section') || impactSection.parentElement);
-        }
-    </script>
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
     <script src="./js/animations.js" defer></script>
     <script src="js/ui.js" defer></script>
+    <script src="./js/home.js?v=1" defer></script>
     <script src="./Login/Login_supabase.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/cookies.js"></script>

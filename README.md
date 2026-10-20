@@ -250,6 +250,7 @@ flowchart LR
 IMMUJEL/
 │
 ├── index.html                    Página principal
+├── home.css                      Estilos de la página principal (usa los tokens de tema)
 ├── styles.css                    Identidad visual y tema oscuro
 ├── sw.js                         Service Worker (offline + push)
 ├── manifest.json                 Manifiesto PWA
@@ -260,6 +261,7 @@ IMMUJEL/
 │   ├── animations.js             Animaciones de scroll
 │   ├── cookies.js                Consentimiento de cookies (banner + utilidades)
 │   ├── historial.js              Historial local de publicaciones vistas
+│   ├── home.js                   Página principal: carrusel de láminas, contadores y aparición (lógica probada en tests/)
 │   ├── sw-register.js            Registro del Service Worker
 │   └── ui.js                     Utilidades de interfaz
 │
