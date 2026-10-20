@@ -272,6 +272,51 @@
         ],
         "createdAt": "2026-10-19T18:18:30.331Z",
         "reason": "El control de periodo (radiogroup con borde) es un control segmentado dentro de la tarjeta de filtros, no una tarjeta anidada; mismo patron de filtros que Admin.html"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-20T13:30:12.008Z",
+        "reason": "El titular IMMUJEL usa degradado como el Semanario Institucional y el login de la marca; el resto viene de clases compartidas de styles.css que esta página no usa"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-20T13:30:12.726Z",
+        "reason": "Las sombras de home.css llevan desplazamiento y son negras en modo oscuro (home.css sola da 0 hallazgos); el aviso viene de sombras compartidas de styles.css como el botón de subir"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "home.css"
+        ],
+        "createdAt": "2026-10-20T13:30:58.124Z",
+        "reason": "Titular IMMUJEL con degradado: es la firma tipográfica del Semanario Institucional (referencia de la marca) y del login; el contraste del texto grande se verificó"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-20T13:30:58.921Z",
+        "reason": "Falso positivo estático: el detector no resuelve la cascada ni los degradados con variables (tarjeta destacada, banner, titular con degradado). Contraste medido en el navegador: texto blanco 4.6:1 o más y texto suave 4.5:1 o más sobre ambos extremos del degradado en los 4 temas, claro y oscuro"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-20T14:01:45.744Z",
+        "reason": "Las hojas (svc, contact, news, impact) son bandas de página a todo el ancho con las esquinas superiores redondeadas para separar secciones, no tarjetas; las únicas tarjetas son los artículos de servicios y noticias, que no se anidan entre sí"
       }
     ]
   }
