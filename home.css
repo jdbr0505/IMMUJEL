@@ -120,28 +120,9 @@ body.home.dark-theme {
 body.home.dark-theme .hbtn--solid { background: var(--accent); color: #1a0a2e; }
 body.home.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
 
-/* ===== Logotipo grande =====
-   LOGO IMMUJEL.png trae un 25 % de margen transparente arriba y abajo, por eso se veía diminuto: se usa la versión
-   recortada y en la cabecera cuelga como una pestaña blanca que sobresale de la barra. */
-.home .brand-tab { position: relative; z-index: 2; display: inline-flex; align-items: center; transition: transform 200ms var(--ease-out); }
-.home .brand-tab img { position: relative; display: block; }
-.home .brand-tab:active { transform: scale(0.98); }
-/* Con 1280 px o más el logotipo va sobre una pestaña blanca. La pestaña es un pseudo-elemento, así que no cambia el alto
-   ni el ancho de la barra; solo cuelga por debajo (clase cabecera-sola, la pone js/home.js) cuando el menú cabe en la
-   misma fila. Si el menú salta a una segunda fila, por ejemplo con el correo largo de una usuaria con sesión, la pestaña
-   se queda dentro de la barra para no tapar "Inicio". */
-@media (min-width: 1280px) {
-    .home .brand-tab { padding: 0 1rem; }
-    .home .brand-tab img { height: 4.25rem; }
-    .home .brand-tab::before {
-        content: ""; position: absolute; z-index: -1; inset: -0.45rem 0; border-radius: 0 0 1.5rem 1.5rem; background: #fff;
-        box-shadow: 0 18px 28px -20px var(--h-shadow);
-    }
-    .home.cabecera-sola .brand-tab::before { bottom: -1.6rem; }
-    .home #auth-section { margin-left: 1rem; }
-    .home header .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
-    .home #menu > ul > li ~ li { margin-left: 0.5rem; }
-}
+/* El logotipo de cabecera y pie usa Images/logo-immujel-recortado.png: LOGO IMMUJEL.png trae un 25 % de margen transparente
+   arriba y abajo y por eso se veía diminuto. La cabecera lo muestra a la par de la barra (h-12 md:h-14), sin colgar. */
+
 
 /* ===== Hojas: cada sección se apoya sobre la anterior con las esquinas superiores redondeadas ===== */
 .sheet, .contact {

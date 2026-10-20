@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="home.css?v=13">
+    <link rel="stylesheet" href="home.css?v=14">
     <script>document.documentElement.className += ' js';</script>
     <title>IMMUJEL | Instituto Municipal de la Mujer de Lagunillas</title>
     <!-- Tailwind CSS v3 + Font Awesome -->
@@ -52,8 +52,8 @@
         <div class="container mx-auto px-4 flex items-center justify-between flex-wrap py-2">
          <!-- Logo y enlace al panel -->
             <div class="flex items-center space-x-4">
-                <a href="./index.html" class="brand-tab" aria-label="IMMUJEL, ir al inicio">
-                    <img src="./Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-14 md:h-20 w-auto">
+                <a href="./index.html" class="flex items-center space-x-2 transition-transform hover:scale-105" aria-label="IMMUJEL, ir al inicio">
+                    <img src="./Images/logo-immujel-recortado.png" alt="IMMUJEL" width="756" height="500" class="h-12 md:h-14 w-auto">
                 </a>
                 <!-- Contenedor del botón Panel que se llena con auth.js -->
                 <div id="panel-link"></div>
@@ -74,7 +74,7 @@
 
             <!-- Menú principal (escritorio y móvil) -->
             <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
-                <ul class="flex flex-col lg:flex-row lg:space-x-8 items-center">
+                <ul class="flex flex-col lg:flex-row lg:space-x-5 items-center">
                     <li><a href="./index.html" class="block py-2 px-3 text-purple-700 font-bold border-b-2 border-purple-700 transition">INICIO</a></li>
                    
                     <!-- Dropdown Servicios  -->
@@ -117,7 +117,7 @@
                         <a href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de IMMUJEL" class="text-gray-500 hover:text-purple-600"><i class="fab fa-whatsapp text-xl"></i></a>
                     </li>
                 </ul>
-                <div id="auth-section" class="flex items-center justify-center w-full space-x-3 mt-4 lg:mt-0 lg:ml-8 lg:w-auto lg:justify-start">
+                <div id="auth-section" class="flex items-center justify-center w-full space-x-3 mt-4 lg:mt-0 lg:ml-4 lg:w-auto lg:justify-start">
                     <!-- Los botones se inyectan dinámicamente via auth.js -->
                 </div>
             </div>
@@ -367,7 +367,7 @@
     </button>
     <script src="./js/animations.js" defer></script>
     <script src="js/ui.js" defer></script>
-    <script src="./js/home.js?v=2" defer></script>
+    <script src="./js/home.js?v=3" defer></script>
     <script src="./Login/Login_supabase.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/cookies.js"></script>
