@@ -19,7 +19,7 @@
     { tipo: 'noticiero', etiqueta: 'Noticiero' }
   ];
   // Mismas opciones (y mismo texto) que el selector del formulario de asesorías.
-  var PARROQUIAS = ['Alonso de Ojeda (Paraute)', 'Libertad', 'Campo Lara', 'Eleazar López Contreras', 'Venezuela'];
+  var PARROQUIAS = ['Alonso de Ojeda (Paraute)', 'Libertad', 'Campo Lara', 'Eleazar López Contreras', 'Venezuela', 'El Danto'];
   var MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   var MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 

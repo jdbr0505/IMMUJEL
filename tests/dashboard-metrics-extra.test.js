@@ -220,13 +220,14 @@ test('porParroquia: las anónimas no cuentan como cobertura', () => {
   assert.deepEqual(r.sinSolicitudes, ['Libertad']);
 });
 
-test('PARROQUIAS: coincide con las opciones del formulario de asesorías', () => {
+test('PARROQUIAS: son las seis del municipio y coinciden con las opciones del formulario de asesorías', () => {
   assert.deepEqual(M.PARROQUIAS, [
     'Alonso de Ojeda (Paraute)',
     'Libertad',
     'Campo Lara',
     'Eleazar López Contreras',
-    'Venezuela'
+    'Venezuela',
+    'El Danto'
   ]);
 });
 
@@ -286,7 +287,7 @@ test('construirVista: junta las métricas de todas las secciones', () => {
   assert.equal(v.k.total, 2);
   assert.equal(v.cola.total, 1);
   assert.equal(v.cola.items[0].vencida, true);
-  assert.equal(v.parroquias.sinSolicitudes.length, 4);
+  assert.equal(v.parroquias.sinSolicitudes.length, M.PARROQUIAS.length - 1); // todas las oficiales menos Libertad, que tiene una solicitud
   assert.equal(v.asesoras.items[0].etiqueta, 'Ana Pérez');
   assert.equal(v.usuarias.registradas, 1);
   assert.equal(v.publicaciones.publicadas, 1);
