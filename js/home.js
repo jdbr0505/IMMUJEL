@@ -246,10 +246,36 @@
     grupos.forEach(function (g) { observador.observe(g); });
   }
 
+  // La pestaña del logotipo solo cuelga de la barra (clase cabecera-sola en body) cuando el menú cabe en la misma fila.
+  // Si salta a una segunda fila (muchos botones de sesión, un correo largo) la pestaña taparía "Inicio".
+  function iniciarCabecera() {
+    var logo = document.querySelector('.brand-tab');
+    var menu = document.getElementById('menu');
+    var fila = document.querySelector('header > div');
+    if (!logo || !menu || !fila) return;
+
+    function revisar() {
+      var mismaFila = Math.abs(menu.getBoundingClientRect().top - logo.getBoundingClientRect().top) < 40;
+      document.body.classList.toggle('cabecera-sola', mismaFila && root.innerWidth >= 1280);
+    }
+
+    revisar();
+    root.addEventListener('resize', revisar);
+    root.addEventListener('load', revisar);
+    if ('ResizeObserver' in root) new ResizeObserver(revisar).observe(fila);
+    if ('MutationObserver' in root) {
+      ['auth-section', 'panel-link'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) new MutationObserver(revisar).observe(el, { childList: true, subtree: true });
+      });
+    }
+  }
+
   function iniciar() {
     iniciarCarrusel();
     iniciarContadores();
     iniciarAparicion();
+    iniciarCabecera();
   }
 
   return {
