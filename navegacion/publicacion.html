@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../ds.css?v=1">
+    <link rel="stylesheet" href="../ds.css?v=2">
     <title>Publicación | IMMUJEL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js"></script>
@@ -75,43 +75,47 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- ========== CABECERA DE LA PUBLICACIÓN (la rellena el script con los datos de la publicación) ========== -->
+    <section class="page-hero page-hero--article" aria-labelledby="publicacion-titulo">
+        <div class="wrap wrap--narrow">
+            <a id="publicacion-back" href="../index.html" class="page-back"><i class="fas fa-arrow-left"></i> Volver</a>
+            <div class="page-badges">
+                <span id="publicacion-tipo-badge" class="hidden"></span>
+                <span id="publicacion-fecha" class="page-meta"></span>
+            </div>
+            <h1 id="publicacion-titulo" class="page-title page-title--article" data-rise>Publicación</h1>
+            <p id="publicacion-resumen" class="page-lead"></p>
+        </div>
+    </section>
+
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-4xl">
         <div id="publicacion-loading" class="text-center py-20 text-gray-500">
             <i class="fas fa-spinner fa-spin text-3xl mb-4"></i><br>Cargando publicación...
         </div>
         <div id="publicacion-error" class="hidden text-center py-20">
             <i class="fas fa-exclamation-circle text-5xl text-red-400 mb-4"></i>
             <p class="text-gray-600">No se pudo cargar la publicación.</p>
-            <a href="../index.html" class="text-purple-600 hover:underline mt-4 inline-block">Volver al inicio</a>
+            <a href="../index.html" class="hbtn hbtn--ghost mt-4">Volver al inicio</a>
         </div>
         <article id="publicacion-content" class="hidden reveal">
-            <div class="mb-6">
-                <a id="publicacion-back" href="#" class="text-purple-600 hover:underline text-sm inline-flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i> Volver
-                </a>
-            </div>
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="ds-card">
                 <!-- Galería de imágenes -->
                 <div id="publicacion-gallery" class="hidden w-full relative">
-                    <div id="publicacion-gallery-inner" class="w-full h-64 md:h-96 bg-gradient-to-br from-purple-200 to-blue-200 relative flex overflow-x-auto snap-x snap-mandatory scroll-smooth"></div>
+                    <div id="publicacion-gallery-inner" class="w-full h-64 md:h-96 bg-purple-50 relative flex overflow-x-auto snap-x snap-mandatory scroll-smooth"></div>
                     <div id="gallery-nav" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2"></div>
                 </div>
                 <div class="p-6 md:p-10">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span id="publicacion-tipo-badge" class="text-xs font-semibold px-3 py-1 rounded-full"></span>
-                        <span id="publicacion-fecha" class="text-sm text-gray-400"></span>
-                    </div>
-                    <h1 id="publicacion-titulo" class="text-3xl md:text-4xl font-black text-gray-800 mb-4"></h1>
-                    <div id="publicacion-resumen" class="text-lg text-gray-500 italic mb-6"></div>
                     <div id="publicacion-contenido" class="prose prose-gray max-w-none text-gray-700 leading-relaxed whitespace-pre-line"></div>
                     <!-- Lista de PDFs -->
                     <div id="publicacion-pdfs-container" class="hidden mt-8 pt-6 border-t border-gray-200">
-                        <h3 class="text-lg font-bold text-gray-700 mb-3"><i class="fas fa-file-pdf text-red-500 mr-2"></i>Documentos adjuntos</h3>
+                        <h2 class="text-lg font-bold text-gray-700 mb-3"><i class="fas fa-file-pdf text-purple-600 mr-2"></i>Documentos adjuntos</h2>
                         <div id="publicacion-pdfs-list" class="space-y-2"></div>
                     </div>
                 </div>
             </div>
         </article>
+        </div>
     </main>
 
     <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-16">
@@ -153,6 +157,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const supabase = await window.supabaseReady;
+            // Los datos de las publicaciones vienen del panel: se escapan antes de armar HTML y se descartan enlaces con esquemas peligrosos.
+            const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            const safeUrl = (u) => (/^\s*(javascript|data|vbscript):/i.test(String(u ?? '')) ? '' : String(u ?? ''));
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
 
@@ -196,13 +203,8 @@
 
             // Badge de tipo
             const badge = document.getElementById('publicacion-tipo-badge');
-            if (data.tipo === 'semanario') {
-                badge.textContent = 'Semanario Institucional';
-                badge.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-800';
-            } else {
-                badge.textContent = 'Noticiero';
-                badge.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800';
-            }
+            badge.textContent = data.tipo === 'semanario' ? 'Semanario Institucional' : 'Noticiero';
+            badge.className = 'inline-flex items-center gap-2 bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full';
 
             // Fecha
             document.getElementById('publicacion-fecha').textContent = data.fecha_publicacion || '';
@@ -241,8 +243,8 @@
             if (!imagenes.length && data.imagen_url) imagenes = [data.imagen_url];
             if (imagenes.length > 0) {
                 galleryInner.innerHTML = imagenes.map(function(url) {
-                    return '<div class="snap-start shrink-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-blue-200">' +
-                        '<img src="' + url + '" alt="' + data.titulo + '" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML=\'<div class=\\\'flex items-center justify-center h-full text-gray-400\\\'><i class=\\\'fas fa-image text-4xl\\\'></i></div>\'">' +
+                    return '<div class="snap-start shrink-0 w-full h-full flex items-center justify-center bg-purple-50">' +
+                        '<img src="' + esc(url) + '" alt="' + esc(data.titulo) + '" class="w-full h-full object-contain" onerror="this.parentElement.innerHTML=\'<div class=\\\'flex items-center justify-center h-full text-gray-400\\\'><i class=\\\'fas fa-image text-4xl\\\'></i></div>\'">' +
                         '</div>';
                 }).join('');
                 gallery.classList.remove('hidden');
@@ -279,9 +281,9 @@
             if (pdfs.length > 0) {
                 pdfsList.innerHTML = pdfs.map(function(url) {
                     var name = url.split('/').pop().split('?')[0] || 'documento.pdf';
-                    return '<a href="' + url + '" target="_blank" class="flex items-center gap-3 bg-red-50 hover:bg-red-100 text-red-700 font-medium px-4 py-3 rounded-lg transition group">' +
+                    return '<a href="' + esc(safeUrl(url)) + '" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 tint-box text-purple-700 font-medium px-4 py-3 transition group">' +
                         '<i class="fas fa-file-pdf text-xl"></i>' +
-                        '<span class="flex-1 truncate">' + name + '</span>' +
+                        '<span class="flex-1 truncate">' + esc(name) + '</span>' +
                         '<i class="fas fa-external-link-alt text-sm opacity-0 group-hover:opacity-100 transition"></i>' +
                         '</a>';
                 }).join('');

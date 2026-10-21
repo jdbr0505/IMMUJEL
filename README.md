@@ -269,7 +269,8 @@ flowchart LR
 IMMUJEL/
 │
 ├── index.html                    Página principal
-├── home.css                      Estilos de la página principal (usa los tokens de tema)
+├── ds.css                        Diseño compartido de las páginas públicas: cabecera de página, hojas, botones, tarjetas y pie (usa los tokens de tema)
+├── home.css                      Estilos propios de la página principal (usa los tokens de tema)
 ├── styles.css                    Identidad visual y tema oscuro
 ├── sw.js                         Service Worker (offline + push)
 ├── manifest.json                 Manifiesto PWA

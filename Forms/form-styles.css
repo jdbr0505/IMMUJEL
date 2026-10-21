@@ -27,12 +27,6 @@ body.dark-theme {
     background: linear-gradient(135deg, #2D1B36, #1E1A3A);
 }
 
-/* ----- Tarjeta del formulario (hereda fondo de styles.css) ----- */
-.bg-white {
-    /* El fondo lo controla styles.css mediante --card-bg */
-    border-top: 4px solid var(--purple-primary) !important;
-}
-
 /* Textos (solo como refuerzo, realmente los controla styles.css) */
 .text-gray-800, .text-gray-700, .text-gray-900 { color: var(--text-primary) !important; }
 .text-gray-600, .text-gray-500 { color: var(--text-secondary) !important; }
@@ -49,15 +43,6 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
     border-color: var(--purple-primary) !important;
     box-shadow: 0 0 0 3px rgba(165, 6, 173, 0.15) !important;
-}
-
-/* Botón con gradiente institucional */
-button[type="submit"] {
-    background-image: linear-gradient(to right, var(--purple-primary), var(--blue-primary)) !important;
-}
-button[type="submit"]:hover:not(:disabled) {
-    background-image: linear-gradient(to right, #8B05A0, #0250B5) !important;
-    box-shadow: 0 10px 20px -5px rgba(165, 6, 173, 0.4);
 }
 
 /* Mensajes de error/éxito */

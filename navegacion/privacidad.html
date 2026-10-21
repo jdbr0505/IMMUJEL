@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../ds.css?v=1">
+    <link rel="stylesheet" href="../ds.css?v=2">
     <title>Política de Privacidad | IMMUJEL</title>
     <meta name="description" content="Política de privacidad y uso de cookies del Instituto Municipal de la Mujer de Lagunillas (IMMUJEL).">
     <!-- Tailwind CSS -->
@@ -98,45 +98,39 @@
         </div>
     </header>
 
-    <!-- ========== HERO SECTION ========== -->
-    <section class="relative overflow-hidden">
-        <div class="absolute inset-0" style="background:linear-gradient(135deg, var(--deep-blue) 0%, var(--purple-primary) 50%, var(--blue-primary) 100%);"></div>
-        <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 30% 40%, rgba(165,6,173,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(65,144,235,0.3) 0%, transparent 50%);"></div>
-        <div class="container mx-auto px-4 py-20 md:py-28 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-white/70 text-sm font-semibold uppercase tracking-[0.2em] mb-4"><i class="fas fa-shield-halved mr-2"></i>PROTECCIÓN DE DATOS</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Política de Privacidad</h1>
-                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Cómo protegemos tu información y qué cookies usamos en la plataforma de IMMUJEL.</p>
-                <p class="text-white/60 text-sm mt-4">Última actualización: 7 de septiembre de 2026</p>
-            </div>
+    <!-- ========== CABECERA DE PÁGINA ========== -->
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap wrap--narrow">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Política de</span>
+                <span class="page-word">Privacidad</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Cómo protegemos tu información y qué cookies usamos en la plataforma de IMMUJEL.</p>
+            <p class="page-meta" data-rise style="--i:2">Última actualización: 7 de septiembre de 2026</p>
         </div>
     </section>
 
     <!-- ========== CONTENIDO PRINCIPAL ========== -->
-    <main class="container mx-auto px-4 py-12 max-w-4xl relative">
-        <div class="relative z-10 space-y-12">
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-4xl relative">
+        <div class="space-y-12">
 
             <!-- ===== INTRODUCCIÓN ===== -->
-            <section>
-                <div class="rounded-2xl p-8 md:p-10 text-white relative overflow-hidden" style="background:linear-gradient(135deg,var(--deep-blue) 0%,var(--purple-primary) 60%,var(--blue-primary) 100%);">
-                    <div class="absolute right-0 top-0 bottom-0 flex items-center pr-6 pointer-events-none select-none" aria-hidden="true">
-                        <img src="../Images/HEAD.svg" alt="" class="w-52 h-auto opacity-10">
-                    </div>
-                    <div class="relative z-10">
-                        <span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
-                            <i class="fas fa-lock"></i> Compromiso institucional
-                        </span>
-                        <p class="text-white/90 text-sm md:text-base max-w-2xl leading-relaxed">
-                            El Instituto Municipal de la Mujer de Lagunillas (IMMUJEL) trata la información de sus usuarias con especial cuidado, dada la naturaleza sensible de las solicitudes de asesoría que recibimos. Esta política explica qué datos recopilamos, para qué los usamos, con quién los compartimos y qué control tienes sobre ellos.
-                        </p>
-                    </div>
+            <section class="cta-band cta-band--stack reveal" aria-label="Compromiso institucional">
+                <div>
+                    <span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
+                        <i class="fas fa-lock"></i> Compromiso institucional
+                    </span>
+                    <p class="text-sm md:text-base leading-relaxed">
+                        El Instituto Municipal de la Mujer de Lagunillas (IMMUJEL) trata la información de sus usuarias con especial cuidado, dada la naturaleza sensible de las solicitudes de asesoría que recibimos. Esta política explica qué datos recopilamos, para qué los usamos, con quién los compartimos y qué control tienes sobre ellos.
+                    </p>
                 </div>
             </section>
 
             <!-- ===== 1. RESPONSABLE ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-building-columns text-purple-600"></i> 1. Responsable del tratamiento</h2>
-                <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6 text-gray-600 text-sm leading-relaxed space-y-2">
+                <h2 class="sec-title sec-title--sm mb-5">1. Responsable del tratamiento</h2>
+                <div class="ds-card p-6 text-gray-600 text-sm leading-relaxed space-y-2">
                     <p><strong class="text-gray-800">Instituto Municipal de la Mujer de Lagunillas (IMMUJEL)</strong></p>
                     <p><i class="fas fa-map-marker-alt w-5 text-purple-500"></i> Calle Vargas, esquina Calle Piar, Casa N.° 218, Ciudad Ojeda, Estado Zulia, Venezuela</p>
                     <p><i class="fas fa-envelope w-5 text-purple-500"></i> immujel2024@hotmail.com</p>
@@ -146,21 +140,21 @@
 
             <!-- ===== 2. DATOS QUE RECOPILAMOS ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-database text-purple-600"></i> 2. Qué información recopilamos</h2>
+                <h2 class="sec-title sec-title--sm mb-5">2. Qué información recopilamos</h2>
                 <div class="grid md:grid-cols-2 gap-5">
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fas fa-user text-purple-500"></i> Datos de cuenta</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Nombre completo, correo electrónico, nombre de usuario, contraseña (almacenada cifrada) y, opcionalmente, teléfono. Necesarios para crear tu cuenta e iniciar sesión.</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fas fa-file-lines text-purple-500"></i> Datos de la solicitud de asesoría</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Parroquia, tipo de asesoría y descripción de la situación. Con el <strong>modo incógnito</strong> activado, solo se guarda tu teléfono y la descripción — no tu nombre ni cédula.</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fas fa-bell text-purple-500"></i> Suscripción a notificaciones</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Si activas las notificaciones push, se guarda un identificador técnico de tu navegador para poder enviarte avisos de publicaciones nuevas. No identifica quién eres.</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fas fa-cookie-bite text-purple-500"></i> Cookies y almacenamiento local</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Ver sección 4. Usamos <code class="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded text-xs">localStorage</code> del navegador, no cookies de rastreo de terceros.</p>
                     </div>
@@ -169,31 +163,31 @@
 
             <!-- ===== 3. USO DE LA INFORMACIÓN ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-hand-holding-heart text-purple-600"></i> 3. Para qué usamos tu información</h2>
-                <ul class="bg-white rounded-xl shadow-sm border border-purple-100 p-6 text-gray-600 text-sm leading-relaxed space-y-3 list-none">
-                    <li class="flex gap-3"><i class="fas fa-check text-green-500 mt-1"></i> Gestionar tu cuenta y verificar tu identidad al iniciar sesión.</li>
-                    <li class="flex gap-3"><i class="fas fa-check text-green-500 mt-1"></i> Atender tu solicitud de asesoría y darle seguimiento con el equipo de asesoras.</li>
-                    <li class="flex gap-3"><i class="fas fa-check text-green-500 mt-1"></i> Enviarte notificaciones y correos cuando se publique contenido nuevo (Semanario o Noticiero), solo si lo solicitas.</li>
-                    <li class="flex gap-3"><i class="fas fa-check text-green-500 mt-1"></i> Mejorar el funcionamiento de la plataforma y tu experiencia de navegación.</li>
+                <h2 class="sec-title sec-title--sm mb-5">3. Para qué usamos tu información</h2>
+                <ul class="ds-card p-6 text-gray-600 text-sm leading-relaxed space-y-3 list-none">
+                    <li class="flex gap-3"><i class="fas fa-check text-purple-600 mt-1"></i> Gestionar tu cuenta y verificar tu identidad al iniciar sesión.</li>
+                    <li class="flex gap-3"><i class="fas fa-check text-purple-600 mt-1"></i> Atender tu solicitud de asesoría y darle seguimiento con el equipo de asesoras.</li>
+                    <li class="flex gap-3"><i class="fas fa-check text-purple-600 mt-1"></i> Enviarte notificaciones y correos cuando se publique contenido nuevo (Semanario o Noticiero), solo si lo solicitas.</li>
+                    <li class="flex gap-3"><i class="fas fa-check text-purple-600 mt-1"></i> Mejorar el funcionamiento de la plataforma y tu experiencia de navegación.</li>
                 </ul>
                 <p class="text-gray-500 text-sm mt-4"><i class="fas fa-ban mr-1"></i> <strong>Nunca</strong> usamos tu información con fines publicitarios, ni la vendemos ni compartimos con terceros ajenos a la gestión institucional.</p>
             </section>
 
             <!-- ===== 4. COOKIES ===== -->
             <section id="cookies">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-cookie-bite text-purple-600"></i> 4. Cookies y almacenamiento local</h2>
+                <h2 class="sec-title sec-title--sm mb-5">4. Cookies y almacenamiento local</h2>
                 <p class="text-gray-600 text-sm leading-relaxed mb-5">Al entrar por primera vez verás un aviso donde puedes aceptar o rechazar las cookies funcionales. Puedes cambiar tu elección cuando quieras con el botón de abajo.</p>
-                <button id="btn-reabrir-cookies" class="inline-flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-xl mb-6 transition hover:scale-[1.02] brand-gradient-bg">
+                <button id="btn-reabrir-cookies" type="button" class="hbtn hbtn--solid mb-6">
                     <i class="fas fa-sliders"></i> Cambiar mi elección de cookies
                 </button>
                 <div class="grid md:grid-cols-2 gap-5">
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:var(--purple-primary);">
-                        <span class="inline-block text-xs font-bold uppercase tracking-wide text-white px-3 py-1 rounded-full mb-3" style="background:var(--purple-primary);">Siempre activas</span>
+                    <div class="ds-card p-6">
+                        <span class="chip-tone tone-1 mb-3 font-bold uppercase tracking-wide">Siempre activas</span>
                         <h3 class="font-bold text-gray-800 mb-2">Cookies esenciales</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Necesarias para que la plataforma funcione: mantener tu sesión iniciada (Supabase Auth) y recordar tu elección de cookies. No requieren consentimiento porque el sitio no puede operar sin ellas.</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 border-t-4" style="border-top-color:var(--blue-primary);">
-                        <span class="inline-block text-xs font-bold uppercase tracking-wide text-white px-3 py-1 rounded-full mb-3" style="background:var(--blue-primary);">Opcionales</span>
+                    <div class="ds-card p-6">
+                        <span class="chip-tone tone-2 mb-3 font-bold uppercase tracking-wide">Opcionales</span>
                         <h3 class="font-bold text-gray-800 mb-2">Cookies funcionales</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Guardan tu <strong>historial de publicaciones vistas</strong> (hasta 20, solo en tu navegador) y tu preferencia de tema claro/oscuro. Solo se activan si las aceptas en el banner.</p>
                     </div>
@@ -203,14 +197,14 @@
 
             <!-- ===== 5. TERCEROS ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-server text-purple-600"></i> 5. Proveedores de servicio</h2>
+                <h2 class="sec-title sec-title--sm mb-5">5. Proveedores de servicio</h2>
                 <p class="text-gray-600 text-sm leading-relaxed mb-4">Utilizamos los siguientes proveedores para operar la plataforma. Ellos procesan datos en nuestro nombre, bajo sus propias políticas de seguridad:</p>
                 <div class="grid md:grid-cols-2 gap-5">
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2">Supabase</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Base de datos, autenticación y almacenamiento de archivos (imágenes y PDF de publicaciones).</p>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-purple-100 p-6">
+                    <div class="ds-card p-6">
                         <h3 class="font-bold text-gray-800 mb-2">Vercel</h3>
                         <p class="text-gray-500 text-sm leading-relaxed">Hospedaje del sitio web y entrega de contenido.</p>
                     </div>
@@ -219,8 +213,8 @@
 
             <!-- ===== 6. TUS DERECHOS ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-scale-balanced text-purple-600"></i> 6. Tus derechos</h2>
-                <ul class="bg-white rounded-xl shadow-sm border border-purple-100 p-6 text-gray-600 text-sm leading-relaxed space-y-3 list-none">
+                <h2 class="sec-title sec-title--sm mb-5">6. Tus derechos</h2>
+                <ul class="ds-card p-6 text-gray-600 text-sm leading-relaxed space-y-3 list-none">
                     <li class="flex gap-3"><i class="fas fa-eye text-purple-500 mt-1"></i> <strong class="text-gray-800">Acceso:</strong> solicitar una copia de los datos que tenemos sobre ti.</li>
                     <li class="flex gap-3"><i class="fas fa-pen text-purple-500 mt-1"></i> <strong class="text-gray-800">Rectificación:</strong> corregir datos incorrectos o desactualizados.</li>
                     <li class="flex gap-3"><i class="fas fa-trash text-purple-500 mt-1"></i> <strong class="text-gray-800">Eliminación:</strong> solicitar el borrado de tu cuenta y datos asociados.</li>
@@ -231,14 +225,15 @@
 
             <!-- ===== 7. SEGURIDAD Y CONTACTO ===== -->
             <section>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-shield-halved text-purple-600"></i> 7. Seguridad de la información</h2>
+                <h2 class="sec-title sec-title--sm mb-5">7. Seguridad de la información</h2>
                 <p class="text-gray-600 text-sm leading-relaxed">Aplicamos controles de acceso por rol (Usuaria, Asesora, Administradora) y políticas de seguridad a nivel de base de datos (Row Level Security), de forma que cada persona solo puede ver la información que le corresponde. Las solicitudes en modo incógnito nunca muestran tu identidad al personal.</p>
             </section>
 
-            <div class="bg-purple-50 border border-purple-100 rounded-xl p-6 text-center">
+            <div class="tint-box p-6 text-center">
                 <p class="text-gray-600 text-sm">¿Tienes dudas sobre esta política? Escríbenos a <a href="mailto:immujel2024@hotmail.com" class="text-purple-600 font-semibold hover:underline">immujel2024@hotmail.com</a></p>
             </div>
 
+        </div>
         </div>
     </main>
 

@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../ds.css?v=1">
+    <link rel="stylesheet" href="../ds.css?v=2">
     <title>Noticiero | IMMUJEL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
@@ -74,15 +74,22 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-12 max-w-6xl">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-3"><i class="fas fa-bullhorn text-blue-600 mr-2"></i> Noticiero IMMUJEL</h1>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-500 mx-auto rounded-full mb-4"></div>
-            <p class="text-gray-600 text-lg">Las últimas noticias y novedades del Instituto.</p>
+    <!-- ========== CABECERA DE PÁGINA ========== -->
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Noticiero</span>
+                <span class="page-word">IMMUJEL</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Las últimas noticias y novedades del Instituto.</p>
         </div>
+    </section>
+
+    <main id="main-content" class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-6xl">
 
         <!-- Historial de vistas recientes (solo con consentimiento funcional) -->
-        <div id="historial-wrapper" class="max-w-2xl mx-auto mb-8 bg-white rounded-xl border border-purple-100 shadow-sm p-4 hidden">
+        <div id="historial-wrapper" class="max-w-2xl mx-auto mb-8 ds-card p-4 hidden">
             <h2 class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><i class="fas fa-clock-rotate-left text-purple-500"></i> Vistos recientemente</h2>
             <div id="historial-container"></div>
         </div>
@@ -90,17 +97,18 @@
         <div class="max-w-md mx-auto mb-8">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400"><i class="fas fa-search"></i></span>
-                <input type="text" id="noticiero-search" class="w-full pl-11 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="Buscar noticias..." autocomplete="off">
+                <input type="text" id="noticiero-search" class="w-full pl-11 pr-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="Buscar noticias..." autocomplete="off">
             </div>
         </div>
 
         <div id="noticiero-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal"></div>
         <div id="noticiero-loading" class="text-center py-16 text-gray-500"><i class="fas fa-spinner fa-spin mr-2 text-2xl"></i><br>Cargando noticias...</div>
-        <div id="noticiero-empty" class="hidden text-center py-16 text-gray-400"><i class="fas fa-newspaper text-5xl mb-4"></i><p>No hay noticias publicadas aún.</p></div>
+        <div id="noticiero-empty" class="hidden text-center py-16 text-gray-500"><i class="fas fa-newspaper text-5xl mb-4"></i><p>No hay noticias publicadas aún.</p></div>
         <div id="noticiero-load-more" class="hidden text-center mt-8">
-            <button id="noticiero-load-more-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition shadow-md">
+            <button id="noticiero-load-more-btn" class="hbtn hbtn--solid">
                 <i class="fas fa-chevron-down mr-2"></i> Cargar más noticias
             </button>
+        </div>
         </div>
     </main>
 
@@ -186,7 +194,7 @@
                 } catch (e) {
                   loading.classList.add('hidden');
                   if (loadMoreDiv) loadMoreDiv.classList.add('hidden');
-                  grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error de conexión. Verifica tu internet.</div>';
+                  grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500"><i class="fas fa-exclamation-circle text-3xl mb-2 block"></i>Error de conexión. Verifica tu internet.</div>';
                   return;
                 }
 
@@ -205,15 +213,15 @@
                     let firstImg = '';
                     try { var imgs = typeof p.imagenes === 'string' ? JSON.parse(p.imagenes) : p.imagenes; if (imgs && imgs.length > 0) firstImg = imgs[0]; } catch(e) {}
                     if (!firstImg) firstImg = p.imagen_url || '';
-                    return `<a href="./publicacion.html?id=${p.id}" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition group cursor-pointer ${append ? 'reveal-scale' : ''}">
-                        ${firstImg ? `<img src="${firstImg}" alt="${p.titulo}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">` : `<div class="h-48 bg-gradient-to-br from-blue-200 to-purple-200 flex items-center justify-center group-hover:from-blue-300 group-hover:to-purple-300 transition-all"><i class="fas fa-bullhorn text-4xl text-blue-500 group-hover:scale-110 transition-transform"></i></div>`}
+                    return `<a href="./publicacion.html?id=${p.id}" class="block ds-card overflow-hidden group cursor-pointer transition hover:-translate-y-1 ${append ? 'reveal-scale' : ''}">
+                        ${firstImg ? `<img src="${firstImg}" alt="${p.titulo}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">` : `<div class="tone-panel tone-2 h-48"><i class="fas fa-bullhorn text-4xl group-hover:scale-110 transition-transform"></i></div>`}
                         <div class="p-5">
-                            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Noticia</span>
+                            <span class="chip-tone tone-2 font-semibold">Noticia</span>
                             <h3 class="text-lg font-bold mt-2 mb-2 text-gray-800 group-hover:text-blue-700 transition-colors">${p.titulo}</h3>
                             ${p.resumen ? `<p class="text-gray-600 text-sm mb-3">${p.resumen}</p>` : ''}
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-400"><i class="far fa-calendar-alt mr-1"></i>${p.fecha_publicacion || ''}</span>
-                                <span class="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold">Leer más <i class="fas fa-arrow-right ml-1"></i></span>
+                                <span class="text-gray-500"><i class="far fa-calendar-alt mr-1"></i>${p.fecha_publicacion || ''}</span>
+                                <span class="text-blue-600 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 transition-opacity text-xs font-semibold">Leer más <i class="fas fa-arrow-right ml-1"></i></span>
                             </div>
                         </div>
                     </a>

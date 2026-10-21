@@ -90,6 +90,9 @@ body.ds.dark-theme {
 /* Cinta corta de color bajo cada título (la misma del pie de página). */
 .sec-title::after { content: ""; display: block; width: 4.5rem; height: 0.3rem; margin-top: 1rem; border-radius: 9999px; background: linear-gradient(90deg, var(--purple-primary), var(--magenta)); }
 .sec-lead { margin: 1.25rem 0 0; max-width: 32rem; font-size: 1.0625rem; line-height: 1.7; color: var(--h-muted); text-wrap: pretty; }
+/* Título de sección más compacto para textos largos (política de privacidad, fundamentos legales). */
+.sec-title--sm { font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem); }
+.sec-title--sm::after { width: 3rem; height: 0.25rem; margin-top: 0.75rem; }
 /* La misma cinta como separador suelto dentro del contenido. */
 .brand-rule { background: linear-gradient(90deg, var(--purple-primary), var(--magenta)); }
 
@@ -150,6 +153,13 @@ body.ds.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mix(
 .page-lead { margin: 1.25rem 0 0; max-width: 40rem; font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem); line-height: 1.7; color: var(--h-on-deep); text-wrap: pretty; }
 .page-meta { margin: 1rem 0 0; font-size: 0.875rem; color: var(--h-on-deep); }
 
+/* Cabecera de una publicación: título de tamaño de artículo (los títulos son largos), enlace de regreso y etiquetas. */
+.page-title--article { font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3rem); line-height: 1.08; letter-spacing: -0.025em; overflow-wrap: anywhere; text-wrap: balance; }
+.page-back { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--h-on-deep); text-decoration: none; }
+.page-back:hover { color: #fff; text-decoration: underline; text-underline-offset: 0.25em; }
+.page-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.page-badges .page-meta { margin: 0; }
+
 /* Hoja de contenido: blanca (tarjeta oscura en modo oscuro), se apoya sobre la cabecera de página. */
 .page-sheet { z-index: 1; background: var(--h-sheet); padding-bottom: 3.5rem; }
 
@@ -173,6 +183,7 @@ body.ds.dark-theme .hbtn--ghost { color: var(--accent); border-color: color-mix(
 @media (min-width: 48rem) { .cta-band { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 3rem; } }
 /* Variante apilada: la banda lleva un encabezado y debajo un bloque ancho (cifras). */
 .cta-band--stack { margin-top: 0; gap: 2rem; }
+.cta-band--stack p { max-width: 46rem; }
 @media (min-width: 48rem) { .cta-band--stack { grid-template-columns: minmax(0, 1fr); } }
 .stat-tile { padding: 1.5rem 1rem; border-radius: 1.25rem; text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
 .stat-tile strong { display: block; font-size: clamp(1.875rem, 1.2rem + 2vw, 2.5rem); font-weight: 900; line-height: 1.1; color: #fff; }

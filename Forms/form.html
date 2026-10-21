@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../ds.css?v=1">
+    <link rel="stylesheet" href="../ds.css?v=2">
     <title>Asesoría Legal | IMMUJEL</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,7 @@
     <!-- Fuentes oficiales: Montserrat (títulos) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Estilos específicos del formulario -->
-    <link rel="stylesheet" href="form-styles.css">
+    <link rel="stylesheet" href="form-styles.css?v=2">
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="icon" href="../Images/HEAD.svg" type="image/svg+xml">
@@ -110,17 +110,23 @@
      </header>
 
     <!-- ========== CONTENIDO ========== -->
-    <main class="container mx-auto px-4 py-12 max-w-4xl">
-        <div class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-3">Formulario de Asesoría</h1>
-            <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-500 mx-auto rounded-full"></div>
-            <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Cuéntanos tu situación de manera confidencial. En modo incógnito solo guardaremos tu teléfono y la descripción.</p>
+    <section class="page-hero" aria-labelledby="titulo-pagina">
+        <div class="wrap wrap--narrow">
+            <h1 id="titulo-pagina" class="page-title" data-rise>
+                <span class="page-pre">Formulario de</span>
+                <span class="page-word">Asesoría</span>
+            </h1>
+            <p class="page-lead" data-rise style="--i:1">Cuéntanos tu situación de manera confidencial. En modo incógnito solo guardaremos tu teléfono y la descripción.</p>
         </div>
+    </section>
 
-        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border-t-4 border-purple-600">
+    <main class="sheet page-sheet">
+        <div class="container mx-auto px-4 pt-12 max-w-4xl">
+
+        <div class="ds-card p-6 md:p-8">
             <form id="report-form" class="space-y-6">
                 <!-- Modo incógnito -->
-                <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                <div class="flex items-start gap-3 tint-box">
                     <input type="checkbox" id="incognito" class="mt-1 w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
                     <div>
                         <label for="incognito" class="font-semibold text-gray-800 cursor-pointer">Modo incógnito (asesoría anónima)</label>
@@ -136,21 +142,21 @@
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-user"></i></span>
-                                <input type="text" id="name" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="Ej: María Pérez">
+                                <input type="text" id="name" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="Ej: María Pérez">
                             </div>
                         </div>
                         <div>
                             <label for="id-number" class="block text-sm font-medium text-gray-700 mb-1">Cédula de Identidad</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-id-card"></i></span>
-                                <input type="text" id="id-number" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="V-12345678">
+                                <input type="text" id="id-number" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="V-12345678">
                             </div>
                         </div>
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-envelope"></i></span>
-                                <input type="email" id="email" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="maria@ejemplo.com">
+                                <input type="email" id="email" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="maria@ejemplo.com">
                             </div>
                         </div>
                         <!-- Parroquia (solo visible sin incógnito) -->
@@ -158,7 +164,7 @@
                             <label for="parroquia" class="block text-sm font-medium text-gray-700 mb-1">Parroquia donde resides <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-map-marker-alt"></i></span>
-                                <select id="parroquia" class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white appearance-none">
+                                <select id="parroquia" class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white appearance-none">
                                     <option value="" disabled selected>-- Selecciona tu parroquia --</option>
                                     <option value="Alonso de Ojeda (Paraute)">Alonso de Ojeda (Paraute)</option>
                                     <option value="Libertad">Libertad</option>
@@ -180,7 +186,7 @@
                         </label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-phone-alt"></i></span>
-                            <input type="tel" id="phone" required class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="0412-1234567">
+                            <input type="tel" id="phone" required class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white" placeholder="0412-1234567">
                         </div>
                     </div>
                 </div>
@@ -188,7 +194,7 @@
                 <!-- Descripción (opcional) -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">¿Cómo podemos ayudarte? (descripción opcional)</label>
-                    <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white resize-none" placeholder="Si deseas, puedes añadir algún detalle..."></textarea>
+                    <textarea id="description" rows="3" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition bg-white resize-none" placeholder="Si deseas, puedes añadir algún detalle..."></textarea>
                 </div>
 
                 <!-- Mensajes de estado -->
@@ -196,7 +202,7 @@
                 <div id="success-message" class="hidden text-green-700 text-sm font-medium bg-green-50 p-3 rounded-lg border border-green-200"></div>
 
                 <!-- Botón -->
-                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 shadow-md">
+                <button type="submit" id="submit-btn" class="hbtn hbtn--solid w-full disabled:opacity-50">
                     <i class="fas fa-paper-plane mr-2"></i> Solicitar asesoría
                 </button>
             </form>
@@ -205,6 +211,7 @@
         <p class="text-center text-gray-500 text-sm mt-6">
             <i class="fas fa-shield-alt mr-1"></i> Tus datos están protegidos y solo se usarán para brindarte el apoyo necesario.
         </p>
+        </div>
     </main>
 
     <!-- ========== FOOTER (coincidente con el home) ========== -->
