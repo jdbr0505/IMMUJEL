@@ -317,6 +317,106 @@
         ],
         "createdAt": "2026-10-20T14:01:45.744Z",
         "reason": "Las hojas (svc, contact, news, impact) son bandas de página a todo el ancho con las esquinas superiores redondeadas para separar secciones, no tarjetas; las únicas tarjetas son los artículos de servicios y noticias, que no se anidan entre sí"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "Forms/form.html",
+          "navegacion/FL.html",
+          "navegacion/Programas.html",
+          "navegacion/Sobre Nosotras.html",
+          "navegacion/noticiero.html",
+          "navegacion/privacidad.html",
+          "navegacion/publicacion.html",
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-10-21T14:03:05.110Z",
+        "reason": "La hoja (.sheet/.page-sheet) es la superficie de la página, no una tarjeta: las tarjetas .ds-card van sobre ella sin anidar tarjetas reales; el detector estático no distingue la hoja. Verificado en el navegador."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "Forms/form.html",
+          "navegacion/FL.html",
+          "navegacion/Programas.html",
+          "navegacion/Sobre Nosotras.html",
+          "navegacion/noticiero.html",
+          "navegacion/privacidad.html",
+          "navegacion/publicacion.html",
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-10-21T14:03:05.587Z",
+        "reason": "El análisis estático no resuelve las clases de Tailwind CDN (p-5, p-6, p-8…) ni el relleno de .tone-panel dentro de .ds-card; el inset existe y se verificó en el navegador a 1280 y 375 px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "Forms/form.html",
+          "navegacion/FL.html",
+          "navegacion/Programas.html",
+          "navegacion/Sobre Nosotras.html",
+          "navegacion/noticiero.html",
+          "navegacion/privacidad.html",
+          "navegacion/publicacion.html",
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-10-21T14:03:06.046Z",
+        "reason": "Los tamaños de Tailwind no se compilan en el análisis estático (todo sale como 16px): los títulos usan .page-word (hasta 5.25rem) y .sec-title (hasta 3rem), verificado en el navegador."
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "Forms/form.html",
+          "ds.css",
+          "navegacion/FL.html",
+          "navegacion/Programas.html",
+          "navegacion/Sobre Nosotras.html",
+          "navegacion/noticiero.html",
+          "navegacion/privacidad.html",
+          "navegacion/publicacion.html",
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-10-21T14:03:06.462Z",
+        "reason": "Preexistente: styles.css (enlazado en cada página) trae el degradado de texto; no se introduce en estas páginas."
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "Forms/form.html",
+          "ds.css",
+          "navegacion/FL.html",
+          "navegacion/Programas.html",
+          "navegacion/Sobre Nosotras.html",
+          "navegacion/noticiero.html",
+          "navegacion/privacidad.html",
+          "navegacion/publicacion.html",
+          "navegacion/semanario.html"
+        ],
+        "createdAt": "2026-10-21T14:03:06.837Z",
+        "reason": "Preexistente: sombra de marca de styles.css (enlazado en cada página); en ds.css las sombras son de elevación con el tono del tema, no halos."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "Admin/Admin.html"
+        ],
+        "createdAt": "2026-10-21T14:05:35.710Z",
+        "reason": "Los 9 elementos con bg-purple-600 de la página llevan text-white (clase de Tailwind CDN que el análisis estático no compila): blanco sobre #A506AD o #8C0593 supera 6:1. Comprobado en el navegador; el botón nuevo «Agregar al personal» sigue el mismo patrón de los existentes."
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "Admin/Admin.js"
+        ],
+        "createdAt": "2026-10-21T14:05:36.391Z",
+        "reason": "switchTab() alterna las clases del botón de pestaña (activa: bg-purple-600 text-white; inactiva: text-gray-600 sin fondo): el gris nunca coincide con el fondo de color. Preexistente; solo cambiaron los números de línea."
       }
     ]
   }
