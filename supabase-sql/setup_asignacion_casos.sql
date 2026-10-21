@@ -12,7 +12,9 @@
 --   5. Nada se borra: retirar a alguien es desactivarla y reasignar un caso libera la asignación anterior,
 --      así queda el historial de quién tuvo cada caso y cuándo.
 --   6. solicitudes.asignada_a y asignada_por se mantienen al día con el responsable del caso, para que el
---      dashboard (solicitudes por asesora, sin asesora) siga funcionando igual.
+--      dashboard (solicitudes por asesora, sin asesora) siga funcionando igual. Solo asignar_caso las cambia:
+--      un trigger impide escribirlas directamente (la política abierta de solicitudes lo permitiría).
+--   7. Para asignar también hace falta rol Asesora o Admin: una institucional degradada a "usuaria" deja de asignar.
 --
 -- Después de ejecutarlo:
 --   a) La abogada institucional debe tener cuenta en IMMUJEL (Registrarse).
@@ -213,7 +215,7 @@ GRANT EXECUTE ON FUNCTION public.es_abogada_institucional() TO authenticated, se
 -- PARTE 5: ASIGNAR UN CASO (única vía de escritura)
 -- ==========================================================
 -- asignar_caso(solicitud, [personal_1, personal_2]):
---   · exige ser la abogada institucional activa;
+--   · exige ser la abogada institucional activa y tener acceso al panel (rol Asesora o Admin);
 --   · acepta 0, 1 o 2 personas activas del personal (0 = dejar el caso sin asignar);
 --   · libera lo que ya no corresponde y registra lo nuevo, conservando el historial;
 --   · deja solicitudes.asignada_a con la cuenta del responsable (posición 1) y asignada_por con quien asignó.
@@ -230,7 +232,7 @@ DECLARE
   v_id        uuid;
   v_activas   integer;
 BEGIN
-  IF v_uid IS NULL OR NOT public.es_abogada_institucional() THEN
+  IF v_uid IS NULL OR NOT public.es_abogada_institucional() OR NOT public.es_personal_panel() THEN
     RAISE EXCEPTION 'Solo la abogada institucional puede asignar casos.' USING ERRCODE = '42501';
   END IF;
 
@@ -289,6 +291,40 @@ REVOKE ALL ON FUNCTION public.asignar_caso(text, uuid[]) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.asignar_caso(text, uuid[]) TO authenticated;
 
 -- ==========================================================
+-- PARTE 6: LAS COLUMNAS ANTIGUAS DE ASIGNACIÓN SOLO LAS TOCA asignar_caso
+-- ==========================================================
+-- solicitudes.asignada_a y asignada_por alimentan el dashboard. La política abierta de solicitudes (TODO_EN_UNO.sql:
+-- insertar sin sesión, actualizar con cualquier cuenta) dejaría escribirlas directamente: saltarse la regla de que solo
+-- la abogada institucional asigna, o crear una solicitud que ya nace "asignada" y no aparece en la cola.
+-- Se vigila a quien llega por la API pública (rol anon o authenticated). asignar_caso corre con los permisos de su dueño
+-- (current_user distinto), así que no le afecta; el SQL Editor y service_role tampoco se restringen.
+
+CREATE OR REPLACE FUNCTION public.proteger_asignacion_solicitud()
+RETURNS trigger
+LANGUAGE plpgsql SET search_path = ''
+AS $$
+BEGIN
+  IF current_user NOT IN ('anon', 'authenticated') THEN
+    RETURN NEW;
+  END IF;
+
+  IF TG_OP = 'INSERT' THEN
+    NEW.asignada_a := NULL;
+    NEW.asignada_por := NULL;
+  ELSIF NEW.asignada_a IS DISTINCT FROM OLD.asignada_a OR NEW.asignada_por IS DISTINCT FROM OLD.asignada_por THEN
+    RAISE EXCEPTION 'Solo la abogada institucional asigna casos.' USING ERRCODE = '42501';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_proteger_asignacion_solicitud ON public.solicitudes;
+CREATE TRIGGER trg_proteger_asignacion_solicitud
+  BEFORE INSERT OR UPDATE OF asignada_a, asignada_por ON public.solicitudes
+  FOR EACH ROW
+  EXECUTE FUNCTION public.proteger_asignacion_solicitud();
+
+-- ==========================================================
 -- OPCIONAL: dejar lista a la abogada institucional desde aquí
 -- ==========================================================
 -- Lo normal es hacerlo desde el panel (Usuarias → Personal de asesorías → Agregar). Si prefieres hacerlo en SQL,
@@ -303,7 +339,7 @@ GRANT EXECUTE ON FUNCTION public.asignar_caso(text, uuid[]) TO authenticated;
 NOTIFY pgrst, 'reload schema';
 
 -- ==========================================================
--- VERIFICACIÓN FINAL (debe mostrar: 2 tablas con RLS, 4 funciones y 0 personas, de momento)
+-- VERIFICACIÓN FINAL (debe mostrar: 2 tablas con RLS, 4 funciones, 1 trigger de protección y el personal registrado)
 -- ==========================================================
 SELECT '✅ TABLAS CON RLS' AS paso, count(*)::text AS resultado
   FROM pg_tables
@@ -313,6 +349,10 @@ SELECT '✅ FUNCIONES', count(*)::text
   FROM pg_proc
  WHERE pronamespace = 'public'::regnamespace
    AND proname IN ('es_admin', 'es_personal_panel', 'es_abogada_institucional', 'asignar_caso')
+UNION ALL
+SELECT '✅ PROTECCIÓN DE asignada_a', count(*)::text
+  FROM pg_trigger
+ WHERE tgrelid = 'public.solicitudes'::regclass AND tgname = 'trg_proteger_asignacion_solicitud'
 UNION ALL
 SELECT '✅ PERSONAL REGISTRADO', count(*)::text FROM public.personal_asesoria
 UNION ALL

@@ -205,7 +205,8 @@ Aparte del rol de la cuenta, el personal que atiende los casos tiene un **cargo*
 - Para figurar en el personal hay que **tener cuenta en IMMUJEL**; la administradora la elige por nombre desde Usuarias → Personal de asesorías.
 - La abogada institucional necesita rol **Asesora** (o Admin) para entrar al panel; el panel ofrece dárselo al agregarla.
 - Retirar a alguien no borra nada: sus casos siguen a su nombre hasta que la abogada institucional los reasigne (vuelven a «Sin asignar»).
-- Las reglas las hace cumplir la base de datos (`supabase-sql/setup_asignacion_casos.sql`), no solo la pantalla: ni la administradora puede asignar casos si no es la abogada institucional.
+- Las reglas las hace cumplir la base de datos (`supabase-sql/setup_asignacion_casos.sql`), no solo la pantalla: ni la administradora puede asignar casos si no es la abogada institucional, y tampoco se pueden escribir a mano las columnas `asignada_a` y `asignada_por` de `solicitudes`.
+- La administradora decide qué cuenta es la abogada institucional (el panel pide confirmar nombre y correo); conviene cuidar que solo ella tenga rol Admin.
 
 ---
 
@@ -334,7 +335,8 @@ IMMUJEL/
 │   ├── setup_push_subscriptions.sql
 │   ├── add_finalizado_en.sql     Opcional: registra el cierre de cada solicitud (tiempo de resolución del dashboard)
 │   ├── setup_asignacion_casos.sql  Personal de asesorías, asignación de casos y sus reglas (RLS + función)
-│   ├── proteger_rol_perfiles.sql   Solo una administradora puede dar o cambiar roles
+│   ├── proteger_rol_perfiles.sql   Cada cuenta edita solo su perfil y solo una administradora da o cambia roles
+│   ├── proteger_solicitudes.sql    Solo el personal del panel ve y edita solicitudes, notas y perfiles
 │   └── alter_storage_rls.sql
 │
 ├── docs/                         Manual de uso y material de capacitación
@@ -432,20 +434,26 @@ Crea dos buckets públicos: `publicacion-imagenes` y `publicacion-pdfs`.
 
 ### 4. Asignación de casos y personal de asesorías
 
-Ejecuta, en este orden, desde el **SQL Editor**:
+Ejecuta, en este orden, desde el **SQL Editor** (los tres se pueden repetir sin problema):
 
 ```
 supabase-sql/setup_asignacion_casos.sql
 supabase-sql/proteger_rol_perfiles.sql
+supabase-sql/proteger_solicitudes.sql
 ```
 
 | Tabla / función | Propósito |
 |:---|:---|
 | `personal_asesoria` | Quién forma parte del personal y con qué cargo (se retira desactivando, no borrando) |
 | `asignaciones_caso` | Quién tuvo cada caso y cuándo (máximo dos vigentes por caso) |
-| `asignar_caso()` | Única vía para asignar: exige ser la abogada institucional activa |
+| `asignar_caso()` | Única vía para asignar: exige ser la abogada institucional activa y tener acceso al panel |
 
-El segundo script cierra un hueco de `TODO_EN_UNO.sql`: la política `perfiles_update_auth` deja que cualquier cuenta con sesión cambie cualquier fila de `perfiles`, también su propio `rol`. Con él, solo una administradora puede dar o cambiar roles. Después de ejecutarlos: Usuarias → Personal de asesorías → agrega a la abogada institucional.
+Los dos últimos scripts cierran huecos de `TODO_EN_UNO.sql`, cuyas políticas solo piden «tener sesión»:
+
+- `proteger_rol_perfiles.sql`: la política `perfiles_update_auth` dejaba que cualquier cuenta cambiara cualquier fila de `perfiles` (su propio `rol` y hasta el `id` para suplantar a otra). Con él, cada cuenta edita solo su perfil y solo una administradora da o cambia roles.
+- `proteger_solicitudes.sql`: cualquier persona registrada podía leer por la API la cédula, el teléfono y la descripción de **todas** las solicitudes, las notas internas y los datos de todas las cuentas. Con él, solo el personal del panel (admin y asesoras) las ve y las edita; el formulario público sigue creando solicitudes.
+
+Después de ejecutarlos: Usuarias → Personal de asesorías → agrega a la abogada institucional.
 
 ### 5. Generar claves VAPID
 

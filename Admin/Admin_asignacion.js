@@ -11,11 +11,18 @@
   var COLUMNAS_PERSONAL = 'id, perfil_id, cargo, activa, agregada_en, retirada_en, perfil:perfiles!perfil_id(id, nombre_completo, nombre_usuario, email, telefono, rol)';
   var COLUMNAS_ASIGNACION = 'id, solicitud_id, personal_id, posicion, asignada_por, asignada_en, solicitud:solicitudes!solicitud_id(estado)';
   var SIN_CONFIGURAR = 'La asignación de casos todavía no está activada en la base de datos. La administradora debe ejecutar supabase-sql/setup_asignacion_casos.sql en Supabase.';
+  var SIN_DATOS = 'No se pudo cargar el personal asignado. Recarga la página para ver y cambiar la asignación.';
+  var SIN_ACTUALIZAR = 'No se pudo actualizar el personal asignado: lo que ves puede estar desactualizado. Recarga la página antes de asignar.';
   var SIN_PERMISO = { code: '42501', message: 'permission denied' };
+
+  var TAMANO_PAGINA = 1000;  // PostgREST devuelve como máximo 1000 filas por consulta
+  var MAX_PAGINAS = 20;
 
   var ctx = null;
   var estado = {
     disponible: true,        // false = faltan las tablas o la función: se despliega la página antes de correr el SQL
+    cargado: { personal: false, asignaciones: false },  // ya se leyó bien al menos una vez
+    fallo: { personal: false, asignaciones: false },    // la última lectura falló (red, permisos…): se conserva lo anterior
     personal: [],            // todas las filas de personal_asesoria (activas y retiradas) con su cuenta
     asignaciones: [],        // asignaciones vigentes con el estado de su solicitud
     porCaso: {},             // asignaciones vigentes agrupadas por solicitud
@@ -46,9 +53,34 @@
 
   // ---------- Datos ----------
 
-  function registrarFallo(error) {
-    if (A.faltaConfigurar(error)) estado.disponible = false;
-    else console.error('Asignación de casos:', error);
+  // Si faltan las tablas se descarta todo; si es un fallo pasajero (red, sesión) se conserva lo último que se cargó bien
+  // para no pintar "todo sin asignar" ni dejar asignar a ciegas: la pantalla avisa y bloquea el formulario.
+  function registrarFallo(error, cual) {
+    if (A.faltaConfigurar(error)) {
+      estado.disponible = false;
+      estado.cargado[cual] = false;
+      return;
+    }
+    estado.fallo[cual] = true;
+    console.error('Asignación de casos:', error);
+  }
+
+  function datosListos() { return estado.disponible && estado.cargado.personal && estado.cargado.asignaciones; }
+  function hayFallo() { return estado.fallo.personal || estado.fallo.asignaciones; }
+  // true = los datos de asignación se pueden usar para decidir (ver "Sin asignar", asignar).
+  function confiable() { return datosListos() && !hayFallo(); }
+
+  // Una página de resultados detrás de otra: PostgREST corta en 1000 filas y las asignaciones vigentes crecen con los casos.
+  async function leerPaginado(armarConsulta) {
+    var todas = [];
+    for (var pagina = 0; pagina < MAX_PAGINAS; pagina++) {
+      var desde = pagina * TAMANO_PAGINA;
+      var res = await armarConsulta().order('id', { ascending: true }).range(desde, desde + TAMANO_PAGINA - 1);
+      if (res.error) return { error: res.error };
+      todas = todas.concat(res.data || []);
+      if (!res.data || res.data.length < TAMANO_PAGINA) break;
+    }
+    return { data: todas };
   }
 
   // Equipo de cada caso con nombres y cargos: se calcula una vez por carga y no en cada fila de la tabla.
@@ -65,13 +97,15 @@
       estado.cuentas = cuentas;
       prepararBuscador();
     }
-    var res = await ctx.supabase.from('personal_asesoria').select(COLUMNAS_PERSONAL).order('agregada_en', { ascending: true });
+    var res = await leerPaginado(function () { return ctx.supabase.from('personal_asesoria').select(COLUMNAS_PERSONAL); });
     if (res.error) {
-      registrarFallo(res.error);
-      estado.personal = [];
+      registrarFallo(res.error, 'personal');
+      if (!estado.disponible) estado.personal = [];
     } else {
       estado.disponible = true;
-      estado.personal = res.data || [];
+      estado.fallo.personal = false;
+      estado.cargado.personal = true;
+      estado.personal = res.data;
     }
     recalcularEquipos();
     renderPersonal();
@@ -82,15 +116,20 @@
     if (!estado.disponible) {
       estado.asignaciones = [];
       estado.porCaso = {};
+      estado.cargado.asignaciones = false;
       recalcularEquipos();
       return false;
     }
-    var res = await ctx.supabase.from('asignaciones_caso').select(COLUMNAS_ASIGNACION).is('liberada_en', null);
+    var res = await leerPaginado(function () {
+      return ctx.supabase.from('asignaciones_caso').select(COLUMNAS_ASIGNACION).is('liberada_en', null);
+    });
     if (res.error) {
-      registrarFallo(res.error);
-      estado.asignaciones = [];
+      registrarFallo(res.error, 'asignaciones');
+      if (!estado.disponible) estado.asignaciones = [];
     } else {
-      estado.asignaciones = res.data || [];
+      estado.fallo.asignaciones = false;
+      estado.cargado.asignaciones = true;
+      estado.asignaciones = res.data;
     }
     estado.porCaso = A.agruparPorCaso(estado.asignaciones);
     recalcularEquipos();
@@ -103,8 +142,15 @@
     renderPersonal();
   }
 
-  function puedeAsignar() { return estado.disponible && A.puedeAsignar(estado.personal, ctx && ctx.userId); }
+  function puedeAsignar() { return confiable() && A.puedeAsignar(estado.personal, ctx && ctx.userId); }
   function disponible() { return estado.disponible; }
+
+  // Cuántos casos abiertos esperan a que la abogada institucional los reparta (null = no se pudo calcular).
+  async function contarSinAsignarAbiertos() {
+    if (!confiable()) return null;
+    var res = await leerPaginado(function () { return ctx.supabase.from('solicitudes').select('id, estado').in('estado', A.ESTADOS_ABIERTOS); });
+    return res.error ? null : A.contarSinAsignar(res.data, estado.equipos);
+  }
 
   // Mis filas de personal (activas): sirven para el filtro "Asignadas a mí".
   function misPersonalIds() {
@@ -118,8 +164,6 @@
   function filtrar(solicitudes, filtro) {
     return A.filtrarPorAsignacion(solicitudes, estado.equipos, filtro, misPersonalIds());
   }
-
-  function contarSinAsignar(solicitudes) { return A.contarSinAsignar(solicitudes, estado.equipos); }
 
   function nombreDeCuenta(idCuenta) {
     if (!idCuenta) return '—';
@@ -137,28 +181,30 @@
   }
 
   // anterior = nombre de quien figura en solicitudes.asignada_a por la asignación de antes de este módulo.
+  // Mientras los datos de asignación no se hayan leído bien, "sin asignar" sería una suposición: se muestra un guion.
   function celdaEquipo(solicitud, anterior) {
-    var equipo = estado.disponible ? equipoDe(solicitud.id) : [];
+    var equipo = datosListos() ? equipoDe(solicitud.id) : [];
+    var pendiente = datosListos() && A.estaSinAsignar(solicitud, estado.equipos);
     if (equipo.length) {
       var lista = '<div class="flex flex-col gap-1.5">' + equipo.map(function (e) {
         return '<div class="leading-tight"><span class="font-medium text-gray-800">' + esc(e.nombre) + '</span>' +
           (e.retirada ? ' <span class="text-xs text-amber-700">(retirada)</span>' : '') +
           '<span class="block text-xs text-gray-500">' + esc(e.cargoEtiqueta) + ' · ' + esc(e.rol) + '</span></div>';
       }).join('') + '</div>';
-      return A.estaSinAsignar(solicitud, estado.equipos) ? lista + '<div class="mt-1.5">' + insigniaPendiente('Reasignar') + '</div>' : lista;
+      return pendiente ? lista + '<div class="mt-1.5">' + insigniaPendiente('Reasignar') + '</div>' : lista;
     }
     if (anterior) {
-      return '<div class="leading-tight"><span class="font-medium text-gray-800">' + esc(anterior) + '</span>' +
+      var previa = '<div class="leading-tight"><span class="font-medium text-gray-800">' + esc(anterior) + '</span>' +
         '<span class="block text-xs text-gray-500">Asignación anterior</span></div>';
+      return pendiente ? previa + '<div class="mt-1.5">' + insigniaPendiente('Sin asignar') + '</div>' : previa;
     }
-    if (estado.disponible && A.estaSinAsignar(solicitud, estado.equipos)) return insigniaPendiente('Sin asignar');
-    return '<span class="text-gray-400">—</span>';
+    return pendiente ? insigniaPendiente('Sin asignar') : '<span class="text-gray-400">—</span>';
   }
 
   // Resumen de una línea bajo el nombre, para pantallas pequeñas donde la columna de personal queda fuera de vista.
   function resumenCorto(solicitud, anterior) {
-    if (estado.disponible && A.estaSinAsignar(solicitud, estado.equipos)) return insigniaPendiente('Sin asignar');
-    var activos = estado.disponible ? equipoDe(solicitud.id).filter(function (e) { return !e.retirada; }) : [];
+    if (datosListos() && A.estaSinAsignar(solicitud, estado.equipos)) return insigniaPendiente('Sin asignar');
+    var activos = datosListos() ? equipoDe(solicitud.id).filter(function (e) { return !e.retirada; }) : [];
     if (activos.length) {
       return '<span class="text-xs text-gray-500">' + esc(activos[0].nombre) + (activos.length > 1 ? ' +' + (activos.length - 1) : '') + '</span>';
     }
@@ -227,9 +273,15 @@
       return '<div class="mt-3 pt-3 border-t border-gray-100">' + titulo + equipoActualHtml([], anterior) +
         '<p class="mt-2 text-sm text-amber-700">' + esc(SIN_CONFIGURAR) + '</p></div>';
     }
+    if (!datosListos()) {
+      // Sin datos no se afirma nada del equipo (ni que no tenga): solo la asignación antigua, si la hay, y el aviso.
+      return '<div class="mt-3 pt-3 border-t border-gray-100">' + titulo + (anterior ? equipoActualHtml([], anterior) : '') +
+        '<p class="mt-2 text-sm text-amber-700">' + esc(SIN_DATOS) + '</p></div>';
+    }
     var equipo = equipoDe(solicitud.id);
+    var pie = puedeAsignar() ? formularioAsignarHtml(equipo) : hayFallo() ? '<p class="text-sm text-amber-700">' + esc(SIN_ACTUALIZAR) + '</p>' : avisoSoloLecturaHtml();
     return '<div class="mt-3 pt-3 border-t border-gray-100" id="asignacion-bloque">' + titulo + equipoActualHtml(equipo, anterior) +
-      '<div class="mt-3">' + (puedeAsignar() ? formularioAsignarHtml(equipo) : avisoSoloLecturaHtml()) + '</div>' +
+      '<div class="mt-3">' + pie + '</div>' +
       '<details class="mt-3 text-sm"><summary class="cursor-pointer text-xs text-gray-500 hover:text-gray-700">Historial de asignaciones</summary>' +
       '<div id="asig-historial" class="mt-2 text-xs text-gray-500">Cargando…</div></details></div>';
   }
@@ -285,6 +337,9 @@
     if (!lista) return;
     lista.innerHTML = estado.cuentas.map(function (cuenta) {
       var texto = etiquetaCuenta(cuenta);
+      // Dos cuentas con el mismo nombre y correo (cualquiera puede registrarse con el nombre de otra persona) se
+      // distinguen por el id: así elegir una no elige la otra sin darse cuenta.
+      if (estado.cuentaPorTexto[texto]) texto += ' · id ' + String(cuenta.id).slice(0, 8);
       estado.cuentaPorTexto[texto] = cuenta.id;
       return '<option value="' + esc(texto) + '"></option>';
     }).join('');
@@ -302,6 +357,7 @@
     if (!aviso) return;
     var mensaje = '';
     if (!estado.disponible) mensaje = SIN_CONFIGURAR;
+    else if (hayFallo() || !datosListos()) mensaje = SIN_ACTUALIZAR;
     else if (!A.abogadaInstitucional(estado.personal)) {
       mensaje = 'No hay abogada institucional activa, así que nadie puede asignar casos. Agrégala con el cargo «Abogada institucional».';
     }
@@ -324,13 +380,13 @@
     var perfil = fila.perfil || {};
     var aviso = fila.activa ? A.avisoDeAcceso(fila) : null;
     var abiertos = carga[fila.id] || 0;
-    var botonAcceso = ' <button type="button" class="underline font-semibold" data-accion="dar-acceso" data-perfil="' + esc(fila.perfil_id) + '" data-nombre="' + esc(nombre) + '">Dar rol Asesora</button>';
+    var botonAcceso = ' <button type="button" class="underline font-semibold" data-accion="dar-acceso" data-perfil="' + esc(fila.perfil_id) + '" data-nombre="' + esc(nombre) + '" aria-label="Dar rol Asesora a ' + esc(nombre) + '">Dar rol Asesora</button>';
     var estadoHtml = fila.activa
       ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs rounded-full font-semibold bg-green-100 text-green-800"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Disponible</span>'
       : '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs rounded-full font-semibold bg-gray-200 text-gray-900"><span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>Retirada' + (fila.retirada_en ? ' el ' + esc(fecha(fila.retirada_en)) : '') + '</span>';
     var boton = fila.activa
-      ? '<button type="button" class="text-red-600 hover:text-red-800 hover:underline text-sm font-medium" data-accion="quitar" data-id="' + esc(fila.id) + '">Quitar</button>'
-      : '<button type="button" class="text-purple-700 hover:text-purple-900 hover:underline text-sm font-medium" data-accion="reincorporar" data-id="' + esc(fila.id) + '">Reincorporar</button>';
+      ? '<button type="button" class="text-red-600 hover:text-red-800 hover:underline text-sm font-medium" data-accion="quitar" data-id="' + esc(fila.id) + '" aria-label="Quitar a ' + esc(nombre) + ' del personal">Quitar</button>'
+      : '<button type="button" class="text-purple-700 hover:text-purple-900 hover:underline text-sm font-medium" data-accion="reincorporar" data-id="' + esc(fila.id) + '" aria-label="Reincorporar a ' + esc(nombre) + ' al personal">Reincorporar</button>';
     return '<tr class="hover:bg-gray-50 transition' + (fila.activa ? '' : ' opacity-70') + '">' +
       '<td class="px-4 py-3 font-medium">' + esc(nombre) +
       (aviso ? '<p class="text-xs text-amber-700 font-normal mt-1"><i class="fas fa-exclamation-triangle mr-1"></i>' + esc(aviso) + botonAcceso + '</p>' : '') + '</td>' +
@@ -364,16 +420,24 @@
 
   // Tras cambiar el personal basta recargar el personal y las asignaciones; si además cambió el rol de una cuenta,
   // Admin.js recarga también la tabla de usuarias (y esta vuelve a pedir el personal).
+  // Al repintar la tabla el botón pulsado desaparece y el foco se perdería: pasa al título de la sección.
+  function enfocarPersonal() {
+    var titulo = el('personal-title');
+    if (titulo) titulo.focus({ preventScroll: true });
+  }
+
   async function recargarPersonal() {
     await cargarPersonal();
     await cargarAsignaciones();
     renderPersonal();
+    enfocarPersonal();
   }
 
   async function recargarCuentas() {
     if (window.recargarUsuarias) await window.recargarUsuarias();
     await cargarAsignaciones();
     renderPersonal();
+    enfocarPersonal();
   }
 
   async function agregarPersonal(evento) {
@@ -386,6 +450,13 @@
 
     var cuenta = estado.cuentas.filter(function (c) { return c.id === idCuenta; })[0] || {};
     var nombre = A.nombreDePerfil(cuenta);
+    // Es el cargo con más poder (la única que asigna casos): se confirma con el correo a la vista para no elegir una
+    // cuenta homónima por error.
+    if (cargo === A.INSTITUCIONAL) {
+      var pregunta = 'Vas a nombrar abogada institucional a ' + nombre + (cuenta.email ? ' (' + cuenta.email + ')' : '') +
+        '. Será la única persona que asigna los casos.\n\n¿Es la cuenta correcta?';
+      if (!window.confirm(pregunta)) return;
+    }
     var boton = el('personal-agregar');
     boton.disabled = true;
     var error = await guardarAlta(idCuenta, cargo);
@@ -488,14 +559,17 @@
     cargarAsignaciones: cargarAsignaciones,
     disponible: disponible,
     puedeAsignar: puedeAsignar,
+    confiable: confiable,
+    hayFallo: hayFallo,
     filtrar: filtrar,
-    contarSinAsignar: contarSinAsignar,
+    contarSinAsignarAbiertos: contarSinAsignarAbiertos,
     celdaEquipo: celdaEquipo,
     resumenCorto: resumenCorto,
     etiquetaDeAccion: etiquetaDeAccion,
     bloqueModal: bloqueModal,
     enlazarModal: enlazarModal,
     nombreDeCuenta: nombreDeCuenta,
-    mensajeSinConfigurar: SIN_CONFIGURAR
+    mensajeSinConfigurar: SIN_CONFIGURAR,
+    mensajeSinActualizar: SIN_ACTUALIZAR
   };
 })();

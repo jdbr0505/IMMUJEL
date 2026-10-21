@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUserId = user.id;
   const isAdmin = profile.rol === 'admin';
   window.isAdmin = isAdmin; // switchTab() vive fuera de este closure y necesita leerlo
-  const esc = window.Asignacion ? window.Asignacion.escapar : (v) => String(v ?? '');
+  // Todo dato de personas (nombres, descripciones…) se escapa antes de armar HTML; si asignacion.js no cargó, queda este respaldo.
+  const esc = window.Asignacion ? window.Asignacion.escapar
+    : (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   window.AsignacionPanel?.iniciar({ supabase, userId: currentUserId, isAdmin, notify: window.showToast });
 
   // Mostrar tab de Usuarias y de Estilo solo para admin
@@ -104,9 +106,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const kpiSinAsignar = document.getElementById('kpi-sinasignar');
     if (!kpiSinAsignar) return;
     const panel = window.AsignacionPanel;
-    if (!panel || !panel.disponible()) { kpiSinAsignar.textContent = '—'; return; }
-    const { data, error } = await supabase.from('solicitudes').select('id, estado').in('estado', ['pendiente', 'en proceso']);
-    kpiSinAsignar.textContent = error ? '—' : panel.contarSinAsignar(data || []);
+    if (!panel || !panel.confiable()) { kpiSinAsignar.textContent = '—'; return; }
+    const sinAsignar = await panel.contarSinAsignarAbiertos();
+    kpiSinAsignar.textContent = sinAsignar === null ? '—' : sinAsignar;
   }
 
   // Aviso sobre la tabla: guía a la abogada institucional o avisa que falta activar la función en la base de datos.
@@ -120,21 +122,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!panel.disponible()) {
       texto = panel.mensajeSinConfigurar;
       clases = 'bg-amber-50 border-amber-200 text-amber-800';
+    } else if (!panel.confiable()) {
+      texto = panel.mensajeSinActualizar;
+      clases = 'bg-amber-50 border-amber-200 text-amber-800';
     } else if (panel.puedeAsignar()) {
       texto = 'Eres la abogada institucional: los casos nuevos llegan primero a ti. Los que aparecen como «Sin asignar» esperan que elijas quién los atiende (hasta dos personas).';
       clases = 'bg-purple-50 border-purple-100 text-purple-800';
     }
     aviso.textContent = texto;
     aviso.className = 'mb-6 rounded-xl border px-4 py-3 text-sm ' + clases + (texto ? '' : ' hidden');
-    if (filtro) filtro.disabled = !panel.disponible();
+    if (filtro) filtro.disabled = !panel.confiable();
   }
 
   // 3. Cargar solicitudes
   let lastFilters = {};
+  let reportsSeq = 0; // si se lanzan dos cargas seguidas (dos "Filtrar"), solo se pinta la última
   const refreshReports = () => loadReports(lastFilters);
 
   async function loadReports(filters = {}) {
     lastFilters = filters;
+    const seq = ++reportsSeq;
     if (loading) loading.classList.remove('hidden');
     let query = supabase
       .from('solicitudes')
@@ -145,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filters.estado) query = query.eq('estado', filters.estado);
 
     const { data, error } = await query;
+    if (seq !== reportsSeq) return;
     if (error) {
       console.error('Error al cargar solicitudes:', error);
       if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-500">
@@ -155,6 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // El personal y las asignaciones vigentes se piden junto con las solicitudes para pintar "Personal asignado" y el indicador "Sin asignar".
     await window.AsignacionPanel?.cargar();
+    if (seq !== reportsSeq) return;
     actualizarAvisoAsignacion();
     updateKPIGlobal();
 
@@ -172,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         users.forEach(u => { usersMap[u.id] = u.nombre_completo; });
       }
     }
+    if (seq !== reportsSeq) return;
 
     if (tbody) {
       const panel = window.AsignacionPanel;
@@ -533,7 +543,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  async function loadUsuarios(searchTerm, rolFilter) {
+  async function loadUsuarios(searchTerm, rolFilter, forzarPersonal = false) {
     if (!isAdmin || !usuariosTbody) return;
     if (usuariosLoading) usuariosLoading.classList.remove('hidden');
     if (usuariosEmpty) usuariosEmpty.classList.add('hidden');
@@ -548,7 +558,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (error) {
         console.error('Error al cargar usuarias:', error);
         usuariosTbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-500">
-          <i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</td></tr>`;
+          <i class="fas fa-exclamation-circle mr-2"></i>Error: ${esc(error.message)}</td></tr>`;
         if (usuariosLoading) usuariosLoading.classList.add('hidden');
         return;
       }
@@ -566,13 +576,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderUsuarios(filtered);
 
     // Personal de asesorías (debajo de la tabla): se recarga con las cuentas, que alimentan el buscador de nombres.
-    await window.AsignacionPanel?.cargarPersonal(allUsersCache);
+    // Buscar o filtrar usuarias no lo toca: solo al abrir la pestaña, al refrescar o cuando cambia el rol de una cuenta.
+    if (forzarPersonal || (!searchTerm && !rolFilter)) await window.AsignacionPanel?.cargarPersonal(allUsersCache);
   }
 
   // Tras cambiar el rol de una cuenta desde el personal: vuelve a pedir las cuentas al servidor y repinta la tabla.
   window.recargarUsuarias = async () => {
     allUsersCache = [];
-    await loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '');
+    await loadUsuarios(usuSearch?.value || '', usuFilterRol?.value || '', true);
   };
 
   // Search handlers with debounce
