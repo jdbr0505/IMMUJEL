@@ -295,11 +295,6 @@
     $('btn-print').addEventListener('click', function () { window.print(); });
     window.addEventListener('beforeprint', prepararImpresion);
     window.addEventListener('afterprint', restaurarTema);
-
-    var toggle = $('theme-toggle');
-    if (toggle) toggle.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
-    });
   }
 
   // Igual que en Admin.js: Usuarias y Estilo son solo para administradoras.

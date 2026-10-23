@@ -12,6 +12,16 @@
   const pathDepth = (window.location.pathname.match(/\//g) || []).length;
   const basePath = pathDepth > 1 ? '../' : './';
 
+  // El nombre de usuario lo escribe la propia usuaria al registrarse: se escapa antes de ir a innerHTML
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // Visitante sin sesión (también es lo que se muestra si falla la consulta de sesión)
+  const marcaDeVisitante = () => `
+    <div class="nav-actions">
+      <a href="${basePath}Login/login.html" class="nav-btn nav-btn--solid">Iniciar sesión</a>
+      <a href="${basePath}Login/signup.html" class="nav-btn nav-btn--outline">Registrarse</a>
+    </div>`;
+
   async function subscribePush(userId, swReg) {
     try {
       const sub = await swReg.pushManager.subscribe({
@@ -65,12 +75,10 @@
       if (panelLink) {
         if (rol === 'admin' || rol === 'asesora') {
           panelLink.innerHTML = `
-            <a href="${basePath}Admin/Admin.html" class="group relative inline-flex items-center gap-2 bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-semibold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 text-sm">
-              <span class="flex items-center justify-center w-7 h-7 rounded-lg bg-white/15 group-hover:bg-white/25 transition">
-                <i class="fas fa-crown text-xs"></i>
-              </span>
-              <span class="tracking-wide">Admin</span>
-              <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white animate-pulse" style="border-color: white;"></span>
+            <a href="${basePath}Admin/Admin.html" class="nav-admin" title="Ir al panel de administración">
+              <span class="nav-admin__icon"><i class="fas fa-crown" aria-hidden="true"></i></span>
+              <span>Admin</span>
+              <span class="nav-dot" aria-hidden="true"></span>
             </a>`;
         } else {
           panelLink.innerHTML = '';
@@ -89,27 +97,24 @@
         function updateNotifBtn(active) {
           const btn = document.getElementById('notif-btn');
           if (!btn) return;
-          if (active) {
-            btn.className = 'relative inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-2 px-3 rounded-full transition-all text-xs shadow-md hover:from-purple-700 hover:to-blue-700';
-            btn.title = 'Notificaciones activas · Clic para desactivar';
-            btn.innerHTML = '<i class="fas fa-bell"></i><span class="hidden sm:inline ml-0.5">Activas</span><span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white"></span>';
-          } else {
-            btn.className = 'inline-flex items-center gap-1.5 border border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold py-2 px-3 rounded-full transition-all text-xs';
-            btn.title = 'Activar notificaciones push';
-            btn.innerHTML = '<i class="fas fa-bell-slash"></i><span class="hidden sm:inline ml-0.5">Notificar</span>';
-          }
+          btn.className = 'nav-btn nav-btn--bell ' + (active ? 'nav-btn--solid' : 'nav-btn--ghost');
+          btn.title = active ? 'Notificaciones activas · Clic para desactivar' : 'Activar notificaciones push';
+          btn.innerHTML = active
+            ? '<i class="fas fa-bell" aria-hidden="true"></i><span class="nav-btn-label">Desactivar notificaciones</span><span class="nav-dot" aria-hidden="true"></span>'
+            : '<i class="fas fa-bell-slash" aria-hidden="true"></i><span class="nav-btn-label">Activar notificaciones</span>';
         }
 
+        const nombreSeguro = esc(nombreUsuario);
+        const inicial = esc(Array.from(String(nombreUsuario).trim())[0] || '?');
         sessionBtn.innerHTML = `
-          <div class="flex items-center space-x-3">
-            <span class="text-sm font-medium text-gray-700 flex items-center gap-1">
-              <i class="fas fa-user-circle text-purple-500"></i>${nombreUsuario}
+          <div class="nav-actions nav-actions--session">
+            <span class="nav-user" title="Sesión iniciada como ${nombreSeguro}">
+              <span class="nav-avatar" aria-hidden="true">${inicial}</span>
+              <span class="nav-user-name">${nombreSeguro}</span>
             </span>
-            <button id="notif-btn" class="inline-flex items-center gap-1.5 border border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold py-2 px-3 rounded-full transition-all text-xs">
-              <i class="fas fa-bell-slash"></i>
-            </button>
-            <button id="logout-btn" class="flex items-center gap-1.5 border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">
-              <i class="fas fa-sign-out-alt"></i><span class="hidden sm:inline">Cerrar sesión</span>
+            <button type="button" id="notif-btn" class="nav-btn nav-btn--bell nav-btn--ghost"></button>
+            <button type="button" id="logout-btn" class="nav-btn nav-btn--logout nav-btn--outline" title="Cerrar sesión">
+              <i class="fas fa-sign-out-alt" aria-hidden="true"></i><span class="nav-btn-label">Cerrar sesión</span>
             </button>
           </div>`;
 
@@ -141,23 +146,11 @@
       }
     } else {
       if (panelLink) panelLink.innerHTML = '';
-      if (sessionBtn) {
-        sessionBtn.innerHTML = `
-          <div class="flex gap-2">
-            <a href="${basePath}Login/login.html" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-full transition shadow-md text-sm">Iniciar Sesión</a>
-            <a href="${basePath}Login/signup.html" class="border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">Registrarse</a>
-          </div>`;
-      }
+      if (sessionBtn) sessionBtn.innerHTML = marcaDeVisitante();
     }
   } catch (err) {
     console.error('auth.js: Error general:', err);
-    if (sessionBtn) {
-      sessionBtn.innerHTML = `
-        <div class="flex gap-2">
-          <a href="${basePath}Login/login.html" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-full transition shadow-md text-sm">Iniciar Sesión</a>
-          <a href="${basePath}Login/signup.html" class="border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold py-2 px-4 rounded-full transition text-sm">Registrarse</a>
-        </div>`;
-    }
+    if (sessionBtn) sessionBtn.innerHTML = marcaDeVisitante();
   }
 })();
 

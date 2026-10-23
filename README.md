@@ -270,6 +270,7 @@ IMMUJEL/
 │
 ├── index.html                    Página principal
 ├── ds.css                        Diseño compartido de las páginas públicas: cabecera de página, hojas, botones, tarjetas y pie (usa los tokens de tema)
+├── nav.css                       Encabezado común de todas las páginas: una sola fila en escritorio, panel desplegable en móvil (usa los tokens de tema)
 ├── home.css                      Estilos propios de la página principal (usa los tokens de tema)
 ├── styles.css                    Identidad visual y tema oscuro
 ├── sw.js                         Service Worker (offline + push)
@@ -277,13 +278,13 @@ IMMUJEL/
 ├── vercel.json                   Cabeceras de seguridad y caché
 │
 ├── js/                           Scripts compartidos por todo el sitio
-│   ├── auth.js                   Sesión, roles e inyección de botones
+│   ├── auth.js                   Sesión, roles y botones del encabezado (Admin, notificaciones, ingreso)
 │   ├── animations.js             Animaciones de scroll
 │   ├── cookies.js                Consentimiento de cookies (banner + utilidades)
 │   ├── historial.js              Historial local de publicaciones vistas
 │   ├── home.js                   Página principal: carrusel de láminas, contadores y aparición (lógica probada en tests/)
 │   ├── sw-register.js            Registro del Service Worker
-│   └── ui.js                     Utilidades de interfaz
+│   └── ui.js                     Menú móvil, desplegable de Servicios y modo oscuro
 │
 ├── Login/                        Autenticación
 │   ├── login.html · login.js · login-styles.css

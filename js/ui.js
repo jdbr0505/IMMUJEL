@@ -3,52 +3,57 @@
     // ---------- MENÚ MÓVIL ----------
     const menuBtn = document.getElementById('menu-btn');
     const menu = document.getElementById('menu');
+    const esEscritorio = window.matchMedia('(min-width: 1024px)');
+
+    function ponerMenu(abierto) {
+        menu.classList.toggle('is-open', abierto);
+        menuBtn.setAttribute('aria-expanded', String(abierto));
+        menuBtn.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+    }
+
     if (menuBtn && menu) {
-        menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        menuBtn.addEventListener('click', () => ponerMenu(!menu.classList.contains('is-open')));
     }
 
     // ---------- DROPDOWN SERVICIOS ----------
     const serviciosBtn = document.getElementById('servicios-btn');
     const serviciosDropdown = document.getElementById('servicios-dropdown');
-    const serviciosArrow = document.getElementById('servicios-arrow');
+    const serviciosItem = serviciosBtn && serviciosBtn.closest('.nav-dropdown');
 
-    if (serviciosBtn && serviciosDropdown) {
-        function abrirDropdown() {
-            serviciosDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-            serviciosDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-            serviciosBtn.setAttribute('aria-expanded', 'true');
-            if (serviciosArrow) serviciosArrow.classList.add('rotate-180');
-        }
+    function ponerDropdown(abierto) {
+        serviciosItem.classList.toggle('is-open', abierto);
+        serviciosBtn.setAttribute('aria-expanded', String(abierto));
+    }
 
-        function cerrarDropdown() {
-            serviciosDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-            serviciosDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-            serviciosBtn.setAttribute('aria-expanded', 'false');
-            if (serviciosArrow) serviciosArrow.classList.remove('rotate-180');
-        }
-
+    if (serviciosBtn && serviciosDropdown && serviciosItem) {
         serviciosBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const isOpen = serviciosBtn.getAttribute('aria-expanded') === 'true';
-            if (isOpen) cerrarDropdown();
-            else abrirDropdown();
+            ponerDropdown(serviciosBtn.getAttribute('aria-expanded') !== 'true');
         });
 
         // Cierra al hacer clic fuera del dropdown
         document.addEventListener('click', (e) => {
-            if (!serviciosBtn.contains(e.target) && !serviciosDropdown.contains(e.target)) {
-                cerrarDropdown();
-            }
-        });
-
-        // Cierra con la tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && serviciosBtn.getAttribute('aria-expanded') === 'true') {
-                cerrarDropdown();
-                serviciosBtn.focus();
-            }
+            if (!serviciosItem.contains(e.target)) ponerDropdown(false);
         });
     }
+
+    // Al cruzar el ancho de escritorio todo queda cerrado: el panel móvil deja de existir y el dropdown cambia de forma (acordeón / flotante)
+    esEscritorio.addEventListener('change', () => {
+        if (menu && menuBtn) ponerMenu(false);
+        if (serviciosItem) ponerDropdown(false);
+    });
+
+    // Escape cierra primero el dropdown de Servicios y, si no hay uno abierto, el menú móvil
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        if (serviciosItem && serviciosBtn.getAttribute('aria-expanded') === 'true') {
+            ponerDropdown(false);
+            serviciosBtn.focus();
+        } else if (menu && menu.classList.contains('is-open') && !esEscritorio.matches) {
+            ponerMenu(false);
+            menuBtn.focus();
+        }
+    });
 
     // ---------- TEMA OSCURO ----------
     const body = document.body;
@@ -57,9 +62,12 @@
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') body.classList.add('dark-theme');
     if (themeToggle) {
+        const reflejarTema = () => themeToggle.setAttribute('aria-pressed', String(body.classList.contains('dark-theme')));
+        reflejarTema();
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-theme');
             localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+            reflejarTema();
         });
     }
 

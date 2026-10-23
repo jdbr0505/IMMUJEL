@@ -359,14 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 7. Cerrar sesión (también manejado por auth.js)
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      window.location.href = '../Login/login.html';
-    });
-  }
+  // 7. Cerrar sesión: el botón del encabezado lo crea js/auth.js y pide confirmación; aquí no hay nada que enlazar
 
   // 8. Nueva Asesoría manual
   const btnNuevaAsesoria = document.getElementById('btn-nueva-asesoria');
