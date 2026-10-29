@@ -1,4 +1,7 @@
 // signup.js – Registro con teléfono, manejo de errores y campo opcional
+// Los errores de Supabase llegan en inglés: errores-auth.js los pasa a español (si no cargó, se usa el texto de respaldo)
+const mensajeDeError = (error, respaldo) => (window.ErroresAuth ? window.ErroresAuth.mensaje(error, respaldo) : respaldo);
+
 document.addEventListener('DOMContentLoaded', async () => {
   await window.supabaseReady;
   const form = document.getElementById('signup-form');
@@ -98,15 +101,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       }
 
-      successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Cuenta creada con éxito. Redirigiendo al inicio de sesión...';
+      successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Registro exitoso. Te enviamos un correo para activar tu cuenta: revisa tu bandeja de entrada o el correo no deseado. Redirigiendo al inicio de sesión...';
       successDiv.classList.remove('hidden');
       form.reset();
 
       setTimeout(() => {
         window.location.href = 'login.html';
-      }, 3000);
+      }, 7000);
     } catch (error) {
-      errorDiv.textContent = error.message || 'Error al registrarse. Intenta de nuevo.';
+      console.error('Error al registrarse:', error);
+      errorDiv.textContent = mensajeDeError(error, 'Error al registrarse. Intenta de nuevo.');
       errorDiv.classList.remove('hidden');
     } finally {
       submitBtn.disabled = false;

@@ -289,8 +289,10 @@ IMMUJEL/
 ├── Login/                        Autenticación
 │   ├── login.html · login.js · login-styles.css
 │   ├── signup.html · signup.js · signup-styles.css
+│   ├── errores-auth.js           Mensajes de error de Supabase Auth en español (puros, probados en tests/)
 │   ├── update-password.html
-│   ├── email-confirmacion.html
+│   ├── email-confirmacion.html   Correo de confirmación de cuenta (se pega en Supabase, ver el paso 7)
+│   ├── reset-password-email.html Correo de restablecer contraseña (se pega en Supabase, ver el paso 7)
 │   └── Login_supabase.js         Cliente Supabase compartido
 │
 ├── Forms/                        Solicitudes de asesoría
@@ -470,6 +472,21 @@ Guarda el par de claves en las variables de entorno de la Edge Function.
 ```bash
 supabase functions deploy send-notification
 ```
+
+### 7. Correos de confirmación de cuenta y de restablecer contraseña
+
+Los correos que reciben las usuarias salen de `Login/email-confirmacion.html` (al registrarse) y `Login/reset-password-email.html` (al olvidar la contraseña). Supabase no los lee del repositorio: hay que pegarlos a mano cada vez que cambien.
+
+| Correo | Pestaña en **Authentication → Emails** | Asunto (**Subject heading**) | Archivo |
+|:---|:---|:---|:---|
+| Confirmación de cuenta | Confirm sign up | `Registro exitoso: activa tu cuenta en IMMUJEL` | `Login/email-confirmacion.html` |
+| Restablecer contraseña | Reset password | `Restablece tu contraseña de IMMUJEL` | `Login/reset-password-email.html` |
+
+En **Message body**, pestaña **Source**, reemplaza todo por el contenido del archivo y pulsa **Save changes**.
+
+**Nombre del remitente.** Con el servicio de correo integrado de Supabase los mensajes salen como «Supabase Auth» y con límites muy bajos de envío. Para que salgan como «IMMUJEL», en **Authentication → Emails → SMTP Settings** activa *Enable custom SMTP* y completa: *Sender email* (la cuenta de Gmail institucional), *Sender name* `IMMUJEL`, *Host* `smtp.gmail.com`, *Port* `465`, *Username* (esa misma cuenta) y *Password* (contraseña de aplicación de Google). Son los mismos datos que `SMTP_USER` y `SMTP_PASS` de la Edge Function.
+
+Las plantillas usan solo variables de Supabase (`{{ .ConfirmationURL }}` y `{{ .Email }}`), el logotipo publicado en el sitio y el formato que aceptan los clientes de correo (tablas y estilos en línea). Siguen los colores y los textos de la página principal; si se cambia el logotipo o el dominio, hay que actualizar en ambas las direcciones de la imagen y de los enlaces. Muchos clientes (Outlook, Hotmail) ocultan las imágenes remotas hasta que la usuaria pulsa «mostrar imágenes»; mientras tanto se ve el texto «IMMUJEL» en su lugar.
 
 ---
 

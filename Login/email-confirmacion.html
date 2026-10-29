@@ -1,218 +1,222 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="utf-8">
-  <link rel="preconnect" href="https://vhgfyqodiieblhfwbama.supabase.co">
-  <link rel="dns-prefetch" href="https://vhgfyqodiieblhfwbama.supabase.co">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirma tu cuenta - IMMUJEL</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Registro exitoso | IMMUJEL</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <style>table, td, div, h1, h2, h3, p, a, span { font-family: Arial, sans-serif !important; }</style>
+  <![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <!--<![endif]-->
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #F0F5FF;
-      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    body { margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { text-decoration: none; }
+
+    @media only screen and (max-width: 620px) {
+      .card { width: 100% !important; border-radius: 22px !important; }
+      .px { padding-left: 22px !important; padding-right: 22px !important; }
+      .hero-pre { font-size: 20px !important; }
+      .hero-word { font-size: 42px !important; }
+      .btn-table, .btn-cell { width: 100% !important; }
+      .btn-link { padding-left: 16px !important; padding-right: 16px !important; }
+      .steps-box { padding: 20px 18px !important; }
     }
-    table { border-collapse: collapse; width: 100%; }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #ffffff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(165, 6, 173, 0.12), 0 4px 20px rgba(3, 98, 207, 0.08);
-    }
-    .header {
-      background: linear-gradient(135deg, #A506AD 0%, #0362CF 60%, #02162E 100%);
-      padding: 40px 20px 35px;
-      text-align: center;
-      position: relative;
-    }
-    .header-watermark {
-      display: block;
-      width: 140px;
-      height: auto;
-      margin: 0 auto 10px;
-      opacity: 0.1;
-    }
-    .header-logo {
-      display: block;
-      max-width: 140px;
-      height: auto;
-      margin: -80px auto 0;
-      position: relative;
-    }
-    .content {
-      padding: 44px 36px 36px;
-      text-align: center;
-    }
-    .title {
-      font-size: 26px;
-      font-weight: 800;
-      color: #02162E;
-      margin: 0 0 16px;
-      letter-spacing: -0.3px;
-    }
-    .title-accent {
-      color: #A506AD;
-    }
-    .divider {
-      width: 50px;
-      height: 4px;
-      background: linear-gradient(90deg, #A506AD, #0362CF);
-      border-radius: 2px;
-      margin: 0 auto 24px;
-    }
-    .message {
-      font-size: 16px;
-      line-height: 1.7;
-      color: #4B5563;
-      margin: 0 0 28px;
-    }
-    .button {
-      display: inline-block;
-      background: linear-gradient(135deg, #A506AD, #0362CF);
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 15px 38px;
-      border-radius: 50px;
-      box-shadow: 0 6px 20px rgba(165, 6, 173, 0.3);
-      transition: all 0.3s ease;
-    }
-    .button:hover {
-      box-shadow: 0 8px 28px rgba(165, 6, 173, 0.4);
-      transform: translateY(-1px);
-    }
-    .alt-link {
-      margin-top: 28px;
-      font-size: 13px;
-      color: #9CA3AF;
-      line-height: 1.6;
-    }
-    .alt-link a {
-      color: #0362CF;
-      word-break: break-all;
-    }
-    .footer {
-      background-color: #F5F0FF;
-      padding: 28px 24px;
-      text-align: center;
-      font-size: 12px;
-      color: #9CA3AF;
-      border-top: 1px solid rgba(165, 6, 173, 0.08);
-    }
-    .footer-logo {
-      max-width: 80px;
-      height: auto;
-      margin-bottom: 12px;
-      opacity: 0.25;
-    }
-    .footer p { margin: 4px 0; }
-    .footer a { color: #A506AD; text-decoration: none; font-weight: 500; }
-    .social-links { margin: 12px 0; }
-    .social-links a {
-      display: inline-block;
-      margin: 0 8px;
-      color: #A506AD;
-      font-size: 13px;
-    }
-    @media only screen and (max-width: 600px) {
-      .content { padding: 32px 20px 28px; }
-      .title { font-size: 22px; }
-      .button { padding: 13px 28px; font-size: 15px; }
-      .header { padding: 32px 16px 28px; }
+
+    /* Modo oscuro (Apple Mail, iOS, Outlook para Mac y otros que lo soportan) */
+    @media (prefers-color-scheme: dark) {
+      .dm-page { background-color: #0a0518 !important; }
+      .dm-card { background-color: #1b1230 !important; }
+      .dm-foot { background-color: #150d28 !important; border-color: #3a2a5c !important; }
+      .dm-tint { background-color: #2a1d45 !important; border-color: #4b3a6b !important; }
+      .dm-h { color: #f3f4f6 !important; }
+      .dm-t { color: #e6dcf5 !important; }
+      .dm-faint { color: #c3b8dc !important; }
+      .dm-link { color: #e8b5ff !important; }
+      .dm-btn { background-color: #c474e8 !important; }
+      .dm-btn-main { color: #1a0a2e !important; }
+      .dm-btn-sub { color: #3b1a57 !important; }
+      .dm-num { background-color: #c474e8 !important; color: #1a0a2e !important; }
     }
   </style>
 </head>
-<body style="margin:0; padding:24px; background-color:#F0F5FF;">
-  <table align="center" width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center" style="padding:20px;">
-        <div class="container" style="max-width:600px; margin:0 auto; background:#ffffff; border-radius:20px; overflow:hidden; box-shadow:0 12px 40px rgba(165,6,173,0.12), 0 4px 20px rgba(3,98,207,0.08);">
+<body class="dm-page" bgcolor="#f5f0ff" style="margin:0; padding:0; background-color:#f5f0ff;">
 
-          <!-- ===== HEADER ===== -->
-          <div class="header" style="background:linear-gradient(135deg, #A506AD 0%, #0362CF 60%, #02162E 100%); padding:40px 20px 35px; text-align:center;">
-            <!-- Símbolo institucional como marca de agua sutil -->
-            <img src="https://vhgfyqodiieblhfwbama.supabase.co/storage/v1/object/public/publicacion-imagenes/HEAD.svg"
-                 alt=""
-                 class="header-watermark"
-                 style="display:block; width:140px; height:auto; margin:0 auto 10px; opacity:0.1;"
-                 loading="lazy">
-            <!-- Logotipo completo -->
-            <img src="https://vhgfyqodiieblhfwbama.supabase.co/storage/v1/object/public/publicacion-imagenes/LOGO%20IMMUJEL.png"
-                 alt="IMMUJEL"
-                 class="header-logo"
-                 style="display:block; max-width:140px; height:auto; margin:-80px auto 0; position:relative;"
-                 loading="lazy">
-          </div>
+  <!-- Texto de vista previa en la bandeja de entrada (no se ve dentro del mensaje) -->
+  <div style="display:none; max-height:0; max-width:0; overflow:hidden; opacity:0; font-size:1px; line-height:1px; color:#f5f0ff; mso-hide:all;">
+    Registro exitoso. Confirma tu correo electrónico para activar tu cuenta en IMMUJEL.
+    &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" class="dm-page" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f0ff" style="background-color:#f5f0ff;">
+    <tr>
+      <td align="center" style="padding:28px 12px;">
+
+        <!--[if mso]><table role="presentation" align="center" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+        <table role="presentation" class="card dm-card" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:28px; overflow:hidden; box-shadow:0 40px 70px -40px rgba(0,0,0,0.35);">
+
+          <!-- ===== MARCA ===== -->
+          <tr>
+            <td class="px" bgcolor="#ffffff" style="background-color:#ffffff; padding:18px 40px;">
+              <a href="https://immujel.vercel.app" target="_blank" style="text-decoration:none;">
+                <img src="https://immujel.vercel.app/Images/logo-immujel-recortado.png" width="120" height="79" alt="IMMUJEL" style="display:block; width:120px; height:79px; border:0; font-family:'Montserrat','Segoe UI',Arial,sans-serif; font-size:24px; font-weight:900; line-height:79px; color:#7d0585;">
+              </a>
+            </td>
+          </tr>
+
+          <!-- ===== CABECERA: los mismos tonos de la cabecera de las páginas del sitio ===== -->
+          <tr>
+            <td class="px" bgcolor="#023e81" style="background-color:#023e81; background-image:linear-gradient(180deg, #7d0585 0%, #023e81 100%); padding:44px 40px 14px;">
+              <h1 style="margin:0; font-family:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif; font-weight:900; line-height:1; color:#ffffff;">
+                <span class="hero-pre" style="display:block; font-size:24px; font-weight:800; line-height:1.15; letter-spacing:-0.3px; color:#fee5ff;">Registro</span>
+                <span class="hero-word" style="display:block; margin-top:4px; font-size:54px; font-weight:900; line-height:1; letter-spacing:-1.5px; color:#ffffff;">exitoso</span>
+              </h1>
+              <p style="margin:20px 0 0; max-width:440px; font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:17px; line-height:1.65; color:#fee5ff;">
+                Bienvenida a IMMUJEL. Tu cuenta se creó correctamente; solo falta confirmar tu correo electrónico para activarla.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Unión: la hoja blanca se apoya sobre la cabecera con las esquinas superiores redondeadas -->
+          <tr>
+            <td bgcolor="#023e81" style="background-color:#023e81; font-size:0; line-height:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="dm-card" height="34" bgcolor="#ffffff" style="height:34px; background-color:#ffffff; border-radius:34px 34px 0 0; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
           <!-- ===== CONTENIDO ===== -->
-          <div class="content" style="padding:44px 36px 36px; text-align:center;">
-            <h1 class="title" style="font-size:26px; font-weight:800; color:#02162E; margin:0 0 16px; letter-spacing:-0.3px;">
-              ¡Bienvenida a <span class="title-accent" style="color:#A506AD;">IMMUJEL</span>!
-            </h1>
+          <tr>
+            <td class="px dm-card" bgcolor="#ffffff" style="background-color:#ffffff; padding:6px 40px 8px; font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;">
 
-            <div class="divider" style="width:50px; height:4px; background:linear-gradient(90deg, #A506AD, #0362CF); border-radius:2px; margin:0 auto 24px;"></div>
+              <h2 class="dm-h" style="margin:0; font-family:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:26px; font-weight:800; line-height:1.15; letter-spacing:-0.4px; color:#1f2937;">
+                Confirma tu correo electrónico
+              </h2>
 
-            <p class="message" style="font-size:16px; line-height:1.7; color:#4B5563; margin:0 0 28px;">
-              Estás a un paso de formar parte de nuestra comunidad.<br>
-              Confirma tu dirección de correo electrónico para activar tu cuenta y acceder a todos los servicios del Instituto Municipal de la Mujer de Lagunillas.
-            </p>
+              <!-- Cinta de color bajo el título, igual que en el sitio -->
+              <table role="presentation" width="72" cellpadding="0" cellspacing="0" border="0" style="margin:14px 0 22px;">
+                <tr>
+                  <td width="72" height="5" bgcolor="#A506AD" style="width:72px; height:5px; background-color:#A506AD; background-image:linear-gradient(90deg, #A506AD, #F66EFD); border-radius:9999px; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
 
-            <a href="{{ .ConfirmationURL }}"
-               class="button"
-               style="display:inline-block; background:linear-gradient(135deg, #A506AD, #0362CF); color:#ffffff; text-decoration:none; font-weight:700; font-size:16px; padding:15px 38px; border-radius:50px; box-shadow:0 6px 20px rgba(165,6,173,0.3);">
-              Confirmar mi cuenta
-            </a>
+              <p class="dm-t" style="margin:0 0 6px; font-size:16px; line-height:1.7; color:#4b5563;">
+                Somos el Instituto Municipal de la Mujer de Lagunillas, un espacio de apoyo,
+                <span style="background-color:#024ca1; color:#ffffff; font-weight:700; padding:1px 7px; border-radius:6px;">acompañamiento y defensa de tus derechos</span>.
+                Para activar tu cuenta y solicitar tu asesoría, confirma que esta dirección de correo es tuya.
+              </p>
 
-            <div class="alt-link" style="margin-top:28px; font-size:13px; color:#9CA3AF; line-height:1.6;">
-              <p style="margin:0 0 4px;">Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-              <a href="{{ .ConfirmationURL }}" style="color:#0362CF; word-break:break-all;">{{ .ConfirmationURL }}</a>
-            </div>
-          </div>
+              <!-- Botón principal: el registro ya está hecho, el botón activa la cuenta -->
+              <table role="presentation" class="btn-table" cellpadding="0" cellspacing="0" border="0" style="margin:26px 0 8px;">
+                <tr>
+                  <td class="btn-cell dm-btn" align="center" bgcolor="#7d0585" style="background-color:#7d0585; border-radius:9999px; box-shadow:0 12px 24px -12px rgba(0,0,0,0.45);">
+                    <a class="btn-link" href="{{ .ConfirmationURL }}" target="_blank" style="display:block; padding:13px 46px; text-align:center; text-decoration:none; font-family:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif; color:#ffffff;">
+                      <span class="dm-btn-sub" style="display:block; font-size:13px; font-weight:600; line-height:18px; color:#fee5ff;">Ya estás registrada</span>
+                      <span class="dm-btn-main" style="display:block; font-size:17px; font-weight:800; line-height:24px; color:#ffffff;">Activar mi cuenta</span>
+                    </a>
+                  </td>
+                </tr>
+              </table>
 
-          <!-- ===== VALORES INSTITUCIONALES ===== -->
-          <div style="background:#FAFAFE; padding:20px 36px; border-top:1px solid rgba(165,6,173,0.06);">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="33%" style="text-align:center; padding:8px; font-size:12px; color:#6B7280;">
-                  <strong style="color:#A506AD; display:block; font-size:13px; margin-bottom:2px;">Gratuidad</strong>
-                  Todos nuestros servicios son gratuitos
-                </td>
-                <td width="33%" style="text-align:center; padding:8px; font-size:12px; color:#6B7280; border-left:1px solid rgba(165,6,173,0.08); border-right:1px solid rgba(165,6,173,0.08);">
-                  <strong style="color:#0362CF; display:block; font-size:13px; margin-bottom:2px;">Confidencialidad</strong>
-                  Atención completamente privada
-                </td>
-                <td width="33%" style="text-align:center; padding:8px; font-size:12px; color:#6B7280;">
-                  <strong style="color:#A506AD; display:block; font-size:13px; margin-bottom:2px;">Equidad</strong>
-                  Con perspectiva de género
-                </td>
-              </tr>
-            </table>
-          </div>
+              <p class="dm-faint" style="margin:18px 0 4px; font-size:13px; line-height:1.6; color:#6b7280;">
+                Si el botón no funciona, copia y pega este enlace en tu navegador:
+              </p>
+              <p style="margin:0 0 4px; font-size:13px; line-height:1.6; word-break:break-all;">
+                <a class="dm-link" href="{{ .ConfirmationURL }}" target="_blank" style="color:#0362CF; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+              </p>
+              <p class="dm-faint" style="margin:0 0 26px; font-size:13px; line-height:1.6; color:#6b7280;">
+                Por seguridad, el enlace es de un solo uso y tiene una vigencia limitada.
+              </p>
 
-          <!-- ===== FOOTER ===== -->
-          <div class="footer" style="background-color:#F5F0FF; padding:28px 24px; text-align:center; font-size:12px; color:#9CA3AF; border-top:1px solid rgba(165,6,173,0.08);">
-            <img src="https://vhgfyqodiieblhfwbama.supabase.co/storage/v1/object/public/publicacion-imagenes/HEAD.svg"
-                 alt=""
-                 class="footer-logo"
-                 style="max-width:80px; height:auto; margin-bottom:12px; opacity:0.25;"
-                 loading="lazy">
-            <p style="margin:4px 0; color:#6B7280; font-weight:600;">Instituto Municipal de la Mujer de Lagunillas</p>
-            <p style="margin:4px 0;">Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia</p>
-            <div class="social-links" style="margin:14px 0;">
-              <a href="https://www.instagram.com/immujellags_/" style="color:#A506AD; text-decoration:none; font-weight:500; margin:0 10px;">Instagram</a>
-              <span style="color:#D1D5DB;">|</span>
-              <a href="https://api.whatsapp.com/send?phone=584246540241" style="color:#A506AD; text-decoration:none; font-weight:500; margin:0 10px;">WhatsApp</a>
-              <span style="color:#D1D5DB;">|</span>
-              <a href="https://www.facebook.com/profile.php?id=100094636431215" style="color:#A506AD; text-decoration:none; font-weight:500; margin:0 10px;">Facebook</a>
-            </div>
-            <p style="margin:8px 0 0; font-size:11px; color:#B0B7C3;">Si no solicitaste esta cuenta, puedes ignorar este mensaje.</p>
-          </div>
+              <!-- ¿Qué sigue? -->
+              <table role="presentation" class="dm-tint" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f6e9fb" style="background-color:#f6e9fb; border:1px solid #efd9f4; border-radius:24px; border-collapse:separate;">
+                <tr>
+                  <td class="steps-box" style="padding:24px 26px 12px;">
+                    <p class="dm-h" style="margin:0 0 16px; font-family:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:17px; font-weight:800; line-height:1.2; color:#1f2937;">Qué sigue</p>
 
-        </div>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td width="42" valign="top" style="padding:0 14px 14px 0;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                            <td class="dm-num" width="28" height="28" align="center" bgcolor="#7d0585" style="width:28px; height:28px; background-color:#7d0585; border-radius:50%; font-size:14px; font-weight:800; line-height:28px; color:#ffffff;">1</td>
+                          </tr></table>
+                        </td>
+                        <td class="dm-t" valign="top" style="padding:3px 0 14px; font-size:15px; line-height:22px; color:#4b5563;">
+                          <strong class="dm-h" style="color:#1f2937;">Activa tu cuenta</strong> con el botón de arriba.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="42" valign="top" style="padding:0 14px 14px 0;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                            <td class="dm-num" width="28" height="28" align="center" bgcolor="#7d0585" style="width:28px; height:28px; background-color:#7d0585; border-radius:50%; font-size:14px; font-weight:800; line-height:28px; color:#ffffff;">2</td>
+                          </tr></table>
+                        </td>
+                        <td class="dm-t" valign="top" style="padding:3px 0 14px; font-size:15px; line-height:22px; color:#4b5563;">
+                          <strong class="dm-h" style="color:#1f2937;">Inicia sesión</strong> con tu usuario o tu correo y la contraseña que creaste.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="42" valign="top" style="padding:0 14px 14px 0;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                            <td class="dm-num" width="28" height="28" align="center" bgcolor="#7d0585" style="width:28px; height:28px; background-color:#7d0585; border-radius:50%; font-size:14px; font-weight:800; line-height:28px; color:#ffffff;">3</td>
+                          </tr></table>
+                        </td>
+                        <td class="dm-t" valign="top" style="padding:3px 0 14px; font-size:15px; line-height:22px; color:#4b5563;">
+                          <strong class="dm-h" style="color:#1f2937;">Solicita tu asesoría.</strong> La atención es 100% gratuita y puedes pedirla de forma anónima.
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ===== PIE ===== -->
+          <tr>
+            <td class="px dm-card" bgcolor="#ffffff" style="background-color:#ffffff; padding:30px 40px 0;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="px dm-foot" bgcolor="#faf5fd" style="background-color:#faf5fd; border-top:1px solid #efd9f4; padding:28px 40px 30px; font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:13px; line-height:1.65; color:#6b7280;">
+              <p class="dm-h" style="margin:0 0 4px; font-family:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:15px; font-weight:800; color:#1f2937;">Instituto Municipal de la Mujer de Lagunillas</p>
+              <p class="dm-faint" style="margin:0 0 10px; color:#6b7280;">Calle Vargas, esquina Calle Piar, Casa N. 218, Ciudad Ojeda, Edo. Zulia, Venezuela</p>
+              <p class="dm-faint" style="margin:0 0 14px; color:#6b7280;">
+                WhatsApp <a class="dm-link" href="https://api.whatsapp.com/send?phone=584246540241" target="_blank" style="color:#7d0585; font-weight:600; text-decoration:none;">0424-6540241</a>
+                &nbsp;·&nbsp;
+                <a class="dm-link" href="mailto:immujel2024@hotmail.com" style="color:#7d0585; font-weight:600; text-decoration:none;">immujel2024@hotmail.com</a>
+              </p>
+              <p class="dm-faint" style="margin:0 0 16px; color:#6b7280;">
+                <a class="dm-link" href="https://www.instagram.com/immujellags_/" target="_blank" style="color:#7d0585; font-weight:600; text-decoration:none;">Instagram</a>
+                &nbsp;·&nbsp;
+                <a class="dm-link" href="https://www.facebook.com/profile.php?id=100094636431215" target="_blank" style="color:#7d0585; font-weight:600; text-decoration:none;">Facebook</a>
+                &nbsp;·&nbsp;
+                <a class="dm-link" href="https://immujel.vercel.app/navegacion/privacidad" target="_blank" style="color:#7d0585; font-weight:600; text-decoration:none;">Política de privacidad</a>
+              </p>
+              <p class="dm-faint" style="margin:0; font-size:12px; line-height:1.6; color:#6b7280;">
+                Enviamos este mensaje a {{ .Email }} porque se registró una cuenta en IMMUJEL con esta dirección.
+                Si no fuiste tú, puedes ignorarlo: la cuenta no se activará.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+
+        <p class="dm-faint" style="margin:18px 0 0; font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:12px; line-height:1.6; color:#6b7280;">© 2026 IMMUJEL. Todos los derechos reservados.</p>
+
       </td>
     </tr>
   </table>

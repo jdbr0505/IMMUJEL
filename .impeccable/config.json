@@ -417,6 +417,24 @@
         ],
         "createdAt": "2026-10-21T14:05:36.391Z",
         "reason": "switchTab() alterna las clases del botón de pestaña (activa: bg-purple-600 text-white; inactiva: text-gray-600 sin fondo): el gris nunca coincide con el fondo de color. Preexistente; solo cambiaron los números de línea."
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "Login/email-confirmacion.html"
+        ],
+        "createdAt": "2026-10-29T16:06:44.110Z",
+        "reason": "Titular de una sola línea («exitoso», 54 px, interlineado 1) igual que .page-word de ds.css (0.98); el texto de varias líneas del correo va a 1.6 o más. Decidido por Claude tras revisar la plantilla, no confirmado por la usuaria."
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "Login/reset-password-email.html"
+        ],
+        "createdAt": "2026-10-29T16:11:00.218Z",
+        "reason": "Mismo caso que email-confirmacion.html: titular de una sola línea («contraseña», 50 px, interlineado 1) como .page-word de ds.css; el texto de varias líneas va a 1.6 o más. Decidido por Claude, no confirmado por la usuaria."
       }
     ]
   }

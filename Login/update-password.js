@@ -1,4 +1,7 @@
 // update-password.js
+// Los errores de Supabase llegan en inglés: errores-auth.js los pasa a español (si no cargó, se usa el texto de respaldo)
+const mensajeDeError = (error, respaldo) => (window.ErroresAuth ? window.ErroresAuth.mensaje(error, respaldo) : respaldo);
+
 document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('update-password-form');
     const newPasswordInput = document.getElementById('new-password');
@@ -103,7 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = 'login.html';
             }, 2000);
         } catch (error) {
-            errorDiv.textContent = error.message || 'Error al actualizar la contraseña. Intenta de nuevo.';
+            console.error('Error al actualizar la contraseña:', error);
+            errorDiv.textContent = mensajeDeError(error, 'Error al actualizar la contraseña. Intenta de nuevo.');
             errorDiv.classList.remove('hidden');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Actualizar contraseña';

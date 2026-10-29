@@ -1,4 +1,7 @@
 // login.js – Inicio de sesión con usuario o correo
+// Los errores de Supabase llegan en inglés: errores-auth.js los pasa a español (si no cargó, se usa el texto de respaldo)
+const mensajeDeError = (error, respaldo) => (window.ErroresAuth ? window.ErroresAuth.mensaje(error, respaldo) : respaldo);
+
 document.addEventListener('DOMContentLoaded', async () => {
   await window.supabaseReady;
   const form = document.getElementById('login-form');
@@ -59,8 +62,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       setTimeout(() => resetModal.classList.add('hidden'), 3000);
     } catch (error) {
+      console.error('Error al pedir el enlace de restablecimiento:', error);
       if (resetMessage) {
-        resetMessage.textContent = 'Error: ' + error.message;
+        resetMessage.textContent = mensajeDeError(error, 'No pudimos enviar el enlace. Inténtalo de nuevo en unos minutos.');
         resetMessage.className = 'text-sm mb-4 text-center text-red-500';
         resetMessage.classList.remove('hidden');
       }
@@ -130,15 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '../index.html';
       }
     } catch (error) {
-      let mensaje = '';
-      if (error.message === 'Invalid login credentials') {
-        mensaje = 'Usuario o contraseña incorrectos. Si aún no te has registrado, crea una cuenta primero.';
-      } else if (error.message.includes('Email not confirmed')) {
-        mensaje = 'Debes confirmar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.';
-      } else {
-        mensaje = error.message;
-      }
-      errorDiv.textContent = mensaje;
+      errorDiv.textContent = mensajeDeError(error, 'No se pudo iniciar sesión. Inténtalo de nuevo.');
       errorDiv.classList.remove('hidden');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Iniciar Sesión';
