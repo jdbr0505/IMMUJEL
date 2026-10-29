@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         email,
         password,
         options: {
+          // El botón del correo trae a la usuaria a la pantalla de confirmación (hay que permitir esta dirección en Supabase → URL Configuration)
+          emailRedirectTo: window.location.origin + '/Login/confirmado',
           data: {
             full_name: fullName,
             user_name: username,

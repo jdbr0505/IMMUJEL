@@ -290,6 +290,8 @@ IMMUJEL/
 │   ├── login.html · login.js · login-styles.css
 │   ├── signup.html · signup.js · signup-styles.css
 │   ├── errores-auth.js           Mensajes de error de Supabase Auth en español (puros, probados en tests/)
+│   ├── confirmado.html · confirmado.js   Pantalla a la que lleva el botón del correo de confirmación (confirmado, vencido, error)
+│   ├── estado-enlace.js          Decide la pantalla según el enlace del correo (puro, probado en tests/)
 │   ├── update-password.html
 │   ├── email-confirmacion.html   Correo de confirmación de cuenta (se pega en Supabase, ver el paso 7)
 │   ├── reset-password-email.html Correo de restablecer contraseña (se pega en Supabase, ver el paso 7)
@@ -483,6 +485,8 @@ Los correos que reciben las usuarias salen de `Login/email-confirmacion.html` (a
 | Restablecer contraseña | Reset password | `Restablece tu contraseña de IMMUJEL` | `Login/reset-password-email.html` |
 
 En **Message body**, pestaña **Source**, reemplaza todo por el contenido del archivo y pulsa **Save changes**.
+
+**A dónde lleva el botón del correo.** Al registrarse, `signup.js` pide que el botón lleve a `/Login/confirmado`, la pantalla «Registro confirmado». Supabase solo redirige a direcciones permitidas: en **Authentication → URL Configuration** pon *Site URL* `https://immujel.vercel.app` y, en *Redirect URLs*, `https://immujel.vercel.app/**` (cubre también `/Login/update-password.html` del correo de restablecer). Si la dirección no estuviera permitida, Supabase manda a la usuaria a la raíz del sitio y `js/auth.js` la reenvía a la pantalla de confirmación.
 
 **Nombre del remitente.** Con el servicio de correo integrado de Supabase los mensajes salen como «Supabase Auth» y con límites muy bajos de envío. Para que salgan como «IMMUJEL», en **Authentication → Emails → SMTP Settings** activa *Enable custom SMTP* y completa: *Sender email* (la cuenta de Gmail institucional), *Sender name* `IMMUJEL`, *Host* `smtp.gmail.com`, *Port* `465`, *Username* (esa misma cuenta) y *Password* (contraseña de aplicación de Google). Son los mismos datos que `SMTP_USER` y `SMTP_PASS` de la Edge Function.
 

@@ -435,6 +435,33 @@
         ],
         "createdAt": "2026-10-29T16:11:00.218Z",
         "reason": "Mismo caso que email-confirmacion.html: titular de una sola línea («contraseña», 50 px, interlineado 1) como .page-word de ds.css; el texto de varias líneas va a 1.6 o más. Decidido por Claude, no confirmado por la usuaria."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "Login/confirmado.html"
+        ],
+        "createdAt": "2026-10-29T18:35:40.170Z",
+        "reason": "Falso positivo del análisis estático: los botones llevan text-white y p-8 por clases de Tailwind CDN, que no se compilan; blanco sobre #A506AD da 6.9:1. Mismo caso que login.html. Decidido por Claude, no confirmado por la usuaria."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "Login/confirmado.html"
+        ],
+        "createdAt": "2026-10-29T18:35:40.306Z",
+        "reason": "Falso positivo del análisis estático: la tarjeta lleva p-8 md:p-10 por clases de Tailwind CDN (no compiladas), igual que login.html. Decidido por Claude, no confirmado por la usuaria."
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "Login/confirmado.html"
+        ],
+        "createdAt": "2026-10-29T18:37:42.593Z",
+        "reason": "El morado #A506AD es el color oficial del instituto (paleta institucional de styles.css y logotipo), no una elección por defecto; la pantalla usa los mismos tokens que el resto del sitio. Decidido por Claude, no confirmado por la usuaria."
       }
     ]
   }

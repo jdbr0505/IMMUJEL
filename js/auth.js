@@ -1,5 +1,13 @@
 // auth.js – Control de sesión, panel izquierdo, navbar dinámico y push subscriptions
 (async function() {
+  // El enlace del correo de registro puede caer en otra página (si Supabase no tiene permitida la dirección de confirmación, vuelve a la
+  // raíz del sitio): se lleva a la pantalla de confirmación con el mismo hash, antes de que el cliente de Supabase lo consuma.
+  if (!/\/Login\//i.test(window.location.pathname) && /[#&](type=signup|error_code=otp_expired)(&|$)/.test(window.location.hash)) {
+    const profundidad = (window.location.pathname.match(/\//g) || []).length;
+    window.location.replace((profundidad > 1 ? '../' : './') + 'Login/confirmado' + window.location.hash);
+    return;
+  }
+
   const supabase = await window.supabaseReady;
 
   const loginPaths = ['/Login/login.html', '/Login/signup.html', '/Login/update-password.html'];
