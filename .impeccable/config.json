@@ -462,6 +462,15 @@
         ],
         "createdAt": "2026-10-29T18:37:42.593Z",
         "reason": "El morado #A506AD es el color oficial del instituto (paleta institucional de styles.css y logotipo), no una elección por defecto; la pantalla usa los mismos tokens que el resto del sitio. Decidido por Claude, no confirmado por la usuaria."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "offline.html"
+        ],
+        "createdAt": "2026-10-30T13:41:53.773Z",
+        "reason": "Falso positivo del análisis estático: el botón Reintentar lleva text-white y bg-purple-600 por clases de Tailwind CDN (no compiladas); blanco sobre #A506AD da 6.9:1. Mismo caso que login.html y confirmado.html. Decidido por Claude, no confirmado por la usuaria."
       }
     ]
   }

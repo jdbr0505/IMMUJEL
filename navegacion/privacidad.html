@@ -179,6 +179,11 @@
                     </div>
                 </div>
                 <p class="text-gray-500 text-sm mt-5"><i class="fas fa-circle-info mr-1 text-purple-500"></i> No usamos cookies de publicidad, análisis de terceros ni rastreo entre sitios.</p>
+
+                <div class="ds-card p-6 mt-5">
+                    <h3 class="font-bold text-gray-800 mb-2">Uso sin conexión y solicitudes guardadas</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Para que el sitio abra aunque falle tu internet, guardamos en tu dispositivo una copia de las páginas, imágenes y publicaciones que ya visitaste. Si envías el formulario de asesoría sin conexión, la solicitud (incluidos los datos que escribiste) queda guardada <strong>solo en tu dispositivo</strong> hasta que vuelve la conexión y se envía sola; entonces se borra de él. Si no se logra enviar en 3 días, también se borra. Puedes descartarla antes desde el aviso de la página, o borrando los datos del sitio en tu navegador. No enviamos notificaciones con el contenido de la solicitud.</p>
+                </div>
             </section>
 
             <!-- ===== 5. TERCEROS ===== -->
@@ -270,6 +275,9 @@
     <script src="../js/cookies.js"></script>
     <script src="../js/theme-events.js"></script>
     <script src="../js/historial.js"></script>
+    <script src="../js/offline-core.js?v=1" defer></script>
+    <script src="../js/offline-db.js?v=1" defer></script>
+    <script src="../js/offline-ui.js?v=1" defer></script>
     <script src="../js/sw-register.js" defer></script>
     <script>
         document.getElementById('btn-reabrir-cookies')?.addEventListener('click', () => {

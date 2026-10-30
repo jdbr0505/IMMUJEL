@@ -12,6 +12,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const successDiv = document.getElementById('success-message');
     const submitBtn = document.getElementById('submit-btn');
 
+    // ===== MENSAJES, SESIÓN Y SOLICITUDES SIN CONEXIÓN =====
+    // Los mensajes se arman con textContent: lo que llega del servidor nunca se interpreta como HTML.
+    function pintarMensaje(caja, claseIcono, texto) {
+        caja.textContent = '';
+        const icono = document.createElement('i');
+        icono.className = 'fas ' + claseIcono + ' mr-2';
+        icono.setAttribute('aria-hidden', 'true');
+        caja.appendChild(icono);
+        caja.appendChild(document.createTextNode(' ' + texto));
+        caja.classList.remove('hidden');
+    }
+    const mostrarExito = (claseIcono, texto) => pintarMensaje(successDiv, claseIcono, texto);
+    const mostrarError = (texto) => pintarMensaje(errorDiv, 'fa-exclamation-circle', texto);
+
+    function textoDeError(error) {
+        if (error && error.paraLaUsuaria) return error.paraLaUsuaria;
+        const m = String((error && error.message) || '');
+        if (/duplicate/i.test(m)) return 'Ya existe una solicitud con estos datos.';
+        if (/row-level security|permission denied/i.test(m)) return 'No pudimos registrar tu solicitud en este momento. Escríbenos por WhatsApp al 0424-6540241.';
+        return 'Ocurrió un error al enviar tu solicitud. Inténtalo de nuevo en unos minutos.';
+    }
+
+    // Fallos que se arreglan solos con el tiempo: sin red, servidor ocupado o caído
+    function esFalloPasajero(error, status) {
+        const deRed = window.OfflineCore ? window.OfflineCore.esErrorDeRed(error) : /failed to fetch|networkerror|load failed/i.test(String((error && error.message) || ''));
+        return deRed || status >= 500 || status === 408 || status === 429;
+    }
+
+    // window.supabase es la biblioteca hasta que Login_supabase.js crea el cliente; sin la configuración no hay cliente
+    const clienteListo = () => !!(window.supabase && typeof window.supabase.from === 'function');
+
+    // Con conexión se valida la sesión en el servidor; sin ella basta con la sesión guardada en el dispositivo
+    async function usuarioActual() {
+        if (!clienteListo()) return null;
+        try {
+            if (navigator.onLine) {
+                const { data: { user } } = await window.supabase.auth.getUser();
+                return user ? user.id : null;
+            }
+        } catch (e) { /* se prueba con la sesión local */ }
+        try {
+            const { data: { session } } = await window.supabase.auth.getSession();
+            return session && session.user ? session.user.id : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function guardarParaDespues(datos) {
+        const sinCola = () => Object.assign(new Error('Sin cola de solicitudes'), { paraLaUsuaria: 'No hay conexión y no pudimos guardar tu solicitud en este dispositivo. Inténtalo de nuevo cuando vuelva la conexión.' });
+        if (!window.OfflineDB) throw sinCola();
+        let r;
+        try { r = await window.OfflineDB.encolarSolicitud(datos); } catch (e) { throw sinCola(); }
+        if (!r.ok) throw Object.assign(new Error(r.error), { paraLaUsuaria: r.error });
+        if (window.OfflineUI) {
+            window.OfflineUI.registrarSincronizacion();
+            window.OfflineUI.actualizarEstado();
+        }
+    }
+
     // ===== VALIDACIÓN EN TIEMPO REAL =====
     const validators = {
       name: v => v.trim().length >= 3 || !v,
@@ -106,27 +166,36 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando solicitud...';
 
         try {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            const usuario_id = user ? user.id : null;
+            const datos = {
+                usuario_id: await usuarioActual(),
+                nombre_completo: full_name,
+                cedula: id_number,
+                telefono: phone,
+                correo: email,
+                parroquia,
+                descripcion: description || null,
+                es_anonimo: incognito,
+                estado: 'pendiente'
+            };
 
-            const { error } = await window.supabase
-                .from('solicitudes')
-                .insert([{
-                    usuario_id,
-                    nombre_completo: full_name,
-                    cedula: id_number,
-                    telefono: phone,
-                    correo: email,
-                    parroquia,
-                    descripcion: description || null,
-                    es_anonimo: incognito,
-                    estado: 'pendiente'
-                }]);
+            // Sin conexión (o con el servidor caído) la solicitud se guarda en este dispositivo y se envía sola al volver la red
+            let resultado = 'enviada';
+            if (!navigator.onLine || !clienteListo()) {
+                resultado = 'guardada';
+            } else {
+                const { error, status } = await window.supabase.from('solicitudes').insert([datos]);
+                if (error) {
+                    if (esFalloPasajero(error, status)) resultado = 'guardada';
+                    else throw error;
+                }
+            }
+            if (resultado === 'guardada') await guardarParaDespues(datos);
 
-            if (error) throw error;
-
-            successDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Tu solicitud ha sido enviada con éxito. Pronto nos pondremos en contacto contigo.';
-            successDiv.classList.remove('hidden');
+            if (resultado === 'guardada') {
+                mostrarExito('fa-clock', 'Sin conexión: tu solicitud quedó guardada en este dispositivo y se enviará sola cuando vuelva la conexión. Se borra de aquí en cuanto se envía. Si compartes este dispositivo, puedes descartarla en el aviso de arriba.');
+            } else {
+                mostrarExito('fa-check-circle', 'Tu solicitud ha sido enviada con éxito. Pronto nos pondremos en contacto contigo.');
+            }
             form.reset();
             document.getElementById('full-personal-info').style.display = 'block';
             [nameInput, idInput, emailInput, phoneInput].forEach(i => { i.classList.remove('border-green-400', 'border-red-400'); });
@@ -134,16 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch (error) {
             console.error(error);
-            let mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Ocurrió un error al enviar tu solicitud.';
-            if (error.message?.includes('duplicate')) {
-                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Ya existe una solicitud con estos datos.';
-            } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
-                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> Error de conexión. Verifica tu internet e intenta de nuevo.';
-            } else if (error.message) {
-                mensaje = '<i class="fas fa-exclamation-circle mr-1"></i> ' + error.message;
-            }
-            errorDiv.innerHTML = mensaje;
-            errorDiv.classList.remove('hidden');
+            mostrarError(textoDeError(error));
             errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } finally {
             submitBtn.disabled = false;

@@ -114,6 +114,7 @@ La aplicación es una **PWA instalable**: funciona en computadora, tablet y celu
 - **Modo incógnito** — solo teléfono y descripción
 - Selección de parroquia y tipo de asesoría
 - Confirmación inmediata de envío
+- **Sin conexión**: la solicitud queda guardada en el dispositivo y se envía sola al volver la red
 
 </td>
 </tr>
@@ -133,7 +134,7 @@ La aplicación es una **PWA instalable**: funciona en computadora, tablet y celu
 - Notificaciones push al publicar contenido
 - Correo institucional con cada publicación
 - Instalable en pantalla de inicio
-- Modo oscuro y soporte sin conexión
+- Modo oscuro y lectura sin conexión de lo ya visitado
 
 </td>
 </tr>
@@ -260,6 +261,29 @@ flowchart LR
 | **Web Push nativo** | Implementación directa de RFC 8291/8292 en la Edge Function, sin dependencias de terceros ni servicios de pago. |
 | **RLS en PostgreSQL** | La autorización vive en la base de datos, no solo en el cliente — un usuario no puede saltarse los permisos manipulando el navegador. |
 | **Claves vía `/api/config.js`** | Las credenciales de Supabase se sirven desde una función de Vercel con saneamiento, en lugar de estar embebidas en el HTML. |
+| **Cola de solicitudes en IndexedDB** | Una solicitud de asesoría no se pierde si la red cae al enviarla: se guarda en el dispositivo y se reintenta sola (ver [Modo sin conexión](#modo-sin-conexión)). |
+
+### Modo sin conexión
+
+El Service Worker (`sw.js`) reparte cada petición según su tipo; las reglas son funciones puras en `js/offline-core.js`, con pruebas en `tests/`.
+
+| Qué se pide | Estrategia |
+|:---|:---|
+| Páginas | Red primero (4 s de espera), luego la copia guardada, luego `/offline`. |
+| Archivos propios con `?v=` | Caché primero: la versión cambia cuando cambia el archivo. |
+| Archivos propios sin versión y bibliotecas externas | Se sirve la copia y se renueva en segundo plano. |
+| `/api/config` | Red primero, con copia guardada al instalar (sin ella Supabase no inicia sin conexión). |
+| Imágenes externas | Caché primero, máximo 80. |
+| Lecturas públicas de Supabase (`publicaciones`, `configuracion_visual`) | Red primero; si falla, la última copia, separada por cuenta. |
+| Escrituras, autenticación, `rpc`, otras tablas | Nunca se interceptan. |
+
+**Precarga.** `sw-precache.js` lo genera `scripts/generar-precache.js`: lee las páginas públicas y lista sus archivos tal como los piden (con `?v=`). Su versión sale del contenido, así que al cambiar cualquier página o archivo cambia la versión y el Service Worker descarta la caché anterior.
+
+> **Después de editar una página, un script o una hoja de estilos referenciados, ejecuta `node scripts/generar-precache.js`.** `node --test tests/*.test.js` falla si el archivo quedó desactualizado.
+
+**Solicitudes sin conexión.** `Forms/form.js` guarda la solicitud con `js/offline-db.js` cuando no hay red o el servidor falla (5xx, 408, 429). Se envía sola: por el evento `sync` del Service Worker donde existe (Chromium) y, en cualquier navegador, al volver la conexión, al volver a la pestaña o al abrir una página. Reintenta con esperas crecientes (1 min a 12 h), no reintenta lo que el servidor rechaza (4xx: queda marcado como fallido para que la usuaria lo reintente o lo descarte) y borra lo que no se pudo enviar en 3 días. Un reclamo atómico evita que dos pestañas envíen lo mismo.
+
+**Privacidad.** Los datos personales de una solicitud pendiente viven solo en IndexedDB del dispositivo hasta enviarse, descartarse o vencer; la usuaria puede descartarla en el aviso de la página. El Service Worker no muestra notificaciones por estos envíos (el texto podría verse en la pantalla bloqueada). Si un envío falla de forma ambigua (la respuesta se pierde, pero el servidor sí la recibió), la solicitud puede llegar duplicada; la tabla `solicitudes` no tiene una columna que lo evite.
 
 ---
 
@@ -273,7 +297,9 @@ IMMUJEL/
 ├── nav.css                       Encabezado común de todas las páginas: una sola fila en escritorio, panel desplegable en móvil (usa los tokens de tema)
 ├── home.css                      Estilos propios de la página principal (usa los tokens de tema)
 ├── styles.css                    Identidad visual y tema oscuro
-├── sw.js                         Service Worker (offline + push)
+├── sw.js                         Service Worker: estrategias de caché por tipo de petición, sincronización en segundo plano y push
+├── sw-precache.js                Lista de lo que se guarda al instalar (GENERADO con scripts/generar-precache.js; no se edita a mano)
+├── offline.html                  Página que se muestra sin conexión cuando no hay copia de la que se pide
 ├── manifest.json                 Manifiesto PWA
 ├── vercel.json                   Cabeceras de seguridad y caché
 │
@@ -283,7 +309,10 @@ IMMUJEL/
 │   ├── cookies.js                Consentimiento de cookies (banner + utilidades)
 │   ├── historial.js              Historial local de publicaciones vistas
 │   ├── home.js                   Página principal: carrusel de láminas, contadores y aparición (lógica probada en tests/)
-│   ├── sw-register.js            Registro del Service Worker
+│   ├── sw-register.js            Registro del Service Worker (las versiones nuevas se activan solas)
+│   ├── offline-core.js           Reglas del modo sin conexión: clasificación de peticiones y cola de envío (puras, probadas en tests/)
+│   ├── offline-db.js             Cola de solicitudes y configuración en IndexedDB; envío a Supabase (lo usan la página y el Service Worker)
+│   ├── offline-ui.js             Aviso de conexión y de solicitudes pendientes, con Enviar ahora, Reintentar y Descartar
 │   └── ui.js                     Menú móvil, desplegable de Servicios y modo oscuro
 │
 ├── Login/                        Autenticación
@@ -299,7 +328,7 @@ IMMUJEL/
 │
 ├── Forms/                        Solicitudes de asesoría
 │   ├── form.html
-│   ├── form.js                   Validación y modo incógnito
+│   ├── form.js                   Validación, modo incógnito y guardado sin conexión
 │   └── form-styles.css
 │
 ├── navegacion/                   Secciones públicas del sitio
@@ -344,6 +373,11 @@ IMMUJEL/
 │   ├── proteger_rol_perfiles.sql   Cada cuenta edita solo su perfil y solo una administradora da o cambia roles
 │   ├── proteger_solicitudes.sql    Solo el personal del panel ve y edita solicitudes, notas y perfiles
 │   └── alter_storage_rls.sql
+│
+├── scripts/                      Utilidades de mantenimiento
+│   └── generar-precache.js       Escribe sw-precache.js (node scripts/generar-precache.js)
+│
+├── tests/                        Pruebas con el ejecutor de Node: node --test tests/*.test.js
 │
 ├── docs/                         Manual de uso y material de capacitación
 │
