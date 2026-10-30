@@ -21,6 +21,11 @@ DO $$ BEGIN
   END IF;
 END $$;
 
+-- 1b2. Columna client_id en solicitudes: la envía el formulario para evitar duplicados al reenviar una solicitud guardada sin conexión.
+--      El trigger que descarta las repetidas está en add_client_id_solicitudes.sql (ejecutarlo después de este archivo).
+ALTER TABLE solicitudes ADD COLUMN IF NOT EXISTS client_id uuid;
+CREATE UNIQUE INDEX IF NOT EXISTS solicitudes_client_id_key ON solicitudes (client_id);
+
 -- 1c. Columnas JSONB en publicaciones
 DO $$ BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'publicaciones' AND column_name = 'imagenes' AND data_type = 'text') THEN

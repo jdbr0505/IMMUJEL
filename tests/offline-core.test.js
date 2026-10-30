@@ -162,6 +162,18 @@ test('validarSolicitud: el usuario_id solo puede ser un uuid o null', () => {
   assert.equal(O.validarSolicitud(Object.assign({}, SOLICITUD, { usuario_id: "1'; drop table" })).ok, false);
 });
 
+const CLIENT_ID = '123E4567-E89B-42D3-A456-426614174000';
+
+test('validarSolicitud: el client_id es opcional, solo puede ser un uuid y se guarda en minúsculas', () => {
+  assert.equal('client_id' in O.validarSolicitud(SOLICITUD).datos, false, 'sin client_id no se agrega la columna');
+  assert.equal(O.validarSolicitud(Object.assign({}, SOLICITUD, { client_id: null })).ok, true);
+  const r = O.validarSolicitud(Object.assign({}, SOLICITUD, { client_id: CLIENT_ID }));
+  assert.equal(r.ok, true);
+  assert.equal(r.datos.client_id, CLIENT_ID.toLowerCase());
+  assert.equal(O.validarSolicitud(Object.assign({}, SOLICITUD, { client_id: "x'; drop table" })).ok, false);
+  assert.equal(O.validarSolicitud(Object.assign({}, SOLICITUD, { client_id: 123 })).ok, false);
+});
+
 // ---------- configuración y petición ----------
 test('configValida: https de Supabase (o localhost para pruebas) y claves ASCII', () => {
   assert.equal(O.configValida({ url: SUPA, anonKey: ANON }), true);
@@ -182,6 +194,22 @@ test('peticionDeSolicitud: POST a la tabla solicitudes con la clave pública y s
   assert.equal(p.init.headers.Prefer, 'return=minimal');
   assert.equal(p.init.headers['Content-Type'], 'application/json');
   assert.deepEqual(JSON.parse(p.init.body), [SOLICITUD]);
+});
+
+test('peticionDeSolicitud: el client_id viaja en el cuerpo; no se usa ON CONFLICT (exige permiso de lectura que el público no tiene)', () => {
+  const datos = Object.assign({}, SOLICITUD, { client_id: CLIENT_ID.toLowerCase() });
+  const p = O.peticionDeSolicitud({ url: SUPA, anonKey: ANON }, datos);
+  assert.equal(p.url, SUPA + '/rest/v1/solicitudes');
+  assert.equal(p.init.headers.Prefer, 'return=minimal');
+  assert.equal(JSON.parse(p.init.body)[0].client_id, CLIENT_ID.toLowerCase());
+});
+
+test('esRepetidaPorClientId: solo el 409 del índice único de client_id cuenta como ya recibida', () => {
+  const msg = '{"code":"23505","details":"Key (client_id)=(123e4567-e89b-42d3-a456-426614174000) already exists.","hint":null,"message":"duplicate key value violates unique constraint \\"solicitudes_client_id_key\\""}';
+  assert.equal(O.esRepetidaPorClientId(409, msg), true);
+  assert.equal(O.esRepetidaPorClientId(409, '{"code":"23503","message":"violates foreign key constraint \\"solicitudes_usuario_id_fkey\\""}'), false);
+  assert.equal(O.esRepetidaPorClientId(422, msg), false);
+  assert.equal(O.esRepetidaPorClientId(409, undefined), false);
 });
 
 test('veredictoDeEstado: éxito, error permanente (4xx) y error pasajero', () => {
@@ -312,6 +340,16 @@ test('procesarCola: un 4xx deja la solicitud como fallida (sin reintentos) y sig
   let llamadas = 0;
   await O.procesarCola({ store: s, ahora: T0 + 10 ** 7, enviar: async () => { llamadas++; return { estado: 201 }; } });
   assert.equal(llamadas, 0, 'una fallida no se vuelve a enviar sola');
+});
+
+test('procesarCola: un 409 por client_id repetido significa que el servidor ya la tenía: se da por enviada', async () => {
+  const s = almacenEnMemoria();
+  await s.guardar(O.nuevoPendiente(Object.assign({}, SOLICITUD, { client_id: CLIENT_ID.toLowerCase() }), T0, 'a'));
+  await s.guardar(O.nuevoPendiente(SOLICITUD, T0 + 1, 'b'));
+  const r = await O.procesarCola({ store: s, ahora: T0 + 5, enviar: async (d) => (d.client_id ? { estado: 409, mensaje: 'duplicate key value violates unique constraint "solicitudes_client_id_key"' } : { estado: 409, mensaje: 'violates foreign key constraint' }) });
+  assert.equal(r.enviadas, 1);
+  assert.equal(s.filas.has('a'), false, 'la repetida se borra del dispositivo');
+  assert.equal(s.filas.get('b').estado, 'fallida', 'otro 409 sigue siendo un rechazo');
 });
 
 test('procesarCola: un 5xx cuenta como pasajero y se reintenta más tarde', async () => {

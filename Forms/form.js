@@ -40,6 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return deRed || status >= 500 || status === 408 || status === 429;
     }
 
+    // Marca única de cada solicitud: si un envío llega al servidor pero la respuesta se pierde, el reenvío desde la cola
+    // lleva la misma marca y la base lo ignora en vez de crear una segunda solicitud (supabase-sql/add_client_id_solicitudes.sql)
+    function nuevoClientId() {
+        const c = window.crypto;
+        if (c && c.randomUUID) return c.randomUUID();
+        if (c && c.getRandomValues) {
+            const b = c.getRandomValues(new Uint8Array(16));
+            b[6] = (b[6] & 0x0f) | 0x40;
+            b[8] = (b[8] & 0x3f) | 0x80;
+            const h = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
+            return [h.slice(0, 8), h.slice(8, 12), h.slice(12, 16), h.slice(16, 20), h.slice(20)].join('-');
+        }
+        return null;
+    }
+
     // window.supabase es la biblioteca hasta que Login_supabase.js crea el cliente; sin la configuración no hay cliente
     const clienteListo = () => !!(window.supabase && typeof window.supabase.from === 'function');
 
@@ -177,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const datos = {
                 usuario_id: await usuarioActual(),
+                client_id: nuevoClientId(),
                 nombre_completo: full_name,
                 cedula: id_number,
                 telefono: phone,
@@ -199,7 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     enviarYa = true;
                 } else {
                     const { error, status } = await window.supabase.from('solicitudes').insert([datos]);
-                    if (error) {
+                    // Un 23505 sobre client_id significa que esta misma solicitud ya llegó: no hay nada que reintentar
+                    const yaRecibida = error && error.code === '23505' && /client_id/.test(String(error.message || '') + String(error.details || ''));
+                    if (error && !yaRecibida) {
                         if (esFalloPasajero(error, status)) resultado = 'guardada';
                         else throw error;
                     }

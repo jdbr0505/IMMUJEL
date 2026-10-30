@@ -283,7 +283,7 @@ El Service Worker (`sw.js`) reparte cada petición según su tipo; las reglas so
 
 **Solicitudes sin conexión.** `Forms/form.js` guarda la solicitud con `js/offline-db.js` cuando no hay red o el servidor falla (5xx, 408, 429). Se envía sola: por el evento `sync` del Service Worker donde existe (Chromium) y, en cualquier navegador, al volver la conexión, al volver a la pestaña o al abrir una página. Si el servidor está ocupado (5xx, 408, 429) reintenta con esperas crecientes (1 min a 12 h); sin red no alarga la espera y lo intenta de nuevo en cuanto vuelve la conexión; el botón "Enviar ahora" ignora la espera. No reintenta lo que el servidor rechaza (4xx: queda marcado como fallido para que la usuaria lo reintente o lo descarte). A los 3 días sin enviarse borra los datos personales y deja una marca ("venció sin enviarse") que se avisa en todas las páginas hasta que la usuaria la cierre. Un reclamo atómico evita que dos pestañas envíen lo mismo, y descartar una solicitud mientras se envía no la hace reaparecer.
 
-**Privacidad.** Los datos personales de una solicitud pendiente viven solo en IndexedDB del dispositivo hasta enviarse, descartarse o vencer; la usuaria puede descartarla en el aviso de la página. El Service Worker no muestra notificaciones por estos envíos (el texto podría verse en la pantalla bloqueada). Si un envío falla de forma ambigua (la respuesta se pierde, pero el servidor sí la recibió), la solicitud puede llegar duplicada; la tabla `solicitudes` no tiene una columna que lo evite.
+**Privacidad.** Los datos personales de una solicitud pendiente viven solo en IndexedDB del dispositivo hasta enviarse, descartarse o vencer; la usuaria puede descartarla en el aviso de la página. El Service Worker no muestra notificaciones por estos envíos (el texto podría verse en la pantalla bloqueada). Si un envío falla de forma ambigua (la respuesta se pierde, pero el servidor sí la recibió), el reenvío no crea una segunda solicitud: cada una nace con un `client_id` al azar (sin datos personales) y un trigger de la base descarta en silencio la que repite uno ya recibido (ver el paso 4b de Supabase; no se usa `ON CONFLICT` porque exigiría darle permiso de lectura al público).
 
 ---
 
@@ -369,6 +369,7 @@ IMMUJEL/
 │   ├── setup_notificaciones.sql
 │   ├── setup_push_subscriptions.sql
 │   ├── add_finalizado_en.sql     Opcional: registra el cierre de cada solicitud (tiempo de resolución del dashboard)
+│   ├── add_client_id_solicitudes.sql  Evita solicitudes duplicadas al reenviar una guardada sin conexión (columna client_id + trigger; paso 4b)
 │   ├── setup_asignacion_casos.sql  Personal de asesorías, asignación de casos y sus reglas (RLS + función)
 │   ├── proteger_rol_perfiles.sql   Cada cuenta edita solo su perfil y solo una administradora da o cambia roles
 │   ├── proteger_solicitudes.sql    Solo el personal del panel ve y edita solicitudes, notas y perfiles
@@ -494,6 +495,16 @@ Los dos últimos scripts cierran huecos de `TODO_EN_UNO.sql`, cuyas políticas s
 - `proteger_solicitudes.sql`: cualquier persona registrada podía leer por la API la cédula, el teléfono y la descripción de **todas** las solicitudes, las notas internas y los datos de todas las cuentas. Con él, solo el personal del panel (admin y asesoras) las ve y las edita; el formulario público sigue creando solicitudes.
 
 Después de ejecutarlos: Usuarias → Personal de asesorías → agrega a la abogada institucional.
+
+### 4b. Evitar solicitudes duplicadas al reenviar
+
+Ejecuta **antes de subir** la versión del formulario que envía `client_id` (se puede repetir sin problema):
+
+```
+supabase-sql/add_client_id_solicitudes.sql
+```
+
+Agrega `solicitudes.client_id` (UUID, índice único) y un trigger que descarta en silencio un envío cuyo `client_id` ya existe. Sin este script el formulario público falla, porque la columna no existe. Las solicitudes anteriores y las que crea el panel quedan sin `client_id` y no cambian.
 
 ### 5. Generar claves VAPID
 

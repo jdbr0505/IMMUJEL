@@ -140,13 +140,15 @@
     if (descripcion === undefined) return { ok: false, error: 'La descripción es demasiado larga.' };
     var usuario = d.usuario_id == null || d.usuario_id === '' ? null : String(d.usuario_id);
     if (usuario !== null && !RE_UUID.test(usuario)) return { ok: false, error: 'La cuenta no es válida.' };
-    return {
-      ok: true,
-      datos: {
-        usuario_id: usuario, nombre_completo: nombre, cedula: cedula, telefono: telefono, correo: correo,
-        parroquia: parroquia, descripcion: descripcion, es_anonimo: anonima, estado: 'pendiente'
-      }
+    // Marca de la solicitud: permite que la base ignore un reenvío de algo que ya recibió
+    var clientId = d.client_id == null || d.client_id === '' ? null : String(d.client_id);
+    if (clientId !== null && !RE_UUID.test(clientId)) return { ok: false, error: 'La solicitud no es válida.' };
+    var datos = {
+      usuario_id: usuario, nombre_completo: nombre, cedula: cedula, telefono: telefono, correo: correo,
+      parroquia: parroquia, descripcion: descripcion, es_anonimo: anonima, estado: 'pendiente'
     };
+    if (clientId !== null) datos.client_id = clientId.toLowerCase();
+    return { ok: true, datos: datos };
   }
 
   // Solo se envían datos a Supabase (https) o a localhost (pruebas), nunca a una dirección cualquiera.
@@ -159,6 +161,9 @@
     return (u.protocol === 'http:' || u.protocol === 'https:') && (u.hostname === 'localhost' || u.hostname === '127.0.0.1');
   }
 
+  // El client_id viaja en el cuerpo: un trigger de la base descarta en silencio un reenvío de algo que ya recibió y responde 201
+  // igual, así que la cola lo da por enviado (supabase-sql/add_client_id_solicitudes.sql). No se usa ON CONFLICT: exige permiso
+  // de lectura, que el público no tiene.
   function peticionDeSolicitud(cfg, datos) {
     return {
       url: cfg.url.replace(/\/+$/, '') + '/rest/v1/solicitudes',
@@ -168,6 +173,12 @@
         body: JSON.stringify([datos])
       }
     };
+  }
+
+  // Si dos envíos idénticos llegan exactamente a la vez, el segundo choca con el índice único de client_id (409): esa solicitud
+  // ya está en la base, no hay nada que reintentar.
+  function esRepetidaPorClientId(estado, mensaje) {
+    return estado === 409 && /solicitudes_client_id_key|\(client_id\)/.test(String(mensaje || ''));
   }
 
   // 'ok' | 'permanente' (datos o permisos mal: reintentar no ayuda) | 'pasajero' (servidor ocupado o sin conexión)
@@ -253,7 +264,7 @@
         break; // lo más probable es que sigamos sin red: no se insiste con las demás
       }
 
-      var veredicto = veredictoDeEstado(resp && resp.estado);
+      var veredicto = resp && esRepetidaPorClientId(resp.estado, resp.mensaje) ? 'ok' : veredictoDeEstado(resp && resp.estado);
       if (veredicto === 'ok') {
         await store.borrar(r.id); res.enviadas++;
       } else if (veredicto === 'permanente') {
@@ -287,6 +298,7 @@
     configValida: configValida,
     peticionDeSolicitud: peticionDeSolicitud,
     veredictoDeEstado: veredictoDeEstado,
+    esRepetidaPorClientId: esRepetidaPorClientId,
     proximoIntentoMs: proximoIntentoMs,
     esErrorDeRed: esErrorDeRed,
     nuevoPendiente: nuevoPendiente,

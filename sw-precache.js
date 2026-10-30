@@ -1,7 +1,7 @@
 // Generado por scripts/generar-precache.js (node scripts/generar-precache.js). No se edita a mano:
 // tests/precache.test.js falla si no coincide con las páginas y archivos actuales.
 self.PRECACHE = {
-  "version": "eacb3124db",
+  "version": "848152ff45",
   "paginas": [
     "/",
     "/404",
@@ -21,7 +21,7 @@ self.PRECACHE = {
   ],
   "archivos": [
     "/Forms/form-styles.css?v=2",
-    "/Forms/form.js?v=3",
+    "/Forms/form.js?v=4",
     "/Images/First%20Slade.webp",
     "/Images/HEAD.svg",
     "/Images/LOGO%20IMMUJEL.png",
@@ -43,7 +43,7 @@ self.PRECACHE = {
     "/js/cookies.js",
     "/js/historial.js",
     "/js/home.js?v=3",
-    "/js/offline-core.js?v=2",
+    "/js/offline-core.js?v=3",
     "/js/offline-db.js?v=2",
     "/js/offline-ui.js?v=2",
     "/js/sw-register.js",
