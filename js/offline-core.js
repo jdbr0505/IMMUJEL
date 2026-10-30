@@ -192,37 +192,53 @@
     return { id: id, tipo: 'solicitud', datos: datos, creadoEn: ahora, intentos: 0, proximoIntento: ahora, estado: 'pendiente', reclamadoEn: null, ultimoError: null };
   }
 
+  // Lo que venció sin enviarse: los datos personales se borran, pero queda una marca para avisarle a la usuaria (estado 'vencida').
+  function marcaDeVencida(it) {
+    return { id: it.id, tipo: it.tipo, datos: null, creadoEn: it.creadoEn, intentos: it.intentos, proximoIntento: 0, estado: 'vencida', reclamadoEn: null, ultimoError: null };
+  }
+
   function resumenDeCola(lista) {
-    var r = { pendientes: 0, fallidas: 0, total: lista.length };
+    var r = { pendientes: 0, fallidas: 0, vencidas: 0, total: lista.length };
     lista.forEach(function (it) {
       if (it.estado === 'fallida') r.fallidas++;
+      else if (it.estado === 'vencida') r.vencidas++;
       else r.pendientes++;
     });
     return r;
   }
 
+  // Guarda el resultado de un intento solo si la solicitud sigue siendo la que este proceso reclamó: si mientras tanto la usuaria
+  // la descartó (o la tomó otro proceso), no se vuelve a crear con sus datos personales.
+  function guardarSiSigue(store, item, marca) {
+    return store.guardarSiReclamada ? store.guardarSiReclamada(item, marca) : store.guardar(item);
+  }
+
   // Envía lo que toque. `store`: listar/obtener/guardar/borrar/reclamar. `enviar(datos)` devuelve { estado, mensaje } o lanza si no hay red.
+  // `forzar` (botón "Enviar ahora") ignora la espera entre intentos.
   async function procesarCola(op) {
     var store = op.store, enviar = op.enviar;
     var ahora = op.ahora == null ? Date.now() : op.ahora;
+    var forzar = op.forzar === true;
     var res = { enviadas: 0, fallidas: 0, pendientes: 0, vencidas: 0 };
 
     var items = (await store.listar()).sort(function (a, b) { return a.creadoEn - b.creadoEn; });
     var elegibles = [];
     for (var i = 0; i < items.length; i++) {
       var it = items[i];
-      if (ahora - it.creadoEn > VIGENCIA_PENDIENTE_MS) { await store.borrar(it.id); res.vencidas++; continue; }
-      if (it.estado === 'enviando' || (it.estado === 'pendiente' && it.proximoIntento <= ahora)) elegibles.push(it);
+      if (it.estado === 'vencida') continue; // solo queda la marca; la usuaria la descarta
+      if (ahora - it.creadoEn > VIGENCIA_PENDIENTE_MS) { await store.guardar(marcaDeVencida(it)); res.vencidas++; continue; }
+      if (it.estado === 'enviando' || (it.estado === 'pendiente' && (forzar || it.proximoIntento <= ahora))) elegibles.push(it);
     }
 
     for (var j = 0; j < elegibles.length; j++) {
       var r = await store.reclamar(elegibles[j].id, ahora, TTL_RECLAMO_MS);
       if (!r) continue; // otro proceso la tiene
+      var marca = r.reclamadoEn;
 
       var v = validarSolicitud(r.datos);
       if (!v.ok) {
         r.estado = 'fallida'; r.reclamadoEn = null; r.ultimoError = 'Datos no válidos: ' + v.error;
-        await store.guardar(r); res.fallidas++;
+        await guardarSiSigue(store, r, marca); res.fallidas++;
         continue;
       }
 
@@ -230,9 +246,10 @@
       try {
         resp = await enviar(v.datos);
       } catch (e) {
+        // Sin red no se alarga la espera: se vuelve a intentar apenas haya señal de conexión (evento online, volver a la pestaña, abrir una página)
         r.estado = 'pendiente'; r.reclamadoEn = null; r.intentos++;
-        r.proximoIntento = ahora + proximoIntentoMs(r.intentos - 1); r.ultimoError = 'Sin conexión';
-        await store.guardar(r);
+        r.proximoIntento = ahora; r.ultimoError = 'Sin conexión';
+        await guardarSiSigue(store, r, marca);
         break; // lo más probable es que sigamos sin red: no se insiste con las demás
       }
 
@@ -242,17 +259,17 @@
       } else if (veredicto === 'permanente') {
         r.estado = 'fallida'; r.reclamadoEn = null;
         r.ultimoError = 'Rechazada (' + resp.estado + ')' + (resp.mensaje ? ': ' + String(resp.mensaje).slice(0, 200) : '');
-        await store.guardar(r); res.fallidas++;
+        await guardarSiSigue(store, r, marca); res.fallidas++;
       } else {
         r.estado = 'pendiente'; r.reclamadoEn = null; r.intentos++;
         r.proximoIntento = ahora + proximoIntentoMs(r.intentos - 1); r.ultimoError = 'Servidor no disponible (' + resp.estado + ')';
-        await store.guardar(r);
+        await guardarSiSigue(store, r, marca);
         break;
       }
     }
 
     var restantes = await store.listar();
-    res.pendientes = restantes.filter(function (x) { return x.estado !== 'fallida'; }).length;
+    res.pendientes = restantes.filter(function (x) { return x.estado !== 'fallida' && x.estado !== 'vencida'; }).length;
     return res;
   }
 

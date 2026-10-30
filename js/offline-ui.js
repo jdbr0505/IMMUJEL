@@ -18,7 +18,7 @@
     var s = document.createElement('style');
     s.textContent =
       '#estado-conexion{position:relative;z-index:60;padding:.5rem 1rem;font:600 .875rem/1.4 "Segoe UI",Arial,sans-serif;text-align:center}' +
-      '#estado-conexion[data-tipo="sin-conexion"]{background:#fef3c7;color:#78350f;border-bottom:1px solid #fcd34d}' +
+      '#estado-conexion[data-tipo="sin-conexion"],#estado-conexion[data-tipo="pendiente"]{background:#fef3c7;color:#78350f;border-bottom:1px solid #fcd34d}' +
       '#estado-conexion[data-tipo="restablecida"]{background:#dcfce7;color:#14532d;border-bottom:1px solid #86efac}' +
       '#solicitudes-pendientes .pend-item{border:1px solid #e9d5ff;border-radius:.75rem;padding:.75rem 1rem;margin-bottom:.5rem;background:#faf5ff;color:#1f2937}' +
       '#solicitudes-pendientes .pend-item[data-estado="fallida"]{border-color:#fca5a5;background:#fef2f2}' +
@@ -45,7 +45,7 @@
     barra.dataset.tipo = tipo;
     barra.textContent = texto;
     clearTimeout(temporizador);
-    if (duracionMs) temporizador = setTimeout(quitarAviso, duracionMs);
+    if (duracionMs) temporizador = setTimeout(function () { quitarAviso(); actualizarEstado(); }, duracionMs);
   }
 
   function quitarAviso() {
@@ -57,11 +57,27 @@
     return n === 1 ? ' Tienes 1 solicitud guardada: se enviará sola al volver la conexión.' : ' Tienes ' + n + ' solicitudes guardadas: se enviarán solas al volver la conexión.';
   }
 
+  // Con conexión, lo que sigue sin enviarse se avisa en todas las páginas (en el formulario ya está el panel con los botones)
+  function textoSinEnviar(r) {
+    var partes = [];
+    if (r.pendientes) partes.push(r.pendientes === 1 ? 'Tienes 1 solicitud guardada sin enviar.' : 'Tienes ' + r.pendientes + ' solicitudes guardadas sin enviar.');
+    if (r.fallidas) partes.push('No pudimos enviar una solicitud guardada.');
+    if (r.vencidas) partes.push('Una solicitud guardada venció sin enviarse.');
+    partes.push(r.vencidas && !r.pendientes && !r.fallidas
+      ? 'Vuelve a llenar el formulario de asesoría.'
+      : 'Abre «Solicitar asesoría» con conexión para enviarla, reintentarla o descartarla.');
+    return partes.join(' ');
+  }
+
   async function actualizarEstado() {
-    var r = { pendientes: 0, fallidas: 0 };
+    var r = { pendientes: 0, fallidas: 0, vencidas: 0 };
     try { r = await DB.resumen(); } catch (e) { /* IndexedDB no disponible (modo privado antiguo): se sigue sin cola */ }
     if (!navigator.onLine) {
       mostrarAviso('sin-conexion', 'Sin conexión. Puedes seguir leyendo lo que ya visitaste.' + (r.pendientes ? textoDePendientes(r.pendientes) : ''));
+    } else if (!document.getElementById('solicitudes-pendientes') && (r.pendientes || r.fallidas || r.vencidas)) {
+      if (!barra || barra.dataset.tipo === 'pendiente') mostrarAviso('pendiente', textoSinEnviar(r));
+    } else if (barra && barra.dataset.tipo === 'pendiente') {
+      quitarAviso();
     }
     pintarPanel();
     return r;
@@ -89,19 +105,24 @@
     lista.forEach(function (it) {
       var caja = document.createElement('div');
       caja.className = 'pend-item';
-      caja.dataset.estado = it.estado === 'fallida' ? 'fallida' : 'pendiente';
+      var vencida = it.estado === 'vencida';
+      var fallida = it.estado === 'fallida';
+      caja.dataset.estado = vencida || fallida ? 'fallida' : 'pendiente';
       var titulo = document.createElement('div');
       titulo.className = 'pend-titulo';
-      titulo.textContent = it.estado === 'fallida' ? 'No pudimos enviar una solicitud guardada' : 'Solicitud guardada en este dispositivo';
+      titulo.textContent = vencida ? 'Una solicitud guardada venció sin enviarse'
+        : fallida ? 'No pudimos enviar una solicitud guardada' : 'Solicitud guardada en este dispositivo';
       var detalle = document.createElement('div');
       detalle.className = 'pend-detalle';
-      detalle.textContent = it.estado === 'fallida'
-        ? 'Guardada el ' + fechaCorta(it.creadoEn) + '. ' + (it.ultimoError || '') + ' Puedes reintentar o descartarla.'
-        : 'Guardada el ' + fechaCorta(it.creadoEn) + '. Se envía sola al volver la conexión; si prefieres, puedes enviarla ahora o descartarla.';
+      detalle.textContent = vencida
+        ? 'Guardada el ' + fechaCorta(it.creadoEn) + '. No se pudo enviar en 3 días y sus datos se borraron de este dispositivo. Vuelve a llenar el formulario.'
+        : fallida
+          ? 'Guardada el ' + fechaCorta(it.creadoEn) + '. ' + (it.ultimoError || '') + ' Puedes reintentar o descartarla.'
+          : 'Guardada el ' + fechaCorta(it.creadoEn) + '. Se envía sola al volver la conexión; si prefieres, puedes enviarla ahora o descartarla.';
       var acciones = document.createElement('div');
       acciones.className = 'pend-acciones';
-      acciones.appendChild(boton(it.estado === 'fallida' ? 'Reintentar' : 'Enviar ahora', it.estado === 'fallida' ? 'reintentar' : 'enviar', it.id));
-      acciones.appendChild(boton('Descartar', 'descartar', it.id));
+      if (!vencida) acciones.appendChild(boton(fallida ? 'Reintentar' : 'Enviar ahora', fallida ? 'reintentar' : 'enviar', it.id));
+      acciones.appendChild(boton(vencida ? 'Entendido' : 'Descartar', vencida ? 'cerrar' : 'descartar', it.id));
       caja.appendChild(titulo); caja.appendChild(detalle); caja.appendChild(acciones);
       panel.appendChild(caja);
     });
@@ -111,7 +132,9 @@
     var b = e.target.closest('button[data-accion]');
     if (!b) return;
     var id = b.dataset.id;
-    if (b.dataset.accion === 'descartar') {
+    if (b.dataset.accion === 'cerrar') {
+      await DB.descartar(id); // la marca de una solicitud vencida ya no tiene datos personales: no pide confirmación
+    } else if (b.dataset.accion === 'descartar') {
       if (!confirm('¿Descartar esta solicitud guardada? No se enviará y se borrará de este dispositivo.')) return;
       await DB.descartar(id);
     } else {
@@ -122,12 +145,15 @@
   }
 
   // ---------- envío ----------
+  // Devuelve true si el navegador enviará la solicitud aunque se cierre la página (Sincronización en segundo plano)
   async function registrarSincronizacion() {
     try {
-      if (!('serviceWorker' in navigator)) return;
-      var reg = await navigator.serviceWorker.ready;
-      if (reg && reg.sync) await reg.sync.register('enviar-solicitudes');
+      if (!('serviceWorker' in navigator)) return false;
+      // `ready` no se resuelve nunca si no hay Service Worker registrado: no se espera más de 2 s
+      var reg = await Promise.race([navigator.serviceWorker.ready, new Promise(function (r) { setTimeout(function () { r(null); }, 2000); })]);
+      if (reg && reg.sync) { await reg.sync.register('enviar-solicitudes'); return true; }
     } catch (e) { /* sin Sincronización en segundo plano: se envía al abrir una página o al volver la conexión */ }
+    return false;
   }
 
   async function enviarAhora(avisarResultado) {
@@ -136,7 +162,7 @@
     try {
       var antes = await DB.resumen();
       if (!antes.pendientes) return null;
-      var r = await DB.enviarPendientes();
+      var r = await DB.enviarPendientes({ forzar: avisarResultado === true });
       if (r.enviadas > 0) {
         mostrarAviso('restablecida', r.enviadas === 1 ? 'Tu solicitud guardada se envió. Pronto nos pondremos en contacto contigo.' : 'Se enviaron ' + r.enviadas + ' solicitudes guardadas. Pronto nos pondremos en contacto contigo.', 8000);
       } else if (avisarResultado && !navigator.onLine) {
@@ -148,7 +174,7 @@
       return null;
     } finally {
       enviando = false;
-      pintarPanel();
+      actualizarEstado();
     }
   }
 
@@ -171,7 +197,7 @@
     });
     try {
       var canal = new BroadcastChannel('immujel-offline');
-      canal.onmessage = function () { pintarPanel(); if (!navigator.onLine) actualizarEstado(); };
+      canal.onmessage = function () { actualizarEstado(); };
     } catch (e) { /* sin BroadcastChannel */ }
 
     actualizarEstado();

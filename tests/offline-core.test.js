@@ -208,6 +208,10 @@ function almacenEnMemoria() {
     async obtener(id) { return filas.has(id) ? JSON.parse(JSON.stringify(filas.get(id))) : null; },
     async guardar(item) { filas.set(item.id, JSON.parse(JSON.stringify(item))); },
     async borrar(id) { filas.delete(id); },
+    async guardarSiReclamada(item, marca) {
+      const f = filas.get(item.id);
+      if (f && f.estado === 'enviando' && f.reclamadoEn === marca) filas.set(item.id, JSON.parse(JSON.stringify(item)));
+    },
     async reclamar(id, ahora, ttl) {
       const f = filas.get(id);
       if (!f) return null;
@@ -241,7 +245,7 @@ test('procesarCola: envía en orden de llegada y borra lo enviado', async () => 
   assert.equal(orden.length, 2);
 });
 
-test('procesarCola: sin conexión deja todo pendiente con espera y no sigue intentando', async () => {
+test('procesarCola: sin conexión deja todo pendiente, sin alargar la espera, y no sigue intentando', async () => {
   const s = almacenEnMemoria();
   await s.guardar(O.nuevoPendiente(SOLICITUD, T0, 'a'));
   await s.guardar(O.nuevoPendiente(SOLICITUD, T0 + 1, 'b'));
@@ -253,8 +257,35 @@ test('procesarCola: sin conexión deja todo pendiente con espera y no sigue inte
   const a = s.filas.get('a');
   assert.equal(a.estado, 'pendiente');
   assert.equal(a.intentos, 1);
-  assert.equal(a.proximoIntento, T0 + 5 + O.proximoIntentoMs(0));
+  assert.equal(a.proximoIntento, T0 + 5, 'sin red no hay espera: se reintenta apenas vuelva la conexión');
   assert.equal(s.filas.get('b').intentos, 0, 'la segunda no se tocó');
+  let otra = 0;
+  await O.procesarCola({ store: s, ahora: T0 + 6, enviar: async () => { otra++; return { estado: 201 }; } });
+  assert.equal(otra, 2, 'el siguiente intento no tiene que esperar minutos');
+});
+
+test('procesarCola: "forzar" ignora la espera entre intentos de un servidor ocupado', async () => {
+  const s = almacenEnMemoria();
+  await s.guardar(O.nuevoPendiente(SOLICITUD, T0, 'a'));
+  await O.procesarCola({ store: s, ahora: T0, enviar: async () => ({ estado: 503 }) });
+  assert.ok(s.filas.get('a').proximoIntento > T0 + 1000);
+  let llamadas = 0;
+  const enviar = async () => { llamadas++; return { estado: 201 }; };
+  await O.procesarCola({ store: s, ahora: T0 + 1000, enviar });
+  assert.equal(llamadas, 0, 'sin forzar respeta la espera');
+  const r = await O.procesarCola({ store: s, ahora: T0 + 1000, enviar, forzar: true });
+  assert.equal(llamadas, 1);
+  assert.equal(r.enviadas, 1);
+});
+
+test('procesarCola: si la usuaria descarta una solicitud mientras se envía, un fallo no la vuelve a crear', async () => {
+  const s = almacenEnMemoria();
+  await s.guardar(O.nuevoPendiente(SOLICITUD, T0, 'a'));
+  await O.procesarCola({ store: s, ahora: T0, enviar: async () => { await s.borrar('a'); throw new TypeError('Failed to fetch'); } });
+  assert.equal(s.filas.has('a'), false, 'los datos personales descartados no reaparecen');
+  await s.guardar(O.nuevoPendiente(SOLICITUD, T0, 'b'));
+  await O.procesarCola({ store: s, ahora: T0, enviar: async () => { await s.borrar('b'); return { estado: 422 }; } });
+  assert.equal(s.filas.has('b'), false);
 });
 
 test('procesarCola: no reintenta antes de la hora indicada', async () => {
@@ -311,15 +342,23 @@ test('procesarCola: una reclamación vieja (proceso que murió) se puede retomar
   assert.equal(llamadas, 1);
 });
 
-test('procesarCola: lo que pasó de la vigencia se borra sin enviarse', async () => {
+test('procesarCola: lo que pasó de la vigencia no se envía, pierde sus datos personales y deja una marca para avisar', async () => {
   const s = almacenEnMemoria();
   await s.guardar(O.nuevoPendiente(SOLICITUD, T0, 'vieja'));
   await s.guardar(O.nuevoPendiente(SOLICITUD, T0 + O.VIGENCIA_PENDIENTE_MS, 'nueva'));
   let llamadas = 0;
   const r = await O.procesarCola({ store: s, ahora: T0 + O.VIGENCIA_PENDIENTE_MS + 1, enviar: async () => { llamadas++; return { estado: 201 }; } });
   assert.equal(r.vencidas, 1);
-  assert.equal(llamadas, 1);
-  assert.equal(s.filas.size, 0);
+  assert.equal(llamadas, 1, 'solo se envía la vigente');
+  assert.equal(s.filas.size, 1);
+  const marca = s.filas.get('vieja');
+  assert.equal(marca.estado, 'vencida');
+  assert.equal(marca.datos, null, 'no queda ningún dato personal');
+  assert.equal(r.pendientes, 0, 'la marca no cuenta como pendiente (el Service Worker no reintenta por ella)');
+  assert.deepEqual(O.resumenDeCola([marca]), { pendientes: 0, fallidas: 0, vencidas: 1, total: 1 });
+  const otra = await O.procesarCola({ store: s, ahora: T0 + O.VIGENCIA_PENDIENTE_MS * 3, enviar: async () => { llamadas++; return { estado: 201 }; } });
+  assert.equal(otra.vencidas, 0, 'la marca se queda hasta que la usuaria la cierre');
+  assert.equal(s.filas.has('vieja'), true);
 });
 
 test('procesarCola: una solicitud con datos alterados no se envía y queda fallida', async () => {
@@ -334,8 +373,8 @@ test('procesarCola: una solicitud con datos alterados no se envía y queda falli
 
 test('resumenDeCola: cuenta pendientes y fallidas', () => {
   const lista = [O.nuevoPendiente(SOLICITUD, T0, 'a'), Object.assign(O.nuevoPendiente(SOLICITUD, T0, 'b'), { estado: 'fallida' }), Object.assign(O.nuevoPendiente(SOLICITUD, T0, 'c'), { estado: 'enviando' })];
-  assert.deepEqual(O.resumenDeCola(lista), { pendientes: 2, fallidas: 1, total: 3 });
-  assert.deepEqual(O.resumenDeCola([]), { pendientes: 0, fallidas: 0, total: 0 });
+  assert.deepEqual(O.resumenDeCola(lista), { pendientes: 2, fallidas: 1, vencidas: 0, total: 3 });
+  assert.deepEqual(O.resumenDeCola([]), { pendientes: 0, fallidas: 0, vencidas: 0, total: 0 });
 });
 
 test('esErrorDeRed: reconoce los fallos de conexión de fetch en los navegadores', () => {

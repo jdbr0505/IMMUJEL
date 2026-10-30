@@ -11,6 +11,7 @@
   var NOMBRE_DB = 'immujel-offline';
   var VERSION_DB = 1;
   var TIEMPO_ENVIO_MS = 20000;
+  var TIEMPO_CONFIG_MS = 8000;
   var canal = null;
 
   function avisar(mensaje) {
@@ -40,7 +41,8 @@
         var tx = db.transaction(nombre, modo);
         var resultado;
         try { resultado = fn(tx.objectStore(nombre), tx); } catch (e) { rechazar(e); db.close(); return; }
-        tx.oncomplete = function () { db.close(); resolver(resultado && resultado.__valor !== undefined ? resultado.__valor : resultado); };
+        // Una lectura que no encontró nada deja __valor en undefined: debe resolver con eso, no con la caja que lo envuelve
+        tx.oncomplete = function () { db.close(); resolver(resultado && typeof resultado === 'object' && '__valor' in resultado ? resultado.__valor : resultado); };
         tx.onerror = function () { db.close(); rechazar(tx.error); };
         tx.onabort = function () { db.close(); rechazar(tx.error || new Error('Transacción cancelada')); };
       });
@@ -57,6 +59,17 @@
     obtener: function (id) { return transaccion('cola', 'readonly', function (t) { return pedir(t.get(id), {}); }).then(function (v) { return v || null; }); },
     guardar: function (item) { return transaccion('cola', 'readwrite', function (t) { t.put(item); }); },
     borrar: function (id) { return transaccion('cola', 'readwrite', function (t) { t.delete(id); }); },
+    // Guarda el resultado de un intento solo si la solicitud sigue existiendo y sigue reclamada por quien la envió
+    // (si la usuaria la descartó mientras se enviaba, no reaparece con sus datos personales).
+    guardarSiReclamada: function (item, marca) {
+      return transaccion('cola', 'readwrite', function (t) {
+        var lectura = t.get(item.id);
+        lectura.onsuccess = function () {
+          var f = lectura.result;
+          if (f && f.estado === 'enviando' && f.reclamadoEn === marca) t.put(item);
+        };
+      });
+    },
     // Atómico: lee y marca en la misma transacción; solo uno de dos procesos simultáneos se queda con la solicitud.
     reclamar: function (id, ahora, ttl) {
       return transaccion('cola', 'readwrite', function (t) {
@@ -85,7 +98,11 @@
   }
   async function obtenerConfig() {
     try {
-      var r = await fetch('/api/config', { cache: 'no-store' });
+      // Con tiempo límite: en el Service Worker, una petición colgada dejaría la solicitud reclamada hasta que venza el reclamo
+      var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var reloj = ctl ? setTimeout(function () { ctl.abort(); }, TIEMPO_CONFIG_MS) : null;
+      var r;
+      try { r = await fetch('/api/config', ctl ? { cache: 'no-store', signal: ctl.signal } : { cache: 'no-store' }); } finally { if (reloj) clearTimeout(reloj); }
       if (r.ok) {
         var cfg = await r.json();
         if (core.configValida(cfg)) { await guardarConfig(cfg).catch(function () {}); return cfg; }
@@ -139,8 +156,9 @@
     }
   }
 
-  async function enviarPendientes() {
-    var r = await core.procesarCola({ store: store, enviar: enviar, ahora: Date.now() });
+  // opciones.forzar: ignora la espera entre intentos (botón "Enviar ahora")
+  async function enviarPendientes(opciones) {
+    var r = await core.procesarCola({ store: store, enviar: enviar, ahora: Date.now(), forzar: !!(opciones && opciones.forzar) });
     avisar({ tipo: 'cola', enviadas: r.enviadas });
     return r;
   }

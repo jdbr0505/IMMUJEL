@@ -48,8 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clienteListo()) return null;
         try {
             if (navigator.onLine) {
-                const { data: { user } } = await window.supabase.auth.getUser();
-                return user ? user.id : null;
+                // Si la consulta falla (sin red de verdad) viene con `error`, no lanza: entonces se usa la sesión guardada
+                const { data, error } = await window.supabase.auth.getUser();
+                if (!error) return data && data.user ? data.user.id : null;
             }
         } catch (e) { /* se prueba con la sesión local */ }
         try {
@@ -66,10 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let r;
         try { r = await window.OfflineDB.encolarSolicitud(datos); } catch (e) { throw sinCola(); }
         if (!r.ok) throw Object.assign(new Error(r.error), { paraLaUsuaria: r.error });
+        let conSincronizacion = false;
         if (window.OfflineUI) {
-            window.OfflineUI.registrarSincronizacion();
+            conSincronizacion = await window.OfflineUI.registrarSincronizacion();
             window.OfflineUI.actualizarEstado();
         }
+        return { conSincronizacion };
+    }
+
+    // Con conexión pero antes de que Supabase termine de iniciar: se espera un momento (el envío guardado no depende del cliente)
+    async function esperarCliente() {
+        if (clienteListo() || !window.supabaseReady) return;
+        try { await Promise.race([window.supabaseReady, new Promise((r) => setTimeout(r, 4000))]); } catch (e) { /* se guarda y se envía por la cola */ }
     }
 
     // ===== VALIDACIÓN EN TIEMPO REAL =====
@@ -180,19 +189,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Sin conexión (o con el servidor caído) la solicitud se guarda en este dispositivo y se envía sola al volver la red
             let resultado = 'enviada';
-            if (!navigator.onLine || !clienteListo()) {
+            let enviarYa = false; // hay conexión pero el cliente de Supabase no terminó de iniciar: se guarda y se envía por la cola
+            if (!navigator.onLine) {
                 resultado = 'guardada';
             } else {
-                const { error, status } = await window.supabase.from('solicitudes').insert([datos]);
-                if (error) {
-                    if (esFalloPasajero(error, status)) resultado = 'guardada';
-                    else throw error;
+                await esperarCliente();
+                if (!clienteListo()) {
+                    resultado = 'guardada';
+                    enviarYa = true;
+                } else {
+                    const { error, status } = await window.supabase.from('solicitudes').insert([datos]);
+                    if (error) {
+                        if (esFalloPasajero(error, status)) resultado = 'guardada';
+                        else throw error;
+                    }
                 }
             }
-            if (resultado === 'guardada') await guardarParaDespues(datos);
+            let conSincronizacion = false;
+            if (resultado === 'guardada') {
+                ({ conSincronizacion } = await guardarParaDespues(datos));
+                if (enviarYa && window.OfflineUI) {
+                    const r = await window.OfflineUI.enviarAhora(true);
+                    if (r && r.enviadas > 0) resultado = 'enviada';
+                }
+            }
 
             if (resultado === 'guardada') {
-                mostrarExito('fa-clock', 'Sin conexión: tu solicitud quedó guardada en este dispositivo y se enviará sola cuando vuelva la conexión. Se borra de aquí en cuanto se envía. Si compartes este dispositivo, puedes descartarla en el aviso de arriba.');
+                mostrarExito('fa-clock', 'Tu solicitud quedó guardada en este dispositivo y se enviará sola cuando vuelva la conexión.' +
+                    (conSincronizacion ? '' : ' Si cierras el sitio, ábrelo de nuevo con conexión para que se envíe.') +
+                    ' Se borra de aquí en cuanto se envía. Si compartes este dispositivo, puedes descartarla en el aviso de arriba.');
             } else {
                 mostrarExito('fa-check-circle', 'Tu solicitud ha sido enviada con éxito. Pronto nos pondremos en contacto contigo.');
             }

@@ -37,6 +37,23 @@ async function sinRedireccion(res) {
   return new Response(await res.blob(), { status: res.status, statusText: res.statusText, headers: res.headers });
 }
 
+// Guardar una copia nunca debe romper la respuesta que ya llegó bien (cuota llena, respuesta 206, Vary: *):
+// si no se puede guardar, se sigue sin copia.
+async function guardar(cache, clave, res) {
+  try { await cache.put(clave, res); return true; } catch (error) { return false; }
+}
+
+// Cache.put rechaza las respuestas 206 y las listas paginadas de PostgREST (range) responden así: se guarda una copia 200
+// con las mismas cabeceras (Content-Range incluido), que es lo que lee supabase-js para el total.
+async function comoCompleta(res) {
+  return new Response(await res.blob(), { status: 200, statusText: 'OK', headers: res.headers });
+}
+
+// Solo se guarda una configuración que el envío en segundo plano podría usar; una vacía no reemplaza a la buena.
+async function esConfigValida(res) {
+  try { return Core.configValida(await res.clone().json()); } catch (error) { return false; }
+}
+
 async function recortar(nombre, maximo) {
   const c = await caches.open(nombre);
   const claves = await c.keys();
@@ -57,7 +74,7 @@ async function precargar() {
 
   dinamicos.forEach((url) => tareas.push((async () => {
     const res = await fetch(origen + url, { cache: 'no-store' });
-    if (res.ok) await cache.put(new Request(origen + url), res);
+    if (res.ok && await esConfigValida(res)) await cache.put(new Request(origen + url), res);
   })()));
 
   paginas.forEach((ruta) => tareas.push((async () => {
@@ -83,7 +100,7 @@ async function precargar() {
 }
 
 self.addEventListener('install', (e) => {
-  // Sin skipWaiting(): la versión nueva espera a que sw-register.js reciba la confirmación de la usuaria.
+  // Sin skipWaiting() propio: sw-register.js lo pide por mensaje cuando la página ya tenía un Service Worker anterior.
   e.waitUntil(precargar());
 });
 
@@ -111,7 +128,7 @@ async function paginas(e) {
 
   const red = fetch(req).then(async (res) => {
     // Las direcciones con .html las redirige Vercel a la limpia: esa respuesta se deja pasar y la limpia se guarda al pedirse.
-    if (res.ok && res.type === 'basic') await cache.put(clave, (await sinRedireccion(res.clone())));
+    if (res.ok && res.type === 'basic') await guardar(cache, clave, await sinRedireccion(res.clone()));
     return res;
   });
   red.catch(() => {}); // si se agota el tiempo y la red falla después, no queda un error sin atender
@@ -124,8 +141,8 @@ async function paginas(e) {
       e.waitUntil(red.catch(() => {})); // si la red responde después, la copia se renueva
       return guardada;
     }
-    const aviso = await cache.match(new Request(self.location.origin + '/offline'));
-    return aviso || sinConexion();
+    // Sin copia: si fue solo lentitud se espera la red; la página /offline es solo para cuando de verdad no hay conexión
+    return red.catch(async () => (await cache.match(new Request(self.location.origin + '/offline'))) || sinConexion());
   }
 }
 
@@ -135,7 +152,7 @@ async function primeroCache(req, nombre) {
   if (guardada) return guardada;
   try {
     const res = await fetch(req);
-    if (res.ok && res.type === 'basic') await cache.put(req, res.clone());
+    if (res.ok && res.type === 'basic') await guardar(cache, req, res.clone());
     return res;
   } catch (error) {
     return Response.error();
@@ -147,7 +164,7 @@ async function revalidar(e, nombre) {
   const cache = await caches.open(nombre);
   const guardada = await cache.match(req);
   const actualizar = fetch(req).then(async (res) => {
-    if (res.ok && res.type === 'basic') await cache.put(req, res.clone());
+    if (res.ok && res.type === 'basic') await guardar(cache, req, res.clone());
     return res;
   });
   if (guardada) {
@@ -162,8 +179,12 @@ async function configuracion(e) {
   const cache = await caches.open(CACHE);
   try {
     const res = await conTiempo(fetch(req), 3000);
-    if (res.ok && res.type === 'basic') await cache.put(req, res.clone());
-    return res;
+    if (res.ok && res.type === 'basic') {
+      if (await esConfigValida(res)) await guardar(cache, req, res.clone());
+      return res;
+    }
+    // Un error del servidor no deja a Supabase sin configuración si ya había una copia buena
+    return (await cache.match(req)) || res;
   } catch (error) {
     return (await cache.match(req)) || sinConexion();
   }
@@ -177,18 +198,18 @@ async function biblioteca(e) {
   const guardada = await cache.match(url, { ignoreVary: true });
   if (guardada) {
     if (guardada.type !== 'opaque') {
-      e.waitUntil(fetch(url, { mode: 'cors', credentials: 'omit' }).then((res) => { if (res.ok) return cache.put(url, res); }).catch(() => {}));
+      e.waitUntil(fetch(url, { mode: 'cors', credentials: 'omit' }).then((res) => { if (res.ok) return guardar(cache, url, res); }).catch(() => {}));
     }
     return guardada;
   }
   try {
     const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
-    if (res.ok) await cache.put(url, res.clone());
+    if (res.ok) await guardar(cache, url, res.clone());
     return res;
   } catch (errorCors) {
     try {
       const res = await fetch(e.request);
-      if (res.type === 'opaque' || res.ok) await cache.put(url, res.clone());
+      if (res.type === 'opaque' || res.ok) await guardar(cache, url, res.clone());
       return res;
     } catch (errorRed) {
       return Response.error();
@@ -204,10 +225,7 @@ async function imagenExterna(e) {
   try {
     let res;
     try { res = await fetch(url, { mode: 'cors', credentials: 'omit' }); } catch (errorCors) { return await fetch(e.request); }
-    if (res.ok) {
-      await cache.put(url, res.clone());
-      e.waitUntil(recortar(CACHE_IMAGENES, MAX_IMAGENES));
-    }
+    if (res.ok && await guardar(cache, url, res.clone())) e.waitUntil(recortar(CACHE_IMAGENES, MAX_IMAGENES));
     return res;
   } catch (error) {
     return Response.error();
@@ -221,8 +239,8 @@ async function datosPublicos(e) {
 
   const red = fetch(req).then(async (res) => {
     if (clave && (res.status === 200 || res.status === 206)) {
-      await cache.put(new Request(clave), res.clone());
-      e.waitUntil(recortar(CACHE_DATOS, MAX_DATOS));
+      const copia = res.status === 206 ? await comoCompleta(res.clone()) : res.clone();
+      if (await guardar(cache, new Request(clave), copia)) e.waitUntil(recortar(CACHE_DATOS, MAX_DATOS));
     }
     return res;
   });

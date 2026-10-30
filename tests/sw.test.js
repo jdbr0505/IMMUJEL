@@ -26,23 +26,34 @@ class Resp {
   clone() { return new Resp({ status: this.status, type: this.type, redirected: this.redirected, statusText: this.statusText, body: this._body, headers: Object.fromEntries(this.headers) }); }
   async blob() { return new Blob([this._body]); }
   async text() { return String(this._body); }
+  async json() { return JSON.parse(String(this._body)); }
 }
+
+// Una configuración que el envío en segundo plano puede usar (clave pública y dirección de Supabase)
+const CONFIG_BUENA = JSON.stringify({ url: 'https://vhgfyqodiieblhfwbama.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYW5vbiJ9.firma' });
 
 function crearCaches() {
   const almacenes = new Map();
+  const estado = { sinCupo: false }; // simula una caché llena
   const clave = (r) => (typeof r === 'string' ? r : r.url).split('#')[0];
   const abrir = (n) => {
     if (!almacenes.has(n)) almacenes.set(n, new Map());
     const m = almacenes.get(n);
     return {
       async match(r) { const v = m.get(clave(r)); return v ? v.clone() : undefined; },
-      async put(r, res) { m.set(clave(r), res); },
+      // Como la Cache API real: rechaza las respuestas parciales (206) y falla si no hay espacio
+      async put(r, res) {
+        if (res.status === 206) throw new TypeError("Failed to execute 'put' on 'Cache': Partial response (status code 206) is unsupported");
+        if (estado.sinCupo) throw new Error('QuotaExceededError');
+        m.set(clave(r), res);
+      },
       async keys() { return [...m.keys()].map((u) => ({ url: u })); },
       async delete(r) { return m.delete(clave(r)); }
     };
   };
   return {
     almacenes,
+    estado,
     open: async (n) => abrir(n),
     keys: async () => [...almacenes.keys()],
     delete: async (n) => almacenes.delete(n),
@@ -107,6 +118,7 @@ test('instalar: guarda páginas, archivos propios y bibliotecas externas', async
     const url = typeof r === 'string' ? r : r.url;
     if (url.includes('cdn.tailwindcss.com') && init && init.mode === 'cors') throw new TypeError('Failed to fetch'); // sin CORS
     if (url.includes('cdn.tailwindcss.com')) return new Resp({ status: 0, type: 'opaque' });
+    if (url.endsWith('/api/config')) return new Resp({ body: CONFIG_BUENA });
     return new Resp({ body: 'contenido de ' + url });
   };
   const r = await disparar(sw, 'install', {});
@@ -250,15 +262,37 @@ test('archivo sin versión y sin red: sigue funcionando con lo guardado', async 
 // ---------- configuración de Supabase ----------
 test('/api/config: con red se guarda; sin red se usa la copia; sin copia, 503', async () => {
   const sw = cargarSW();
-  sw.ctx.__fetch = async () => new Resp({ body: '{"url":"u","anonKey":"k"}' });
+  sw.ctx.__fetch = async () => new Resp({ body: CONFIG_BUENA });
   await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
   sw.ctx.__fetch = sinRed;
   let r = await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
-  assert.equal(await r.respuesta.text(), '{"url":"u","anonKey":"k"}');
+  assert.equal(await r.respuesta.text(), CONFIG_BUENA);
   const otro = cargarSW();
   otro.ctx.__fetch = sinRed;
   r = await pedir(otro, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
   assert.equal(r.respuesta.status, 503);
+});
+
+test('/api/config: una respuesta vacía o con una dirección ajena a Supabase no reemplaza a la copia buena', async () => {
+  const sw = cargarSW();
+  sw.ctx.__fetch = async () => new Resp({ body: CONFIG_BUENA });
+  await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
+  for (const mala of ['{"url":"","anonKey":""}', '{"url":"https://malo.example.com","anonKey":"eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYW5vbiJ9.firma"}', 'no es json']) {
+    sw.ctx.__fetch = async () => new Resp({ body: mala });
+    await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
+  }
+  sw.ctx.__fetch = sinRed;
+  const r = await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
+  assert.equal(await r.respuesta.text(), CONFIG_BUENA);
+});
+
+test('/api/config: si el servidor falla, se usa la copia buena', async () => {
+  const sw = cargarSW();
+  sw.ctx.__fetch = async () => new Resp({ body: CONFIG_BUENA });
+  await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
+  sw.ctx.__fetch = async () => new Resp({ status: 500, body: 'error' });
+  const r = await pedir(sw, peticion(ORIGEN + '/api/config', { mode: 'cors' }));
+  assert.equal(await r.respuesta.text(), CONFIG_BUENA);
 });
 
 // ---------- bibliotecas externas ----------
@@ -361,6 +395,65 @@ test('lecturas públicas con red lenta: se entrega la copia guardada', async () 
   sw.ctx.__fetch = () => new Promise(() => {}); // nunca responde
   const r = await pedir(sw, lecturaPublica());
   assert.equal(await r.respuesta.text(), 'guardada');
+});
+
+// ---------- guardar una copia nunca rompe la respuesta ----------
+test('lista paginada (respuesta 206): llega a la página y se guarda una copia 200 con el total', async () => {
+  const sw = cargarSW();
+  const pagina = () => lecturaPublica({ range: '0-8', prefer: 'count=exact' });
+  sw.ctx.__fetch = async () => new Resp({ type: 'cors', status: 206, body: '[{"id":1}]', headers: { 'content-range': '0-8/25' } });
+  let r = await pedir(sw, pagina());
+  assert.equal(r.respuesta.status, 206, 'la página recibe lo que respondió el servidor');
+  assert.equal(await r.respuesta.text(), '[{"id":1}]');
+  sw.ctx.__fetch = sinRed;
+  r = await pedir(sw, pagina());
+  assert.equal(r.respuesta.status, 200);
+  assert.equal(await r.respuesta.text(), '[{"id":1}]');
+  assert.equal(r.respuesta.headers.get('content-range'), '0-8/25', 'supabase-js saca de aquí el total de publicaciones');
+  assert.equal(r.respuesta.headers.get('x-immujel-cache'), 'guardado');
+});
+
+test('caché llena: las respuestas buenas llegan igual a la página, sin copia', async () => {
+  const sw = cargarSW();
+  sw.caches.estado.sinCupo = true;
+  sw.ctx.__fetch = async (r) => {
+    const u = typeof r === 'string' ? r : r.url;
+    if (u.endsWith('/api/config')) return new Resp({ body: CONFIG_BUENA });
+    if (u.startsWith(SUPA)) return new Resp({ type: 'cors', body: '[{"id":1}]' });
+    return new Resp({ body: 'contenido' });
+  };
+  const casos = [
+    [peticion(ORIGEN + '/navegacion/Programas', { mode: 'navigate' }), 'contenido'],
+    [peticion(ORIGEN + '/js/ui.js?v=2'), 'contenido'],
+    [peticion(ORIGEN + '/styles.css'), 'contenido'],
+    [peticion(ORIGEN + '/api/config', { mode: 'cors' }), CONFIG_BUENA],
+    [lecturaPublica(), '[{"id":1}]']
+  ];
+  for (const [req, esperado] of casos) {
+    const r = await pedir(sw, req);
+    assert.equal(r.error, undefined, req.url);
+    assert.equal(r.respuesta.status, 200, req.url);
+    assert.equal(await r.respuesta.text(), esperado, req.url);
+  }
+});
+
+test('caché llena con una biblioteca y una imagen externa: también llegan', async () => {
+  const sw = cargarSW();
+  sw.caches.estado.sinCupo = true;
+  sw.ctx.__fetch = async () => new Resp({ type: 'cors', body: 'recurso' });
+  for (const url of ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css', SUPA + '/storage/v1/object/public/publicacion-imagenes/a.png']) {
+    const r = await pedir(sw, peticion(url, { mode: 'cors', destination: url.includes('storage') ? 'image' : 'style' }));
+    assert.equal(r.respuesta.status, 200, url);
+  }
+});
+
+test('página sin copia y con red lenta: se espera la red en vez de mostrar /offline', async () => {
+  const sw = cargarSW();
+  const c = await sw.caches.open(sw.nombreCache);
+  await c.put(ORIGEN + '/offline', new Resp({ body: 'página sin conexión' }));
+  sw.ctx.__fetch = () => new Promise((ok) => setTimeout(() => ok(new Resp({ body: 'llegó tarde' })), 40));
+  const r = await pedir(sw, peticion(ORIGEN + '/Admin/Admin', { mode: 'navigate' }));
+  assert.equal(await r.respuesta.text(), 'llegó tarde');
 });
 
 // ---------- lo que nunca se intercepta ----------
