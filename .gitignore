@@ -7,3 +7,6 @@ scripts/pdfs/
 
 .vercel
 .env*
+
+# Guía interna del dashboard (Power BI): se queda en el equipo, no se publica
+Dashboard IMMUJEL.html
