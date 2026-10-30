@@ -1,7 +1,7 @@
 // Generado por scripts/generar-precache.js (node scripts/generar-precache.js). No se edita a mano:
 // tests/precache.test.js falla si no coincide con las páginas y archivos actuales.
 self.PRECACHE = {
-  "version": "848152ff45",
+  "version": "4f2281bfe0",
   "paginas": [
     "/",
     "/404",
